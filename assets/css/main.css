@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.nav-bar {
+    background-color: #dadada;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between; 
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-item {
+    margin: 0 15px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-family: Arial;
+}
+
+.nav-item a:hover {
+    color: #007bff;
+}
+
+.nav-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    font-family: Arial;
+    display: flex;
+    align-items: flex-start;
+}
+
+.login-btn {
+    background-color: #020202;
+    color: white;
+    font-family: Arial;
+    font-weight: bold;
+    border: none;
+    font-size: 12px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: Arial;
+}
