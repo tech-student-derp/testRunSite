@@ -1,60 +1,93 @@
 * {
-    margin: 0;
     padding: 0;
+    margin: 0;
     box-sizing: border-box;
+    font-family: Arial;
 }
 
-.nav-bar {
-    background-color: #dadada;
-    padding: 15px;
+.logo-and-title {
+    position: relative;
     display: flex;
-    justify-content: space-between; 
+    gap: 5px;
+    flex-direction: row;
+    padding: inherit;
+    width: 85%;
+}
+
+.title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+}
+
+.navbar {
+    background-color: rgb(190, 190, 190);
     position: fixed;
-    top: 0;
+    display: flex;
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: auto;
+    padding: 9px;
+    top: 0;
 }
 
-.nav-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.icon {
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.menu-box {
+    position: relative;
+    padding: inherit;
+    flex-direction: row;
     display: flex;
+    gap: 10px;
 }
 
-.nav-item {
-    margin: 0 15px;
+.menu {
+    padding: inherit;
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 25px;
 }
 
-.nav-item a {
+.menu a {
     text-decoration: none;
-    color: #333;
+    color: black;
     font-weight: bold;
-    font-family: Arial;
+    font-size: 14px;
+    top: 0;
 }
 
-.nav-item a:hover {
-    color: #007bff;
-}
-
-.nav-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    font-family: Arial;
-    display: flex;
-    align-items: flex-start;
+.menu a:hover {
+    text-decoration: none;
+    color: rgb(0, 83, 190);
+    font-weight: bolder;
 }
 
 .login-btn {
-    background-color: #020202;
+    position: relative;
+    display: flex;
+    background-color: black;
+    padding: 8px;
+    border-radius: 9px;
+    border: 1px solid black;
+}
+
+.login-btn:hover {
+    background-color: rgb(44, 44, 44);
+}
+
+.login-btn a {
     color: white;
-    font-family: Arial;
+    text-decoration: none;
     font-weight: bold;
-    border: none;
     font-size: 12px;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: Arial;
+    padding: inherit;
+}
+
+.login-btn a:hover {
+    color: rgb(24, 247, 255);
 }
