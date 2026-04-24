@@ -1,93 +1,231 @@
+:root {
+    --primary-bg: #bebebe;
+    --primary-color: #000;
+    --accent-color: #0053be;
+    --hover-accent: #18f7ff;
+    --btn-bg: #000;
+    --btn-hover-bg: #2c2c2c;
+    --border-radius: 9px;
+    --transition: 0.2s;
+    --gap: 1.5rem;
+    --font-main: Arial, sans-serif;
+}
+
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: Arial;
+    font-family: var(--font-main);
 }
 
 .logo-and-title {
-    position: relative;
     display: flex;
-    gap: 5px;
-    flex-direction: row;
-    padding: inherit;
+    align-items: center;
+    gap: 0.5rem;
     width: 85%;
 }
 
 .title {
-    position: relative;
-    display: flex;
-    align-items: center;
-    font-size: 24px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
 }
 
 .navbar {
-    background-color: rgb(190, 190, 190);
+    background-color: var(--primary-bg);
     position: fixed;
     display: flex;
     width: 100%;
-    height: auto;
-    padding: 9px;
+    padding: 0.7rem 2rem;
     top: 0;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .icon {
-    width: 40px;
-    height: 40px;
-    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 .menu-box {
-    position: relative;
-    padding: inherit;
-    flex-direction: row;
     display: flex;
-    gap: 10px;
+    gap: 1rem;
+    align-items: center;
+    margin-left: auto;
 }
 
 .menu {
-    padding: inherit;
     display: flex;
-    flex-direction: row;
     list-style: none;
-    gap: 25px;
+    gap: var(--gap);
 }
 
 .menu a {
     text-decoration: none;
-    color: black;
+    color: var(--primary-color);
     font-weight: bold;
-    font-size: 14px;
-    top: 0;
+    font-size: 1rem;
+    transition: color var(--transition), font-weight var(--transition);
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
 }
 
 .menu a:hover {
-    text-decoration: none;
-    color: rgb(0, 83, 190);
+    color: var(--accent-color);
+    background: rgba(0,83,190,0.08);
     font-weight: bolder;
 }
 
 .login-btn {
-    position: relative;
     display: flex;
-    background-color: black;
-    padding: 8px;
-    border-radius: 9px;
-    border: 1px solid black;
+    background-color: var(--btn-bg);
+    padding: 0.5rem 1.2rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--btn-bg);
+    transition: background-color var(--transition);
+    align-items: center;
 }
 
 .login-btn:hover {
-    background-color: rgb(44, 44, 44);
+    background-color: var(--btn-hover-bg);
 }
 
 .login-btn a {
-    color: white;
+    color: #fff;
     text-decoration: none;
     font-weight: bold;
-    font-size: 12px;
-    padding: inherit;
+    font-size: 0.95rem;
+    transition: color var(--transition);
 }
 
 .login-btn a:hover {
-    color: rgb(24, 247, 255);
+    color: var(--hover-accent);
+}
+
+.signup-btn {
+    display: flex;
+    background-color: var(--btn-bg);
+    padding: 0.5rem 1.5rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--btn-bg);
+    transition: background-color var(--transition);
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.signup-btn:hover {
+    background-color: var(--btn-hover-bg);
+}
+
+.signup-btn a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: color var(--transition);
+}
+
+.signup-btn a:hover {
+    color: var(--hover-accent);
+}
+
+.searchbar {
+    padding: 0.5rem 1rem;
+    border: 2px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    width: 250px;
+}
+
+.searchbar:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(0, 83, 190, 0.3);
+}
+
+.search-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--btn-bg);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color var(--transition), box-shadow var(--transition);
+}
+
+.search-btn:hover {
+    background-color: var(--btn-hover-bg);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.search-box {
+    margin-top: 3rem;
+    padding: 1rem 2rem;
+    background-color: var(--primary-bg);
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.searchbar {
+    padding: 0.6rem 1rem;
+    border: 2px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    width: 300px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.searchbar:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(0, 83, 190, 0.3), inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.search-btn {
+    padding: 0.6rem 1.2rem;
+    background-color: var(--btn-bg);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color var(--transition), box-shadow var(--transition);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.search-btn:hover {
+    background-color: var(--btn-hover-bg);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 700px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+    .logo-and-title {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    .menu-box {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-left: 0;
+    }
+    .menu {
+        gap: 1rem;
+    }
 }
