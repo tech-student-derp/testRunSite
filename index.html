@@ -31,15 +31,46 @@
         </nav>
 
         <div class="search-box">
+
+                <select class="sort-dropdown">
+                        <option value="latest">Latest</option>
+                        <option value="popular">Most Popular</option>
+                        <option value="low-high">Price: Low to High</option>
+                        <option value="high-low">Price: High to Low</option>
+                </select>
                 <form action="" class="search-form">
                     <input type="text" placeholder="Search for products" class="searchbar">
                     <button type="submit" class="search-btn">Search</button>
                 </form>
+
+                <div class="category-bar">
+                    <a href="#">Shirts</a>
+                    <a href="#">Lanyards</a>
+                    <a href="#">Stickers</a>
+                    <a href="#">Accessories</a>
+                    <a href="#">Hoodies</a>
+                </div>
+                
         </div>
     </header>
 
     <main class="main-page">
-        
+        <h1>Hot picks for CCS Students</h1>
+        <h3>Shirts<br><br></h3>
+
+        <div class="product-container">
+            <div class="product-grid">
+
+                <div class="product-card">
+                    <a href="#" class="product-img"></a>
+                    <p class="prod-name"><b>BSCS Shirt</b></p>
+                    <p class="price">Only for ₱259</p>
+                    <button class="preorder-btn">Preorder</button>
+                </div>
+
+
+            </div>
+        </div>
     </main>
 </body>
 </html>
