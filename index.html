@@ -6,6 +6,8 @@
     <title>WMSU Merch</title>
     <link rel="icon" type="image/png" href="assets/img/WMSU logo.png">
     <link rel="stylesheet" href="assets/css/main.css">
+
+    
 </head>
 <body>
     <header>
@@ -47,8 +49,8 @@
                     <a href="#">Shirts</a>
                     <a href="#">Lanyards</a>
                     <a href="#">Stickers</a>
-                    <a href="#">Accessories</a>
-                    <a href="#">Hoodies</a>
+                    <a href="#" class="disabled">Accessories</a>
+                    <a href="#" class="disabled">Hoodies</a>
                 </div>
                 
         </div>
@@ -57,20 +59,102 @@
     <main class="main-page">
         <h1>Hot picks for CCS Students</h1>
         <h3>Shirts<br><br></h3>
-
         <div class="product-container">
             <div class="product-grid">
 
-                <div class="product-card">
-                    <a href="#" class="product-img"></a>
+                <div class="product-card" data-id="bs-shirt">
+                    <a href="#">
+                        <img src="assets/img/bs-shirt.png" class="product-img">
+                    </a>
                     <p class="prod-name"><b>BSCS Shirt</b></p>
-                    <p class="price">Only for ₱259</p>
+                    <p class="price">₱259</p>
                     <button class="preorder-btn">Preorder</button>
                 </div>
 
+                <div class="product-card" data-id="bs-shirt-2">
+                    <a href="#">
+                        <img src="assets/img/bs-shirt-2.png" class="product-img">
+                    </a>
+                    <p class="prod-name"><b>BSIT Shirt</b></p>
+                    <p class="price">₱259</p>
+                    <button class="preorder-btn">Preorder</button>
+                </div>
+
+                <div class="product-card" data-id="bs-shirt-3">
+                    <a href="#">
+                        <img src="assets/img/bs-shirt-3.png" class="product-img">
+                    </a>
+                    <p class="prod-name"><b>ACT AD Shirt</b></p>
+                    <p class="price">₱259</p>
+                    <button class="preorder-btn">Preorder</button>
+                </div>
+
+                <div class="product-card" data-id="bs-it-3">
+                    <a href="#">
+                        <img src="assets/img/bs-it-3.jpg" class="product-img">
+                    </a>
+                    <p class="prod-name"><b>BSIT Shirt</b></p>
+                    <p class="price">₱259</p>
+                    <button class="preorder-btn">Preorder</button>
+                </div>
+
+                <div class="product-card" data-id="act-ad-2">
+                    <a href="#">
+                        <img src="assets/img/act-ad-2.jpg" class="product-img">
+                    </a>
+                    <p class="prod-name"><b>ACT AD Shirt</b></p>
+                    <p class="price">₱259</p>
+                    <button class="preorder-btn">Preorder</button>
+                </div>
+
+                <div class="product-card" data-id="act-ad">
+                    <a href="#">
+                        <img src="assets/img/act-ad.jpg" class="product-img">
+                    </a>
+                    <p class="prod-name"><b>BSCS Shirt</b></p>
+                    <p class="price">₱259</p>
+                    <button class="preorder-btn">Preorder</button>
+                </div>
 
             </div>
         </div>
     </main>
+
+    <div id="hover-preview">
+        <img id="preview-img" src="" alt="">
+
+        <h3 id="preview-name"></h3>
+
+        <p id="preview-rating"></p>
+        <p id="preview-sold"></p>
+        <p id="preview-price"></p>
+        <p id="preview-review"></p>
+        <p id="preview-sizes"></p>
+    </div>
+
+    <div id="overlay"></div>
+
+    <div id="product-sidebar" class="sidebar">
+        <div class="sidebar-content">
+
+            <span id="close-sidebar" class="close-btn">×</span>
+
+            <img id="side-img" src="" alt="">
+
+            <h2 id="side-name"></h2>
+
+            <p id="side-rating"></p>
+            <p id="side-sold"></p>
+            <p id="side-price"></p>
+            <p id="side-sizes"></p>
+
+            <h3>Reviews</h3>
+            <p id="side-review"></p>
+
+            <button class="preorder-btn">Preorder</button>
+        </div>
+    </div>
+
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
