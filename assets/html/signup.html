@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - WMSU Merch</title>
+    <link rel="stylesheet" href="/assets/css/signup.css">
+</head>
+<body>
+
+<div class="signup-wrap">
+
+    <div class="signup-box">
+
+        <a href="/index.html" class="back-btn">← Back</a>
+
+        <div class="brand">
+            <img src="/assets/img/WMSU logo.png" alt="">
+            <h2>Create Account</h2>
+        </div>
+
+        <p class="sub">Join WMSU Merch</p>
+
+        <form>
+
+            <input type="text" placeholder="Full Name" required>
+
+            <input type="text" placeholder="Username" required>
+
+            <input type="email" placeholder="Email Address" required>
+
+            <input type="text" placeholder="Phone Number" required>
+
+            <input type="date" placeholder="Birth Date" required>
+
+            <select required>
+                <option value="" disabled selected>Sex</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Prefer not to say</option>
+            </select>
+
+            <input type="text" placeholder="College Course (e.g. BSCS, BSIT)" required>
+
+            <select required>
+                <option value="" disabled selected>Year Level</option>
+                <option>1st Year</option>
+                <option>2nd Year</option>
+                <option>3rd Year</option>
+                <option>4th Year</option>
+            </select>
+
+            <div class="pass-box">
+                <input type="password" id="password" placeholder="Password" required>
+                <img src="/assets/img/ico/eye-close.png" class="toggle" onclick="togglePass('password', this)">
+            </div>
+
+            <div class="pass-box">
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                <img src="/assets/img/ico/eye-close.png" class="toggle" onclick="togglePass('confirmPassword', this)">
+            </div>
+
+            <button type="submit">Sign Up</button>
+
+        </form>
+
+        <div class="meta">
+            <p>Already Have an Account? <a href="/assets/html/login.html">Log In</a></p>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/assets/js/signup.js"></script>
+</body>
+</html>

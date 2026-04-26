@@ -1,0 +1,161 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(135deg, #c40000, #5a0000);
+}
+
+.signup-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.signup-box {
+    width: 480px;
+    background: #fff;
+
+    padding: 2.5rem;
+    border-radius: 16px;
+
+    box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+
+    text-align: center;
+    position: relative;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.brand img {
+    width: 60px;
+    height: 60px;
+}
+
+.sub {
+    color: #666;
+    margin: 0.7rem 0 1.5rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+input {
+    padding: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #c40000;
+    box-shadow: 0 0 10px rgba(196,0,0,0.2);
+}
+
+button {
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+
+    background: black;
+    color: white;
+
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #2c2c2c;
+}
+
+.meta {
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+}
+
+.meta a {
+    color: #c40000;
+    text-decoration: none;
+}
+
+.back-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+
+    text-decoration: none;
+    font-size: 0.9rem;
+
+    background: #f2f2f2;
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+
+    color: #333;
+}
+
+.back-btn:hover {
+    background: #ddd;
+}
+
+select {
+    padding: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    outline: none;
+    background: white;
+
+    font-size: 0.95rem;
+}
+
+select:focus {
+    border-color: #c40000;
+    box-shadow: 0 0 10px rgba(196,0,0,0.2);
+}
+
+.pass-box {
+    position: relative;
+}
+
+.pass-box input {
+    width: 100%;
+    padding-right: 2.5rem;
+}
+
+.toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 20px;
+    height: 20px;
+
+    object-fit: contain;
+
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.toggle:hover {
+    opacity: 1;
+}
