@@ -10,8 +10,10 @@
     
 </head>
 <body>
-    <header>
+    <header class="header">
+
         <nav class="navbar">
+            <button id="menu-btn" class="menu-btn">☰ </button>
             <div class="logo-and-title">
                 <img src="assets/img/WMSU logo.png" alt="WMSU logo" class="icon">
                 <h3 class="title">WMSU Merch</h3>
@@ -26,34 +28,34 @@
                 </ul>
 
                 <button class="login-btn"><a href="#">Login</a></button>
-                
                 <button class="signup-btn"><a href="#">Sign Up</a></button>
             </div>
-            
         </nav>
 
         <div class="search-box">
 
-                <select class="sort-dropdown">
-                        <option value="latest">Latest</option>
-                        <option value="popular">Most Popular</option>
-                        <option value="low-high">Price: Low to High</option>
-                        <option value="high-low">Price: High to Low</option>
-                </select>
-                <form action="" class="search-form">
-                    <input type="text" placeholder="Search for products" class="searchbar">
-                    <button type="submit" class="search-btn">Search</button>
-                </form>
+            <select class="sort-dropdown">
+                <option value="latest">Latest</option>
+                <option value="popular">Most Popular</option>
+                <option value="low-high">Price: Low to High</option>
+                <option value="high-low">Price: High to Low</option>
+            </select>
 
-                <div class="category-bar">
-                    <a href="#">Shirts</a>
-                    <a href="#">Lanyards</a>
-                    <a href="#">Stickers</a>
-                    <a href="#" class="disabled">Accessories</a>
-                    <a href="#" class="disabled">Hoodies</a>
-                </div>
-                
+            <form class="search-form">
+                <input type="text" placeholder="Search for products" class="searchbar">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+
+            <div class="category-bar">
+                <a href="#">Shirts</a>
+                <a href="#">Lanyards</a>
+                <a href="#">Stickers</a>
+                <a href="#" class="disabled">Accessories</a>
+                <a href="#" class="disabled">Hoodies</a>
+            </div>
+
         </div>
+
     </header>
 
     <main class="main-page">
@@ -160,6 +162,63 @@
 
         </div>
     </div>
+
+    <div id="left-sidebar" class="left-sidebar">
+
+        <div class="left-sidebar-content">
+            <span id="close-left" class="close-left">×</span>
+
+            <h2>Menu</h2>
+
+            <a href="#">Home</a>
+            <a href="#">Products</a>
+            <a href="#">Orders</a>
+            <a href="#">Wishlist</a>
+            <a href="#">Settings</a>
+
+            <hr>
+
+            <p>WMSU Merch v1.0</p>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-col">
+            <h3>WMSU Merch</h3>
+            <p>Official CCS student merchandise shop.</p>
+            <p>Built for students, by students.</p>
+        </div>
+
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <a href="#">Home</a>
+            <a href="#">Products</a>
+            <a href="#">About</a>
+            <a href="#">Contacts</a>
+        </div>
+
+        <div class="footer-col">
+            <h3>Support</h3>
+            <p>Email: support@wmsumerch.fake</p>
+            <p>Response: 1–3 business days</p>
+        </div>
+
+        <div class="footer-col">
+            <h3>Disclaimer</h3>
+            <p>This is a student project, not an official store.</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 WMSU Merch | CCS Department</p>
+    </div>
+
+</footer>
 
     <script src="assets/js/script.js"></script>
 </body>

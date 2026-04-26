@@ -1,56 +1,39 @@
 const cards = document.querySelectorAll(".product-card");
 
-
+/* -----------------------------
+   DATABASE
+----------------------------- */
 const productData = {
-    "bs-shirt": {
-        rating: 4.8,
-        sold: 320,
-        review: "actually bussin quality ngl",
-        sizes: "S, M, L, XL"
-    },
-    "bs-shirt-2": {
-        rating: 4.6,
-        sold: 210,
-        review: "clean design and comfy",
-        sizes: "M, L, XL"
-    },
-    "bs-shirt-3": {
-        rating: 4.7,
-        sold: 180,
-        review: "perfect for daily wear",
-        sizes: "S, M, L"
-    },
-    "bs-it-3": {
-        rating: 4.5,
-        sold: 150,
-        review: "simple but solid 🔥",
-        sizes: "M, L, XL"
-    },
-    "act-ad-2": {
-        rating: 4.9,
-        sold: 410,
-        review: "elite design fr",
-        sizes: "S, M, L"
-    },
-    "act-ad": {
-        rating: 4.4,
-        sold: 95,
-        review: "underrated piece ngl",
-        sizes: "M, L"
-    }
+    "bs-shirt": { rating: 4.8, sold: 320, review: "actually bussin quality ngl", sizes: "S, M, L, XL" },
+    "bs-shirt-2": { rating: 4.6, sold: 210, review: "clean design and comfy", sizes: "M, L, XL" },
+    "bs-shirt-3": { rating: 4.7, sold: 180, review: "perfect for daily wear", sizes: "S, M, L" },
+    "bs-it-3": { rating: 4.5, sold: 150, review: "simple but solid 🔥", sizes: "M, L, XL" },
+    "act-ad-2": { rating: 4.9, sold: 410, review: "elite design fr", sizes: "S, M, L" },
+    "act-ad": { rating: 4.4, sold: 95, review: "underrated piece ngl", sizes: "M, L" }
 };
 
+/* -----------------------------
+   ELEMENTS
+----------------------------- */
 const preview = document.getElementById("hover-preview");
 
 const sidebar = document.getElementById("product-sidebar");
 const overlay = document.getElementById("overlay");
 const closeBtn = document.getElementById("close-sidebar");
 
+/* LEFT SIDEBAR */
+const menuBtn = document.getElementById("menu-btn");
+const leftSidebar = document.getElementById("left-sidebar");
+const closeLeft = document.getElementById("close-left");
+
+/* ZOOM */
 const zoomWrapper = document.querySelector(".img-zoom-wrapper");
 const lens = document.querySelector(".zoom-lens");
 const zoomResult = document.querySelector(".zoom-result");
 
-
+/* -----------------------------
+   HOVER PREVIEW
+----------------------------- */
 let hoverTimer;
 
 cards.forEach(card => {
@@ -60,7 +43,6 @@ cards.forEach(card => {
 
             const id = card.dataset.id;
             const data = productData[id];
-
             if (!data || !preview) return;
 
             const img = card.querySelector(".product-img");
@@ -95,7 +77,9 @@ cards.forEach(card => {
     });
 });
 
-
+/* -----------------------------
+   SIDEBAR OPEN
+----------------------------- */
 function openSidebar(card, img, data) {
 
     if (!sidebar) return;
@@ -123,34 +107,56 @@ function openSidebar(card, img, data) {
     sidebar.classList.add("active");
     overlay?.classList.add("active");
 
-    const zoomResult = document.querySelector(".zoom-result");
-    if (zoomResult) {
-        zoomResult.style.backgroundImage = `url(${img.src})`;
+    const zoomBg = document.querySelector(".zoom-result");
+    if (zoomBg) {
+        zoomBg.style.backgroundImage = `url(${img.src})`;
     }
 }
 
-
+/* click product */
 cards.forEach(card => {
     const img = card.querySelector(".product-img");
 
     img.addEventListener("click", () => {
-
         const id = card.dataset.id;
         const data = productData[id];
-
         if (!data) return;
 
         openSidebar(card, img, data);
     });
 });
 
+/* -----------------------------
+   CLOSE SIDEBAR
+----------------------------- */
 function closeSidebar() {
     sidebar?.classList.remove("active");
     overlay?.classList.remove("active");
 }
 
 closeBtn?.addEventListener("click", closeSidebar);
-overlay?.addEventListener("click", closeSidebar);
+
+/* -----------------------------
+   LEFT SIDEBAR (MENU)
+----------------------------- */
+function openLeft() {
+    leftSidebar?.classList.add("active");
+    overlay?.classList.add("active");
+}
+
+function closeLeftSidebar() {
+    leftSidebar?.classList.remove("active");
+    overlay?.classList.remove("active");
+}
+
+menuBtn?.addEventListener("click", openLeft);
+closeLeft?.addEventListener("click", closeLeftSidebar);
+
+/* shared overlay close */
+overlay?.addEventListener("click", () => {
+    closeSidebar();
+    closeLeftSidebar();
+});
 
 if (zoomWrapper && lens && zoomResult) {
 
