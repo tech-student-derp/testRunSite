@@ -1,7 +1,5 @@
 const cards = document.querySelectorAll(".product-card");
-const preview = document.getElementById("hover-preview");
 
-let hoverTimer;
 
 const productData = {
     "bs-shirt": {
@@ -42,6 +40,19 @@ const productData = {
     }
 };
 
+const preview = document.getElementById("hover-preview");
+
+const sidebar = document.getElementById("product-sidebar");
+const overlay = document.getElementById("overlay");
+const closeBtn = document.getElementById("close-sidebar");
+
+const zoomWrapper = document.querySelector(".img-zoom-wrapper");
+const lens = document.querySelector(".zoom-lens");
+const zoomResult = document.querySelector(".zoom-result");
+
+
+let hoverTimer;
+
 cards.forEach(card => {
     card.addEventListener("mouseenter", () => {
 
@@ -50,12 +61,11 @@ cards.forEach(card => {
             const id = card.dataset.id;
             const data = productData[id];
 
-            if (!data) return;
+            if (!data || !preview) return;
 
-            const imgSrc = card.querySelector(".product-img").src;
+            const img = card.querySelector(".product-img");
 
-            document.getElementById("preview-img").src = imgSrc;
-
+            document.getElementById("preview-img").src = img.src;
             document.getElementById("preview-name").innerText =
                 card.querySelector(".prod-name").innerText;
 
@@ -81,53 +91,98 @@ cards.forEach(card => {
 
     card.addEventListener("mouseleave", () => {
         clearTimeout(hoverTimer);
-        preview.classList.remove("active");
+        preview?.classList.remove("active");
     });
 });
 
-const sidebar = document.getElementById("product-sidebar");
-const closeBtn = document.getElementById("close-sidebar");
+
+function openSidebar(card, img, data) {
+
+    if (!sidebar) return;
+
+    document.getElementById("side-img").src = img.src;
+
+    document.getElementById("side-name").innerText =
+        card.querySelector(".prod-name").innerText;
+
+    document.getElementById("side-rating").innerHTML =
+        `⭐ ${data.rating} / 5`;
+
+    document.getElementById("side-sold").innerHTML =
+        `🔥 ${data.sold}+ sold`;
+
+    document.getElementById("side-price").innerHTML =
+        card.querySelector(".price").innerText;
+
+    document.getElementById("side-sizes").innerHTML =
+        `Sizes: ${data.sizes}`;
+
+    document.getElementById("side-review").innerHTML =
+        `"${data.review}"`;
+
+    sidebar.classList.add("active");
+    overlay?.classList.add("active");
+
+    const zoomResult = document.querySelector(".zoom-result");
+    if (zoomResult) {
+        zoomResult.style.backgroundImage = `url(${img.src})`;
+    }
+}
+
 
 cards.forEach(card => {
     const img = card.querySelector(".product-img");
 
     img.addEventListener("click", () => {
+
         const id = card.dataset.id;
         const data = productData[id];
 
         if (!data) return;
 
-        document.getElementById("side-img").src =
-            img.src;
-
-        document.getElementById("side-name").innerText =
-            card.querySelector(".prod-name").innerText;
-
-        document.getElementById("side-rating").innerHTML =
-            `⭐ ${data.rating} / 5`;
-
-        document.getElementById("side-sold").innerHTML =
-            `🔥 ${data.sold}+ sold`;
-
-        document.getElementById("side-price").innerHTML =
-            card.querySelector(".price").innerText;
-
-        document.getElementById("side-sizes").innerHTML =
-            `Sizes: ${data.sizes}`;
-
-        document.getElementById("side-review").innerHTML =
-            `"${data.review}"`;
-
-        sidebar.classList.add("active");
+        openSidebar(card, img, data);
     });
 });
 
-closeBtn.addEventListener("click", () => {
-    sidebar.classList.remove("active");
-});
+function closeSidebar() {
+    sidebar?.classList.remove("active");
+    overlay?.classList.remove("active");
+}
 
-window.addEventListener("click", (e) => {
-    if (e.target === sidebar) {
-        sidebar.classList.remove("active");
-    }
-});
+closeBtn?.addEventListener("click", closeSidebar);
+overlay?.addEventListener("click", closeSidebar);
+
+if (zoomWrapper && lens && zoomResult) {
+
+    zoomWrapper.addEventListener("mouseenter", () => {
+        lens.style.display = "block";
+        zoomResult.style.display = "block";
+    });
+
+    zoomWrapper.addEventListener("mouseleave", () => {
+        lens.style.display = "none";
+        zoomResult.style.display = "none";
+    });
+
+    zoomWrapper.addEventListener("mousemove", (e) => {
+
+        const rect = zoomWrapper.getBoundingClientRect();
+
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+
+        const lensSize = 120;
+
+        x = Math.max(lensSize / 2, Math.min(x, rect.width - lensSize / 2));
+        y = Math.max(lensSize / 2, Math.min(y, rect.height - lensSize / 2));
+
+        lens.style.left = `${x - lensSize / 2}px`;
+        lens.style.top = `${y - lensSize / 2}px`;
+
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+
+        zoomResult.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
+        zoomResult.style.backgroundSize = "250%";
+    });
+}
