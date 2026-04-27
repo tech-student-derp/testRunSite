@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Account</title>
+    <link rel="stylesheet" href="/assets/css/otp.css">
+</head>
+<body>
+
+<div class="otp-wrap">
+
+    <div class="otp-box">
+
+        <h2>Verify Your Account</h2>
+        <p>We sent a 6-digit code to your email</p>
+
+        <input type="text" id="otp-input" maxlength="6" placeholder="Enter Code">
+
+        <button id="verify-btn">Verify</button>
+
+        <button id="resend-btn">Resend Code (10)</button>
+
+        <p id="msg"></p>
+
+    </div>
+
+</div>
+
+<div id="otp-overlay" class="otp-overlay">
+    <div class="otp-modal">
+        <h3 id="otp-title">Message</h3>
+        <p id="otp-text">...</p>
+        <button id="otp-close">OK</button>
+    </div>
+</div>
+
+<script src="/assets/js/otp.js"></script>
+</body>
+</html>

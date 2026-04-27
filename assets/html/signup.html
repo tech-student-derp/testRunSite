@@ -6,6 +6,44 @@
     <title>Sign Up - WMSU Merch</title>
     <link rel="stylesheet" href="/assets/css/signup.css">
 </head>
+<div id="terms-overlay">
+    <div class="terms-box">
+
+        <h2>Terms and Conditions</h2>
+
+        <div class="terms-content">
+            <p>
+                By creating an account on WMSU Merch, you agree to provide accurate and complete information including your personal, academic, and contact details. You acknowledge that this platform is a mock e-commerce system developed for educational purposes.
+            </p>
+
+            <p>
+                Users are responsible for maintaining the confidentiality of their login credentials. Any misuse, unauthorized access, or false information submitted may result in restriction or removal of account access within the system.
+            </p>
+
+            <p>
+                This platform does not process real payments and all displayed transactions are simulated. Product information, reviews, and availability are for demonstration purposes only and may not reflect real-world data.
+            </p>
+
+            <p>
+                By continuing, you consent to the temporary storage of your data using browser-based technologies such as localStorage. No real backend database is used in this system.
+            </p>
+
+            <p>
+                You agree to use this system responsibly and acknowledge that all interactions are part of an academic requirement.
+            </p>
+        </div>
+
+        <div class="terms-actions">
+            <label>
+                <input type="checkbox" id="agree-check">
+                I Agree to the Terms and Conditions
+            </label>
+
+            <button id="accept-btn" disabled>Continue</button>
+        </div>
+
+    </div>
+</div>
 <body>
 
 <div class="signup-wrap">
@@ -23,7 +61,15 @@
 
         <form>
 
-            <input type="text" placeholder="Full Name" required>
+            <div class="name-group">
+
+                <input type="text" placeholder="Given Name" required>
+
+                <input type="text" placeholder="M.I." maxlength="2">
+
+                <input type="text" placeholder="Surname" required>
+
+            </div>
 
             <input type="text" placeholder="Username" required>
 

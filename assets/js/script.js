@@ -1,8 +1,5 @@
 const cards = document.querySelectorAll(".product-card");
 
-/* -----------------------------
-   DATABASE
------------------------------ */
 const productData = {
     "bs-shirt": { rating: 4.8, sold: 320, review: "actually bussin quality ngl", sizes: "S, M, L, XL" },
     "bs-shirt-2": { rating: 4.6, sold: 210, review: "clean design and comfy", sizes: "M, L, XL" },
@@ -12,28 +9,20 @@ const productData = {
     "act-ad": { rating: 4.4, sold: 95, review: "underrated piece ngl", sizes: "M, L" }
 };
 
-/* -----------------------------
-   ELEMENTS
------------------------------ */
 const preview = document.getElementById("hover-preview");
 
 const sidebar = document.getElementById("product-sidebar");
 const overlay = document.getElementById("overlay");
 const closeBtn = document.getElementById("close-sidebar");
 
-/* LEFT SIDEBAR */
 const menuBtn = document.getElementById("menu-btn");
 const leftSidebar = document.getElementById("left-sidebar");
 const closeLeft = document.getElementById("close-left");
 
-/* ZOOM */
 const zoomWrapper = document.querySelector(".img-zoom-wrapper");
 const lens = document.querySelector(".zoom-lens");
 const zoomResult = document.querySelector(".zoom-result");
 
-/* -----------------------------
-   HOVER PREVIEW
------------------------------ */
 let hoverTimer;
 
 cards.forEach(card => {
@@ -77,9 +66,6 @@ cards.forEach(card => {
     });
 });
 
-/* -----------------------------
-   SIDEBAR OPEN
------------------------------ */
 function openSidebar(card, img, data) {
 
     if (!sidebar) return;
@@ -113,7 +99,6 @@ function openSidebar(card, img, data) {
     }
 }
 
-/* click product */
 cards.forEach(card => {
     const img = card.querySelector(".product-img");
 
@@ -126,9 +111,6 @@ cards.forEach(card => {
     });
 });
 
-/* -----------------------------
-   CLOSE SIDEBAR
------------------------------ */
 function closeSidebar() {
     sidebar?.classList.remove("active");
     overlay?.classList.remove("active");
@@ -136,9 +118,6 @@ function closeSidebar() {
 
 closeBtn?.addEventListener("click", closeSidebar);
 
-/* -----------------------------
-   LEFT SIDEBAR (MENU)
------------------------------ */
 function openLeft() {
     leftSidebar?.classList.add("active");
     overlay?.classList.add("active");
@@ -152,7 +131,6 @@ function closeLeftSidebar() {
 menuBtn?.addEventListener("click", openLeft);
 closeLeft?.addEventListener("click", closeLeftSidebar);
 
-/* shared overlay close */
 overlay?.addEventListener("click", () => {
     closeSidebar();
     closeLeftSidebar();
