@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f4f4;
+}
+
+/* HEADER */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 1rem 2rem;
+    background: #111;
+    color: white;
+}
+
+.admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-actions a {
+    color: #bbb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.admin-actions a:hover {
+    color: white;
+}
+
+#logout-btn {
+    background: crimson;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#logout-btn:hover {
+    background: darkred;
+}
+
+/* LAYOUT */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR (UNCHANGED STYLE, JUST CLEANED) */
+.admin-sidebar {
+    width: 220px;
+    background: #1c1c1c;
+    padding: 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.admin-sidebar a {
+    color: #bbb;
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.admin-sidebar a:hover {
+    background: #333;
+    color: white;
+}
+
+.admin-sidebar a.active {
+    background: #444;
+    color: white;
+}
+
+.admin-sidebar hr {
+    border: none;
+    height: 1px;
+    background: #333;
+    margin: 1rem 0;
+}
+
+.version {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* MAIN */
+.admin-main {
+    flex: 1;
+    padding: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ACTIVITY PANEL */
+.activity-panel {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.activity-panel h3 {
+    margin-bottom: 1rem;
+}
+
+.activity-panel ul {
+    list-style: none;
+}
+
+.activity-panel li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+/* PRODUCT PANEL */
+.product-panel {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.product-panel h3 {
+    margin-bottom: 1rem;
+}
+
+/* PRODUCT ROW */
+.product-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+.p-name {
+    font-weight: bold;
+    width: 25%;
+}
+
+.p-seller {
+    width: 25%;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.p-price {
+    width: 15%;
+}
+
+/* ACTION BUTTONS */
+.flag-btn {
+    background: orange;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.flag-btn:hover {
+    background: darkorange;
+}
+
+.delete-btn {
+    background: crimson;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: darkred;
+}

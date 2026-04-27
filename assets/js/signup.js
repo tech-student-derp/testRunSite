@@ -85,7 +85,8 @@ form.addEventListener("submit", (e) => {
         sex,
         course,
         year,
-        password
+        password,
+        verified: false
     };
 
     localStorage.setItem("tempUser", JSON.stringify(tempUser));

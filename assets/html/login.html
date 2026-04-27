@@ -11,19 +11,23 @@
 <div class="login-wrap">
 
     <div class="login-box">
-        <a href="/index.html" class="back-btn">← Back</a>
+        <a href="javascript:history.back()" class="back-btn">← Back</a>
         <div class="brand">
-            <img src="/assets/img/WMSU logo.png" alt="">
+            <img src="/assets/img/ico/WMSU logo.png" alt="">
             <h2>WMSU Merch</h2>
         </div>
 
         <p class="sub">Sign in to continue</p>
 
         <form>
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required type="password">
+            <input type="text" placeholder="Username" id="login-username" required>
 
-            <button type="submit">Login</button>
+            <div class="pass-box">
+                <input type="password" id="login-password" placeholder="Password" required>
+                <img src="/assets/img/ico/eye-close.png" class="toggle" id="toggle-pass" alt="toggle password">
+            </div>
+
+            <button type="submit" id="login-btn">Login</button>
         </form>
 
         <div class="meta">

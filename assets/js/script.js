@@ -170,3 +170,45 @@ if (zoomWrapper && lens && zoomResult) {
         zoomResult.style.backgroundSize = "250%";
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const authArea = document.getElementById("auth-area");
+
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (user) {
+
+        authArea.innerHTML = `
+            <span id="welcome-user">Welcome, ${user.username}</span>
+        `;
+
+    }
+
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const authArea = document.getElementById("auth-area");
+
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    function logout() {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+    }
+
+    if (user) {
+
+        authArea.innerHTML = `
+            <div class="user-block">
+                <div>Welcome, ${user.username}</div>
+                <button class="logout-btn" id="logout-btn">Log out</button>
+            </div>
+        `;
+
+        document.getElementById("logout-btn").addEventListener("click", logout);
+
+    }
+
+});

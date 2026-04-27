@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Reports Panel</title>
+
+    <link rel="stylesheet" href="/assets/css/admin/admin-reports.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/settings.png">
+</head>
+<body>
+
+<header class="admin-header">
+
+    <div class="logo">
+        <h2>Reports & Moderation</h2>
+    </div>
+
+    <div class="admin-actions">
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/assets/html/admin/admin-product.html">Products</a>
+        <a href="/assets/html/admin/admin-users.html">Users</a>
+        <a href="/assets/html/admin/admin-logs.html">Logs</a>
+        <button id="logout-btn">Log out</button>
+    </div>
+
+</header>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/assets/html/admin/admin-product.html">Products</a>
+        <a href="/assets/html/admin/admin-users.html">Users</a>
+        <a href="/assets/html/admin/admin-reports.html" class="active">Reports</a>
+        <a href="/assets/html/admin/admin-logs.html">Logs</a>
+
+        <hr>
+
+        <p class="version">WMSU Merch Admin v1.0</p>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+        <!-- REPORT SUMMARY -->
+        <section class="report-summary">
+
+            <div class="report-card">
+                <h3>Total Reports</h3>
+                <p>18</p>
+            </div>
+
+            <div class="report-card">
+                <h3>Pending</h3>
+                <p>7</p>
+            </div>
+
+            <div class="report-card">
+                <h3>Resolved</h3>
+                <p>11</p>
+            </div>
+
+        </section>
+
+        <!-- REPORT LIST -->
+        <section class="report-panel">
+
+            <h3>Active Reports</h3>
+
+            <div class="report-row">
+                <span class="r-type">Fake Product</span>
+                <span class="r-target">BSCS Shirt Listing</span>
+                <span class="r-status pending">Pending</span>
+
+                <button class="view-btn">View</button>
+                <button class="resolve-btn">Resolve</button>
+            </div>
+
+            <div class="report-row">
+                <span class="r-type">Spam User</span>
+                <span class="r-target">user123</span>
+                <span class="r-status pending">Pending</span>
+
+                <button class="view-btn">View</button>
+                <button class="resolve-btn">Resolve</button>
+            </div>
+
+            <div class="report-row">
+                <span class="r-type">Suspicious Activity</span>
+                <span class="r-target">admin_alt</span>
+                <span class="r-status resolved">Resolved</span>
+
+                <button class="view-btn">View</button>
+                <button class="resolve-btn disabled">Resolved</button>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

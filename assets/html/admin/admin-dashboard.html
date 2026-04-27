@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - WMSU Merch</title>
+
+    <link rel="stylesheet" href="/assets/css/admin/admin-dashboard.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/settings.png">
+</head>
+<body>
+
+<header class="admin-header">
+
+    <div class="logo">
+        <h2>WMSU Merch Admin</h2>
+    </div>
+
+    <div class="admin-user">
+        <span id="admin-name">Admin</span>
+        <button id="logout-btn">Log out</button>
+    </div>
+
+</header>
+
+<div class="admin-container">
+
+    <aside class="admin-sidebar">
+
+        <a href="/assets/html/admin/admin-dashboard.html" class="active">Dashboard</a>
+        <a href="/assets/html/admin/admin-product.html">Products</a>
+        <a href="/assets/html/admin/admin-users.html">Users</a>
+        <a href="/assets/html/admin/admin-reports.html">Reports</a>
+        <a href="/assets/html/admin/admin-logs.html">Logs</a>
+
+        <hr>
+
+        <a href="/index.html">Back to Store</a>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <h1>Dashboard Overview</h1>
+
+        <div class="card-grid">
+
+            <div class="card">
+                <h3>Total Sales</h3>
+                <p>₱12,450</p>
+            </div>
+
+            <div class="card">
+                <h3>Orders</h3>
+                <p>34 Pending</p>
+            </div>
+
+            <div class="card">
+                <h3>Products</h3>
+                <p>18 Items</p>
+            </div>
+
+            <div class="card">
+                <h3>Users</h3>
+                <p>120 Registered</p>
+            </div>
+
+        </div>
+
+        <section class="admin-section">
+
+            <h2>Recent Activity</h2>
+
+            <ul>
+                <li>New order placed - BSCS Shirt</li>
+                <li>Product updated - BSIT Shirt</li>
+                <li>New user registered - john_doe</li>
+                <li>Admin updated price - ACT AD Shirt</li>
+            </ul>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="/assets/js/admin.js"></script>
+
+</body>
+</html>

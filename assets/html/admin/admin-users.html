@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Users Control</title>
+
+    <link rel="stylesheet" href="/assets/css/admin/admin-users.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/settings.png">
+</head>
+<body>
+
+<header class="admin-header">
+
+    <div class="logo">
+        <h2>User Management Panel</h2>
+    </div>
+
+    <div class="admin-actions">
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/assets/html/admin/admin-products.html">Products</a>
+        <button id="logout-btn">Log out</button>
+    </div>
+
+</header>
+
+<div class="admin-container">
+
+    <aside class="admin-sidebar">
+
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/assets/html/admin/admin-product.html">Products</a>
+        <a href="/assets/html/admin/admin-users.html" class="active">Users</a>
+        <a href="/assets/html/admin/admin-reports.html">Reports</a>
+        <a href="/assets/html/admin/admin-logs.html">Logs</a>
+
+        <hr>
+
+        <p class="version">WMSU Merch Admin v1.0</p>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <section class="user-stats">
+
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p>128</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Active Today</h3>
+                <p>42</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Flagged Accounts</h3>
+                <p>3</p>
+            </div>
+
+        </section>
+
+        <section class="user-panel">
+
+            <h3>User Accounts</h3>
+
+            <div class="user-row">
+                <span class="u-name">john_doe</span>
+                <span class="u-email">john@gmail.com</span>
+                <span class="u-role">User</span>
+
+                <button class="warn-btn">Warn</button>
+                <button class="ban-btn">Ban</button>
+            </div>
+
+            <div class="user-row">
+                <span class="u-name">admin_01</span>
+                <span class="u-email">admin@wmsu.edu</span>
+                <span class="u-role">Admin</span>
+
+                <button class="warn-btn">Warn</button>
+                <button class="ban-btn">Ban</button>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Logs</title>
+
+    <link rel="stylesheet" href="/assets/css/admin/admin-logs.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/settings.png">
+</head>
+<body>
+
+<header class="admin-header">
+
+    <div class="logo">
+        <h2>System Logs</h2>
+    </div>
+
+    <div class="admin-actions">
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/assets/html/admin/admin-product.html">Products</a>
+        <a href="/assets/html/admin/admin-users.html">Users</a>
+        <a href="/assets/html/admin/admin-reports.html">Reports</a>
+
+        <button id="logout-btn">Log out</button>
+    </div>
+
+</header>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/assets/html/admin/admin-product.html">Products</a>
+        <a href="/assets/html/admin/admin-users.html">Users</a>
+        <a href="/assets/html/admin/admin-reports.html">Reports</a>
+        <a href="/assets/html/admin/admin-logs.html" class="active">Logs</a>
+
+        <hr>
+
+        <p class="version">WMSU Merch Admin v1.0</p>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+        <section class="log-panel">
+
+            <h3>Activity Logs</h3>
+
+            <div class="log-entry">
+                <span class="log-time">10:32 AM</span>
+                <span class="log-action">Admin deleted product BSCS Shirt</span>
+                <span class="log-type danger">DELETE</span>
+            </div>
+
+            <div class="log-entry">
+                <span class="log-time">10:15 AM</span>
+                <span class="log-action">User john_doe was warned</span>
+                <span class="log-type warn">WARN</span>
+            </div>
+
+            <div class="log-entry">
+                <span class="log-time">09:50 AM</span>
+                <span class="log-action">Report resolved: Fake Product</span>
+                <span class="log-type ok">RESOLVE</span>
+            </div>
+
+            <div class="log-entry">
+                <span class="log-time">09:20 AM</span>
+                <span class="log-action">New product added: BSIT Shirt</span>
+                <span class="log-type info">CREATE</span>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

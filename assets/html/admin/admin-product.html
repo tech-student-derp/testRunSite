@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Products Control</title>
+
+    <link rel="stylesheet" href="/assets/css/admin/admin-products.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/settings.png">
+</head>
+<body>
+
+<header class="admin-header">
+
+    <div class="logo">
+        <h2>Product Control Panel</h2>
+    </div>
+
+    <div class="admin-actions">
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/index.html">Store</a>
+        <button id="logout-btn">Log out</button>
+    </div>
+
+</header>
+
+<div class="admin-container">
+
+    <aside class="admin-sidebar">
+
+        <a href="/assets/html/admin/admin-dashboard.html">Dashboard</a>
+        <a href="/assets/html/admin/admin-product.html" class="active">Products</a>
+        <a href="/assets/html/admin/admin-users.html">Users</a>
+        <a href="/assets/html/admin/admin-reports.html">Reports</a>
+        <a href="/assets/html/admin/admin-logs.html">Logs</a>
+
+        <hr>
+
+        <p class="version">WMSU Merch Admin v1.0</p>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <section class="activity-panel">
+
+            <h3>Recent Product Activity</h3>
+
+            <ul>
+                <li>BSCS Shirt added (system sync)</li>
+                <li>BSIT Shirt price updated</li>
+                <li>ACT AD Shirt flagged for review</li>
+                <li>Old product removed from store</li>
+            </ul>
+
+        </section>
+
+        <section class="product-panel">
+
+            <h3>All Products (Control View)</h3>
+
+            <div class="product-row">
+                <span class="p-name">BSCS Shirt</span>
+                <span class="p-seller">Seller: CCS Store</span>
+                <span class="p-price">₱259</span>
+
+                <button class="flag-btn">Flag</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+
+            <div class="product-row">
+                <span class="p-name">BSIT Shirt</span>
+                <span class="p-seller">Seller: CCS Store</span>
+                <span class="p-price">₱259</span>
+
+                <button class="flag-btn">Flag</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

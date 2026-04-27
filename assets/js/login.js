@@ -12,29 +12,42 @@ function togglePassword(inputId, icon) {
 
 const toggleIcon = document.getElementById("toggle-pass");
 const form = document.querySelector("form");
-
-toggleIcon.addEventListener("click", () => {
-    togglePassword("login-password", toggleIcon);
-});
+const loginBtn = document.getElementById("login-btn");
 
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const username = form[0].value.trim();
-    const password = form[1].value;
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value;
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    loginBtn.disabled = true;
+    loginBtn.innerText = "Logging in...";
 
-    const user = users.find(u =>
-        u.username === username && u.password === password
-    );
+    setTimeout(() => {
+        const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    if (!user) {
-        alert("Invalid username or password");
-        return;
-    }
+        let user = users.find(u => u.username === username);
 
-    alert(`Welcome back, ${user.username}`);
+        if (!user) {
+            const temp = JSON.parse(localStorage.getItem("tempUser"));
+            if (temp && temp.username === username) {
+                user = temp;
+            }
+        }
 
-    window.location.href = "/index.html";
+        if (!user) {
+            alert("User not found");
+
+            loginBtn.disabled = false;
+            loginBtn.innerText = "Login";
+            return;
+        }
+
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+        alert(`Welcome back, ${user.username}`);
+
+        window.location.href = "/index.html";
+
+    }, 600);
 });
