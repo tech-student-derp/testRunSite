@@ -39,6 +39,16 @@ form.addEventListener("submit", (e) => {
             return;
         }
 
+        if (username === "MERCHANT" && password === "12345") {
+            localStorage.setItem("loggedInUser", JSON.stringify({
+                username: "MERCHANT",
+                role: "merchant"
+            }));
+
+            window.location.href = "/assets/html/merchant/merchant-dashboard.html";
+            return;
+        }
+
         const users = JSON.parse(localStorage.getItem("users")) || [];
 
         const user = users.find(u =>
