@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Dashboard - WMSU Merch</title>
+
+    <link rel="stylesheet" href="/assets/css/merchant/merchant-dashboard.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/settings.png">
+</head>
+<body>
+
+<header class="admin-header">
+
+    <div class="logo">
+        <h2>Merchant Dashboard</h2>
+    </div>
+
+    <div class="admin-user">
+        <span id="admin-name">Welcome, Merchant</span>
+        <button id="logout-btn">Log out</button>
+    </div>
+
+</header>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <a href="/assets/html/merchant/merchant-dashboard.html" class="active">Dashboard</a>
+        <a href="/assets/html/merchant/merchant-product.html">Products</a>
+        <a href="/assets/html/merchant/merchant-customers.html">Customers</a>
+        <a href="/assets/html/merchant/merchant-mail.html">Mail</a>
+
+        <hr>
+
+        <a href="/index.html">Back to Store</a>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="admin-main">
+
+        <h1>Business Overview</h1>
+
+        <div class="card-grid">
+
+            <div class="card">
+                <h3>Total Revenue</h3>
+                <p>₱12,450</p>
+            </div>
+
+            <div class="card">
+                <h3>Pending Orders</h3>
+                <p>34</p>
+            </div>
+
+            <div class="card">
+                <h3>Active Products</h3>
+                <p>18</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Customers</h3>
+                <p>120</p>
+            </div>
+
+        </div>
+
+        <section class="admin-section">
+
+            <h2>Recent Activity</h2>
+
+            <ul>
+                <li>Order received - BSCS Shirt</li>
+                <li>Product updated - BSIT Shirt stock adjusted</li>
+                <li>New customer registered - john_doe</li>
+                <li>Price updated - ACT AD Shirt</li>
+            </ul>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="/assets/js/admin.js"></script>
+
+</body>
+</html>

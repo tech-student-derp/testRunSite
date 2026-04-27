@@ -12,40 +12,51 @@ function togglePassword(inputId, icon) {
 
 const toggleIcon = document.getElementById("toggle-pass");
 const form = document.querySelector("form");
-const loginBtn = document.getElementById("login-btn");
+const loginBtn = form.querySelector("button[type='submit']");
+
+toggleIcon.addEventListener("click", () => {
+    togglePassword("login-password", toggleIcon);
+});
 
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("login-username").value.trim();
-    const password = document.getElementById("login-password").value;
+    const username = form[0].value.trim();
+    const password = form[1].value;
 
     loginBtn.disabled = true;
     loginBtn.innerText = "Logging in...";
 
     setTimeout(() => {
-        const users = JSON.parse(localStorage.getItem("users")) || [];
 
-        let user = users.find(u => u.username === username);
+        if (username === "ADMIN" && password === "69420") {
+            localStorage.setItem("loggedInUser", JSON.stringify({
+                username: "ADMIN",
+                role: "admin"
+            }));
 
-        if (!user) {
-            const temp = JSON.parse(localStorage.getItem("tempUser"));
-            if (temp && temp.username === username) {
-                user = temp;
-            }
+            window.location.href = "/assets/html/admin/admin-dashboard.html";
+            return;
         }
 
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const user = users.find(u =>
+            u.username === username && u.password === password
+        );
+
         if (!user) {
-            alert("User not found");
+            alert("Invalid username or password");
 
             loginBtn.disabled = false;
             loginBtn.innerText = "Login";
             return;
         }
 
-        localStorage.setItem("loggedInUser", JSON.stringify(user));
-
-        alert(`Welcome back, ${user.username}`);
+        localStorage.setItem("loggedInUser", JSON.stringify({
+            ...user,
+            role: "user"
+        }));
 
         window.location.href = "/index.html";
 
