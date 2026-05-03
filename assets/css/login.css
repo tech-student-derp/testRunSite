@@ -1,3 +1,15 @@
+:root {
+    --primary: #c40000;
+    --primary-dark: #720000;
+    --ink: #111111;
+    --muted: #666666;
+    --line: #dddddd;
+    --surface: #ffffff;
+    --danger: #b00020;
+    --success: #137333;
+    --radius: 10px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,170 +18,206 @@
 }
 
 body {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: linear-gradient(135deg, #c40000, #6b0000);
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--ink);
 }
 
-.login-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
 }
 
-.login-box {
-    width: 450px;
-    padding: 3rem;
-
-    background: #fff;
-    border-radius: 18px;
-
+.auth-card {
+    width: min(100%, 460px);
+    position: relative;
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 2.4rem;
     box-shadow: 0 25px 70px rgba(0,0,0,0.35);
-
-    text-align: center;
-}
-
-.brand {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.6rem;
-}
-
-.brand img {
-    width: 70px;
-    height: 70px;
-}
-
-.brand h2 {
-    font-size: 1.6rem;
-}
-
-.sub {
-    font-size: 1rem;
-    color: #666;
-    margin: 0.8rem 0 1.8rem;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-input {
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-
-    font-size: 1rem;
-    outline: none;
-    transition: 0.2s;
-}
-
-input:focus {
-    border-color: #c40000;
-    box-shadow: 0 0 10px rgba(196,0,0,0.25);
-}
-
-button {
-    padding: 1rem;
-    border: none;
-    border-radius: 12px;
-
-    background: #000;
-    color: #fff;
-
-    font-weight: bold;
-    font-size: 1rem;
-
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: #2c2c2c;
-}
-
-.meta {
-    margin-top: 1.5rem;
-    font-size: 0.95rem;
-}
-
-.meta a {
-    color: #c40000;
-    text-decoration: none;
 }
 
 .back-btn {
     position: absolute;
-    top: 15px;
-    left: 15px;
-
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: bold;
-
-    color: #555;
+    top: 1rem;
+    left: 1rem;
+    color: #333333;
     background: #f2f2f2;
-
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
     padding: 0.4rem 0.7rem;
     border-radius: 8px;
-
-    transition: 0.2s;
 }
 
 .back-btn:hover {
-    background: #ddd;
-    color: #000;
+    background: #dddddd;
 }
 
-.login-box {
-    position: relative;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 1.2rem;
+}
+
+.brand img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.eyebrow {
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.brand h1 {
+    font-size: 1.65rem;
+}
+
+.sub {
+    color: var(--muted);
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+}
+
+form,
+label {
+    display: flex;
+    flex-direction: column;
+}
+
+form {
+    gap: 1rem;
+}
+
+label {
+    gap: 0.45rem;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    outline: none;
+    font: inherit;
+}
+
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(196,0,0,0.14);
 }
 
 .pass-box {
     position: relative;
-    width: 100%;
 }
 
 .pass-box input {
-    width: 100%;
-    padding: 0.8rem 2.8rem 0.8rem 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    box-sizing: border-box;
+    padding-right: 3rem;
 }
 
-.pass-box .toggle {
+.toggle-pass {
     position: absolute;
-    right: 10px;
     top: 50%;
+    right: 0.55rem;
     transform: translateY(-50%);
-
-    width: 35px;
-    height: 22px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
     cursor: pointer;
-    opacity: 0.75;
-    transition: 0.2s;
 }
 
-.pass-box .toggle img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
+.toggle-pass:hover {
+    background: #f2f2f2;
 }
 
-.pass-box .toggle:hover {
-    opacity: 1;
+.toggle-pass img {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+}
+
+#login-btn,
+.demo-box,
+.meta {
+    margin-top: 0.25rem;
+}
+
+#login-btn {
+    min-height: 48px;
+    border: none;
+    border-radius: var(--radius);
+    background: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#login-btn:hover {
+    background: #2c2c2c;
+}
+
+#login-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.form-message {
+    min-height: 1.2rem;
+    color: var(--danger);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.form-message.success {
+    color: var(--success);
+}
+
+.demo-box {
+    background: #f7f7f7;
+    border: 1px solid #eeeeee;
+    border-radius: var(--radius);
+    padding: 0.9rem;
+    color: #444444;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+code {
+    background: #eeeeee;
+    padding: 0.08rem 0.25rem;
+    border-radius: 4px;
+}
+
+.meta {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.meta a {
+    color: var(--primary);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+@media (max-width: 520px) {
+    .auth-card {
+        padding: 2rem 1.2rem;
+    }
+
+    .brand {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }

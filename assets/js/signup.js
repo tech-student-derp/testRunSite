@@ -1,22 +1,20 @@
-function togglePass(id, el) {
-    const input = document.getElementById(id);
+const allowedDomains = ["gmail.com", "outlook.com", "yahoo.com", "hotmail.com", "icloud.com"];
 
-    if (input.type === "password") {
-        input.type = "text";
-        el.src = "/assets/img/ico/eye-open.png";
-    } else {
-        input.type = "password";
-        el.src = "/assets/img/ico/eye-close.png";
+const form = document.getElementById("signup-form");
+const signupBtn = document.getElementById("signup-btn");
+const signupMessage = document.getElementById("signup-message");
+const checkbox = document.getElementById("agree-check");
+const acceptBtn = document.getElementById("accept-btn");
+const overlayTerms = document.getElementById("terms-overlay");
+
+function getUsers() {
+    try {
+        const users = JSON.parse(localStorage.getItem("users"));
+        return Array.isArray(users) ? users : [];
+    } catch {
+        return [];
     }
 }
-
-const allowedDomains = [
-    "gmail.com",
-    "outlook.com",
-    "yahoo.com",
-    "hotmail.com",
-    "icloud.com"
-];
 
 function isValidEmail(email) {
     const basicPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,55 +24,101 @@ function isValidEmail(email) {
     return allowedDomains.includes(domain);
 }
 
-const form = document.querySelector("form");
+function isValidPhone(phone) {
+    return /^09\d{9}$/.test(phone);
+}
 
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
+function setMessage(message, isSuccess = false) {
+    signupMessage.textContent = message;
+    signupMessage.classList.toggle("success", isSuccess);
+}
 
-    const given = form[0].value.trim();
-    const middle = form[1].value.trim();
-    const surname = form[2].value.trim();
+function togglePassword(button) {
+    const input = document.getElementById(button.dataset.target);
+    const icon = button.querySelector("img");
+    if (!input || !icon) return;
 
-    const username = form[3].value.trim();
-    const email = form[4].value.trim();
-    const phone = form[5].value.trim();
-    const birthdate = form[6].value;
-    const sex = form[7].value;
-    const course = form[8].value.trim();
-    const year = form[9].value;
+    const showPassword = input.type === "password";
+    input.type = showPassword ? "text" : "password";
+    icon.src = showPassword ? "/assets/img/ico/eye-open.png" : "/assets/img/ico/eye-close.png";
+    button.setAttribute("aria-label", showPassword ? "Hide password" : "Show password");
+}
 
-    const password = form[10].value;
-    const confirmPassword = form[11].value;
+document.querySelectorAll(".toggle-pass").forEach(button => {
+    button.addEventListener("click", () => togglePassword(button));
+});
 
-    if (password !== confirmPassword) {
-        alert("Passwords do not match.");
+checkbox.addEventListener("change", () => {
+    acceptBtn.disabled = !checkbox.checked;
+});
+
+acceptBtn.addEventListener("click", () => {
+    overlayTerms.classList.add("hidden");
+    signupBtn.disabled = false;
+});
+
+form.addEventListener("submit", event => {
+    event.preventDefault();
+    setMessage("");
+
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        setMessage("Please complete all required fields.");
         return;
     }
 
-    if (password.length < 6) {
-        alert("Password must be at least 6 characters");
+    const formData = new FormData(form);
+    const given = formData.get("given").trim();
+    const middle = formData.get("middle").trim();
+    const surname = formData.get("surname").trim();
+    const username = formData.get("username").trim();
+    const email = formData.get("email").trim();
+    const phone = formData.get("phone").trim();
+    const birthdate = formData.get("birthdate");
+    const sex = formData.get("sex");
+    const course = formData.get("course").trim().toUpperCase();
+    const year = formData.get("year");
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
+
+    if (username.length < 3) {
+        setMessage("Username must be at least 3 characters.");
         return;
     }
 
     if (!isValidEmail(email)) {
-        alert("Please enter a valid email (gmail, outlook, yahoo, etc).");
+        setMessage("Please use a valid email domain like Gmail, Outlook, Yahoo, Hotmail, or iCloud.");
         return;
     }
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+    if (!isValidPhone(phone)) {
+        setMessage("Phone number must use the format 09XXXXXXXXX.");
+        return;
+    }
 
-    const userExists = users.some(user =>
-        user.username === username || user.email === email
-    );
+    if (password.length < 6) {
+        setMessage("Password must be at least 6 characters.");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        setMessage("Passwords do not match.");
+        return;
+    }
+
+    const users = getUsers();
+    const userExists = users.some(user => {
+        return user.username?.toLowerCase() === username.toLowerCase() || user.email?.toLowerCase() === email.toLowerCase();
+    });
 
     if (userExists) {
-        alert("Username or email already exists.");
+        setMessage("Username or email already exists.");
         return;
     }
 
     const tempUser = {
         id: Date.now(),
-        name: `${given} ${middle ? middle + "." : ""} ${surname}`,
+        name: `${given} ${middle ? middle + "." : ""} ${surname}`.replace(/\s+/g, " ").trim(),
         given,
         middle,
         surname,
@@ -86,32 +130,14 @@ form.addEventListener("submit", (e) => {
         course,
         year,
         password,
+        role: "user",
         verified: false
     };
 
     localStorage.setItem("tempUser", JSON.stringify(tempUser));
+    setMessage("Account details saved. Redirecting to OTP...", true);
 
-    window.location.href = "/assets/html/otp.html";
-});
-
-const checkbox = document.getElementById("agree-check");
-const acceptBtn = document.getElementById("accept-btn");
-const overlayTerms = document.getElementById("terms-overlay");
-const signupBtn = document.querySelector("form button");
-
-signupBtn.disabled = true;
-
-checkbox.addEventListener("change", () => {
-    if (checkbox.checked) {
-        acceptBtn.disabled = false;
-        acceptBtn.classList.add("active");
-    } else {
-        acceptBtn.disabled = true;
-        acceptBtn.classList.remove("active");
-    }
-});
-
-acceptBtn.addEventListener("click", () => {
-    overlayTerms.style.display = "none";
-    signupBtn.disabled = false;
+    window.setTimeout(() => {
+        window.location.href = "/assets/html/otp.html";
+    }, 450);
 });

@@ -3,38 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Account</title>
+    <title>Verify Account - WMSU Merch</title>
     <link rel="stylesheet" href="/assets/css/otp.css">
-
     <link rel="icon" type="image/x-icon" href="/assets/img/ico/WMSU logo.png">
 </head>
 <body>
 
-<div class="otp-wrap">
+<main class="otp-page">
+    <section class="otp-card" aria-labelledby="otp-title">
+        <a href="/assets/html/signup.html" class="back-btn">← Back</a>
 
-    <div class="otp-box">
+        <div class="brand">
+            <img src="/assets/img/ico/WMSU logo.png" alt="WMSU logo">
+            <div>
+                <p class="eyebrow">Mock verification</p>
+                <h1 id="otp-title">Verify Your Account</h1>
+            </div>
+        </div>
 
-        <h2>Verify Your Account</h2>
-        <p>We sent a 6-digit code to your email</p>
+        <p id="otp-help" class="sub">We generated a 6-digit demo code for your signup email.</p>
+        <p id="email-target" class="email-target"></p>
 
-        <input type="text" id="otp-input" maxlength="6" placeholder="Enter Code">
+        <div class="otp-inputs" aria-label="Enter 6-digit verification code">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 1">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6">
+        </div>
 
-        <button id="verify-btn">Verify</button>
+        <p id="msg" class="form-message" role="status"></p>
 
-        <button id="resend-btn">Resend Code (10)</button>
+        <button id="verify-btn" type="button">Verify Account</button>
+        <button id="resend-btn" type="button">Resend Code</button>
 
-        <p id="msg"></p>
-
-    </div>
-
-</div>
+        <div class="hint-box">
+            <strong>Demo only:</strong>
+            <span>No real email is sent. The generated code appears in the popup for testing.</span>
+        </div>
+    </section>
+</main>
 
 <div id="otp-overlay" class="otp-overlay">
-    <div class="otp-modal">
-        <h3 id="otp-title">Message</h3>
+    <section class="otp-modal" aria-labelledby="modal-title">
+        <h2 id="modal-title">Demo Code Sent</h2>
         <p id="otp-text">...</p>
-        <button id="otp-close">OK</button>
-    </div>
+        <div id="mock-code" class="mock-code"></div>
+        <button id="otp-close" type="button">Use Code</button>
+    </section>
 </div>
 
 <script src="/assets/js/otp.js"></script>

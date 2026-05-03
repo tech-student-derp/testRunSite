@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="/assets/css/checkout.css">
+</head>
+
+<body>
+
+<header class="checkout-header">
+    <button id="back-btn" type="button" aria-label="Go back to shop">← Back</button>
+    <h2>Checkout</h2>
+</header>
+
+<main class="checkout-container">
+
+    <section id="cart-items" aria-live="polite"></section>
+
+    <aside class="checkout-summary" aria-label="Order summary">
+        <h3>Order Summary</h3>
+        <p class="total-price">₱0</p>
+
+        <button id="pay-btn" type="button">Proceed to Payment</button>
+    </aside>
+
+</main>
+
+<script src="/assets/js/checkout.js"></script>
+</body>
+</html>

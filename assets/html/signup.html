@@ -6,117 +6,147 @@
     <title>Sign Up - WMSU Merch</title>
     <link rel="stylesheet" href="/assets/css/signup.css">
 </head>
-<div id="terms-overlay">
-    <div class="terms-box">
+<body>
 
-        <h2>Terms and Conditions</h2>
+<div id="terms-overlay" class="terms-overlay">
+    <section class="terms-box" aria-labelledby="terms-title">
+        <h2 id="terms-title">Terms and Conditions</h2>
 
         <div class="terms-content">
-            <p>
-                By creating an account on WMSU Merch, you agree to provide accurate and complete information including your personal, academic, and contact details. You acknowledge that this platform is a mock e-commerce system developed for educational purposes.
-            </p>
-
-            <p>
-                Users are responsible for maintaining the confidentiality of their login credentials. Any misuse, unauthorized access, or false information submitted may result in restriction or removal of account access within the system.
-            </p>
-
-            <p>
-                This platform does not process real payments and all displayed transactions are simulated. Product information, reviews, and availability are for demonstration purposes only and may not reflect real-world data.
-            </p>
-
-            <p>
-                By continuing, you consent to the temporary storage of your data using browser-based technologies such as localStorage. No real backend database is used in this system.
-            </p>
-
-            <p>
-                You agree to use this system responsibly and acknowledge that all interactions are part of an academic requirement.
-            </p>
+            <p>By creating an account on WMSU Merch, you agree to provide accurate personal, academic, and contact information for this mock e-commerce system.</p>
+            <p>Users are responsible for keeping their login credentials private. False information or misuse may result in account restrictions inside the demo system.</p>
+            <p>This platform does not process real payments. Product details, reviews, availability, and transactions are simulated for educational purposes.</p>
+            <p>Your submitted data is stored temporarily in browser localStorage. No real backend database is used in this project.</p>
+            <p>You agree to use this system responsibly as part of an academic requirement.</p>
         </div>
 
         <div class="terms-actions">
-            <label>
+            <label class="check-row">
                 <input type="checkbox" id="agree-check">
-                I Agree to the Terms and Conditions
+                <span>I agree to the Terms and Conditions</span>
             </label>
 
-            <button id="accept-btn" disabled>Continue</button>
+            <button id="accept-btn" type="button" disabled>Continue</button>
         </div>
-
-    </div>
+    </section>
 </div>
-<body>
 
-<div class="signup-wrap">
-
-    <div class="signup-box">
-
+<main class="auth-page">
+    <section class="auth-card" aria-labelledby="signup-title">
         <a href="/index.html" class="back-btn">← Back</a>
 
         <div class="brand">
             <img src="/assets/img/ico/WMSU logo.png" alt="WMSU logo">
-            <h2>Create Account</h2>
+            <div>
+                <p class="eyebrow">Student account</p>
+                <h1 id="signup-title">Create Account</h1>
+            </div>
         </div>
 
-        <p class="sub">Join WMSU Merch</p>
+        <p class="sub">Join WMSU Merch and save your checkout details for demo orders.</p>
 
-        <form>
-
+        <form id="signup-form" novalidate>
             <div class="name-group">
+                <label>
+                    Given Name
+                    <input id="given-name" name="given" type="text" placeholder="Juan" autocomplete="given-name" required>
+                </label>
 
-                <input type="text" placeholder="Given Name" required>
+                <label>
+                    M.I.
+                    <input id="middle-initial" name="middle" type="text" placeholder="D" maxlength="2">
+                </label>
 
-                <input type="text" placeholder="M.I." maxlength="2">
-
-                <input type="text" placeholder="Surname" required>
-
+                <label>
+                    Surname
+                    <input id="surname" name="surname" type="text" placeholder="Dela Cruz" autocomplete="family-name" required>
+                </label>
             </div>
 
-            <input type="text" placeholder="Username" required>
+            <div class="form-grid">
+                <label>
+                    Username
+                    <input id="username" name="username" type="text" placeholder="juan_ccs" autocomplete="username" required>
+                </label>
 
-            <input type="email" placeholder="Email Address" required>
-
-            <input type="text" placeholder="Phone Number" required>
-
-            <input type="date" placeholder="Birth Date" required>
-
-            <select required>
-                <option value="" disabled selected>Sex</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Prefer not to say</option>
-            </select>
-
-            <input type="text" placeholder="College Course (e.g. BSCS, BSIT)" required>
-
-            <select required>
-                <option value="" disabled selected>Year Level</option>
-                <option>1st Year</option>
-                <option>2nd Year</option>
-                <option>3rd Year</option>
-                <option>4th Year</option>
-            </select>
-
-            <div class="pass-box">
-                <input type="password" id="password" placeholder="Password" required>
-                <img src="/assets/img/ico/eye-close.png" class="toggle" onclick="togglePass('password', this)">
+                <label>
+                    Email Address
+                    <input id="email" name="email" type="email" placeholder="name@gmail.com" autocomplete="email" required>
+                </label>
             </div>
 
-            <div class="pass-box">
-                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-                <img src="/assets/img/ico/eye-close.png" class="toggle" onclick="togglePass('confirmPassword', this)">
+            <div class="form-grid">
+                <label>
+                    Phone Number
+                    <input id="phone" name="phone" type="tel" placeholder="09XXXXXXXXX" autocomplete="tel" required>
+                </label>
+
+                <label>
+                    Birth Date
+                    <input id="birthdate" name="birthdate" type="date" required>
+                </label>
             </div>
 
-            <button type="submit">Sign Up</button>
+            <div class="form-grid">
+                <label>
+                    Sex
+                    <select id="sex" name="sex" required>
+                        <option value="" disabled selected>Choose sex</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Prefer not to say</option>
+                    </select>
+                </label>
 
+                <label>
+                    Year Level
+                    <select id="year" name="year" required>
+                        <option value="" disabled selected>Choose year level</option>
+                        <option>1st Year</option>
+                        <option>2nd Year</option>
+                        <option>3rd Year</option>
+                        <option>4th Year</option>
+                    </select>
+                </label>
+            </div>
+
+            <label>
+                College Course
+                <input id="course" name="course" type="text" placeholder="Example: BSCS, BSIT" required>
+            </label>
+
+            <div class="form-grid">
+                <label>
+                    Password
+                    <div class="pass-box">
+                        <input type="password" id="password" name="password" placeholder="At least 6 characters" autocomplete="new-password" required>
+                        <button class="toggle-pass" type="button" data-target="password" aria-label="Show password">
+                            <img src="/assets/img/ico/eye-close.png" alt="">
+                        </button>
+                    </div>
+                </label>
+
+                <label>
+                    Confirm Password
+                    <div class="pass-box">
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat password" autocomplete="new-password" required>
+                        <button class="toggle-pass" type="button" data-target="confirmPassword" aria-label="Show password">
+                            <img src="/assets/img/ico/eye-close.png" alt="">
+                        </button>
+                    </div>
+                </label>
+            </div>
+
+            <p id="signup-message" class="form-message" role="status"></p>
+
+            <button type="submit" id="signup-btn" disabled>Sign Up</button>
         </form>
 
         <div class="meta">
-            <p>Already Have an Account? <a href="/assets/html/login.html">Log In</a></p>
+            <p>Already have an account? <a href="/assets/html/login.html">Log in</a></p>
         </div>
-
-    </div>
-
-</div>
+    </section>
+</main>
 
 <script src="/assets/js/signup.js"></script>
 </body>

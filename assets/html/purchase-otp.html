@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Verification - WMSU Merch</title>
+    <link rel="stylesheet" href="/assets/css/purchase-otp.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/WMSU logo.png">
+</head>
+<body>
+
+<main class="verify-page">
+    <section class="verify-card" aria-labelledby="verify-title">
+        <a href="/assets/html/payment-method.html" class="back-btn">← Back</a>
+
+        <div class="brand">
+            <img src="/assets/img/ico/WMSU logo.png" alt="WMSU logo">
+            <div>
+                <p class="eyebrow">Purchase OTP</p>
+                <h1 id="verify-title">Verify Transaction</h1>
+            </div>
+        </div>
+
+        <p class="sub">A mock 6-digit code was generated for this purchase. No real email or payment gateway is used.</p>
+
+        <div class="transaction-card">
+            <div>
+                <span>Transaction</span>
+                <strong id="txn-id">-</strong>
+            </div>
+            <div>
+                <span>Payment</span>
+                <strong id="txn-method">-</strong>
+            </div>
+            <div>
+                <span>Total</span>
+                <strong id="txn-total">₱0</strong>
+            </div>
+        </div>
+
+        <div class="otp-inputs" aria-label="Enter 6-digit purchase verification code">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 1">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6">
+        </div>
+
+        <p id="verify-message" class="form-message" role="status"></p>
+
+        <button id="verify-purchase-btn" type="button">Complete Transaction</button>
+        <button id="resend-btn" type="button">Resend Code</button>
+        <button id="fail-btn" type="button">Mark as Failed</button>
+    </section>
+</main>
+
+<div id="otp-overlay" class="otp-overlay">
+    <section class="otp-modal" aria-labelledby="modal-title">
+        <h2 id="modal-title">Mock Purchase Code</h2>
+        <p id="otp-text">Use this code to complete the demo transaction.</p>
+        <div id="mock-code" class="mock-code"></div>
+        <button id="otp-close" type="button">Use Code</button>
+    </section>
+</div>
+
+<script src="/assets/js/purchase-otp.js"></script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+:root {
+    --bg: #f4f4f4;
+    --card: #ffffff;
+    --text: #111;
+    --muted: #666;
+    --line: #dddddd;
+    --primary: #c40000;
+    --primary-dark: #900000;
+    --black: #000;
+    --success: #137333;
+    --danger: #b00020;
+    --radius: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.payment-header {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.payment-header h2 {
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
+}
+
+#back-btn {
+    background: linear-gradient(135deg, #000, #333);
+    color: white;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#back-btn:hover {
+    transform: translateX(-3px);
+    background: #333;
+}
+
+.payment-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+    gap: 2rem;
+    align-items: start;
+}
+
+.payment-panel,
+.order-summary {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.payment-panel {
+    padding: 1.5rem;
+}
+
+.payment-panel h1,
+.order-summary h2 {
+    margin-bottom: 1.25rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: var(--text);
+    font-weight: bold;
+}
+
+input,
+textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font: inherit;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    outline: 2px solid rgba(196,0,0,0.25);
+    border-color: var(--primary);
+}
+
+.method-group {
+    border: none;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.method-group legend {
+    margin-bottom: 0.75rem;
+    font-weight: bold;
+}
+
+.method-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.method-card:has(input:checked) {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(196,0,0,0.12);
+}
+
+.method-card input {
+    width: auto;
+    margin-top: 0.25rem;
+}
+
+.method-card small {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--muted);
+    font-weight: normal;
+}
+
+.method-fields {
+    display: grid;
+    gap: 1rem;
+}
+
+.form-message {
+    min-height: 1.25rem;
+    color: var(--danger);
+    font-weight: bold;
+}
+
+.form-message.success {
+    color: var(--success);
+}
+
+#place-order-btn {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    padding: 0.85rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#place-order-btn:hover {
+    background: var(--primary-dark);
+}
+
+#place-order-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.order-summary {
+    padding: 1.5rem;
+    position: sticky;
+    top: 1rem;
+}
+
+#summary-items {
+    display: grid;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.summary-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.summary-item img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.summary-item h3 {
+    font-size: 0.95rem;
+    overflow-wrap: anywhere;
+}
+
+.summary-item p {
+    margin-top: 0.2rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.summary-row,
+.summary-total {
+    border-top: 1px solid var(--line);
+    padding-top: 0.9rem;
+    margin-top: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.summary-total {
+    font-size: 1.25rem;
+}
+
+.empty-order {
+    color: var(--muted);
+    text-align: center;
+    padding: 1rem 0;
+}
+
+@media (max-width: 820px) {
+    .payment-header {
+        padding: 1rem;
+    }
+
+    .payment-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+        position: static;
+    }
+}

@@ -201,3 +201,5 @@ body {
 .delete-btn:hover {
     background: #dc2626;
 }
+
+.mock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.mock-panel{background:white;padding:1.5rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.06)}.mock-panel h3{margin-bottom:1rem}.metric-line{display:flex;justify-content:space-between;gap:1rem;padding:.75rem 0;border-bottom:1px solid #eee}.metric-line:last-child{border-bottom:none}.panel-note{color:#6b7280;line-height:1.5;margin-top:.7rem}@media(max-width:900px){.admin-container{flex-direction:column}.admin-sidebar{width:100%}.mock-grid{grid-template-columns:1fr}.product-row{flex-wrap:wrap;gap:.75rem}}

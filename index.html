@@ -6,226 +6,284 @@
     <title>WMSU Merch</title>
     <link rel="icon" type="image/png" href="assets/img/ico/WMSU logo.png">
     <link rel="stylesheet" href="assets/css/main.css">
-
-    
 </head>
 <body>
-    <header class="header">
+    <header class="site-header">
+        <nav class="navbar" aria-label="Main navigation">
+            <button id="menu-btn" class="icon-btn menu-btn" type="button" aria-label="Open menu">☰</button>
 
-        <nav class="navbar">
-            <button id="menu-btn" class="menu-btn">☰ </button>
-            <div class="logo-and-title">
-                <img src="assets/img/ico/WMSU logo.png" alt="WMSU logo" class="icon">
-                <h3 class="title">WMSU Merch</h3>
-            </div>
+            <a class="brand" href="index.html">
+                <img src="assets/img/ico/WMSU logo.png" alt="WMSU logo" class="brand-logo">
+                <span>WMSU Merch</span>
+            </a>
 
-            <div class="menu-box">
-                <ul class="menu">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contacts</a></li>
-                    <li><a href="#">Pricing</a></li>
-                </ul>
+            <ul class="nav-links">
+                <li><a href="#products">Products</a></li>
+                <li><a href="/assets/html/order-history.html">History</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#support">Support</a></li>
+            </ul>
 
-                <div id="auth-area">
-                    <button class="login-btn">
-                        <a href="/assets/html/login.html">Login</a>
-                    </button>
-
-                    <button class="signup-btn">
-                        <a href="/assets/html/signup.html">Sign Up</a>
-                    </button>
-                </div>
+            <div id="auth-area" class="auth-area">
+                <a class="nav-action ghost" href="/assets/html/login.html">Login</a>
+                <a class="nav-action" href="/assets/html/signup.html">Sign Up</a>
             </div>
         </nav>
-
-        <div class="search-box">
-
-            <select class="sort-dropdown">
-                <option value="latest">Latest</option>
-                <option value="popular">Most Popular</option>
-                <option value="low-high">Price: Low to High</option>
-                <option value="high-low">Price: High to Low</option>
-            </select>
-
-            <form class="search-form">
-                <input type="text" placeholder="Search for products" class="searchbar">
-                <button type="submit" class="search-btn">Search</button>
-            </form>
-
-            <div class="category-bar">
-                <a href="#">Shirts</a>
-                <a href="#">Lanyards</a>
-                <a href="#">Stickers</a>
-                <a href="#" class="disabled">Accessories</a>
-                <a href="#" class="disabled">Hoodies</a>
-            </div>
-
-        </div>
-
     </header>
 
-    <main class="main-page">
-        <h1>Hot picks for CCS Students</h1>
-        <h3>Shirts<br><br></h3>
-        <div class="product-container">
-            <div class="product-grid">
-
-                <div class="product-card" data-id="bs-shirt">
-                    <a href="#">
-                        <img src="assets/img/bs-shirt.png" class="product-img">
-                    </a>
-                    <p class="prod-name"><b>BSCS Shirt</b></p>
-                    <p class="price">₱259</p>
-                    <button class="preorder-btn">Preorder</button>
+    <main>
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <p class="eyebrow">CCS Student Merchandise</p>
+                <h1 id="hero-title">WMSU Merch</h1>
+                <p>Browse student-made shirt drops, check details quickly, and preorder your CCS favorites in a few clicks.</p>
+                <div class="hero-actions">
+                    <a class="primary-link" href="#products">Shop Products</a>
+                    <a class="secondary-link" href="/assets/html/checkout.html">View Cart <span id="cart-count">0</span></a>
+                    <a class="secondary-link" href="/assets/html/order-history.html">Order History</a>
                 </div>
-
-                <div class="product-card" data-id="bs-shirt-2">
-                    <a href="#">
-                        <img src="assets/img/bs-shirt-2.png" class="product-img">
-                    </a>
-                    <p class="prod-name"><b>BSIT Shirt</b></p>
-                    <p class="price">₱259</p>
-                    <button class="preorder-btn">Preorder</button>
-                </div>
-
-                <div class="product-card" data-id="bs-shirt-3">
-                    <a href="#">
-                        <img src="assets/img/bs-shirt-3.png" class="product-img">
-                    </a>
-                    <p class="prod-name"><b>ACT AD Shirt</b></p>
-                    <p class="price">₱259</p>
-                    <button class="preorder-btn">Preorder</button>
-                </div>
-
-                <div class="product-card" data-id="bs-it-3">
-                    <a href="#">
-                        <img src="assets/img/bs-it-3.jpg" class="product-img">
-                    </a>
-                    <p class="prod-name"><b>BSIT Shirt</b></p>
-                    <p class="price">₱259</p>
-                    <button class="preorder-btn">Preorder</button>
-                </div>
-
-                <div class="product-card" data-id="act-ad-2">
-                    <a href="#">
-                        <img src="assets/img/act-ad-2.jpg" class="product-img">
-                    </a>
-                    <p class="prod-name"><b>ACT AD Shirt</b></p>
-                    <p class="price">₱259</p>
-                    <button class="preorder-btn">Preorder</button>
-                </div>
-
-                <div class="product-card" data-id="act-ad">
-                    <a href="#">
-                        <img src="assets/img/act-ad.jpg" class="product-img">
-                    </a>
-                    <p class="prod-name"><b>BSCS Shirt</b></p>
-                    <p class="price">₱259</p>
-                    <button class="preorder-btn">Preorder</button>
-                </div>
-
             </div>
-        </div>
+
+            <div class="hero-product" aria-label="Featured product slideshow">
+                <div class="hero-slider" id="hero-slider">
+                    <button class="slide-card active" type="button" data-slide="0" aria-label="Featured BSCS Shirt">
+                        <img src="assets/img/bs-shirt.png" alt="BSCS Shirt">
+                    </button>
+                    <button class="slide-card next" type="button" data-slide="1" aria-label="Featured BSIT Shirt">
+                        <img src="assets/img/bs-shirt-2.png" alt="BSIT Shirt">
+                    </button>
+                    <button class="slide-card back" type="button" data-slide="2" aria-label="Featured ACT AD Shirt">
+                        <img src="assets/img/bs-shirt-3.png" alt="ACT AD Shirt">
+                    </button>
+                    <button class="slide-card hidden-slide" type="button" data-slide="3" aria-label="Featured BSIT Classic Shirt">
+                        <img src="assets/img/bs-it-3.jpg" alt="BSIT Classic Shirt">
+                    </button>
+                    <button class="slide-card hidden-slide" type="button" data-slide="4" aria-label="Featured ACT AD Premium Shirt">
+                        <img src="assets/img/act-ad-2.jpg" alt="ACT AD Premium Shirt">
+                    </button>
+                    <button class="slide-card hidden-slide" type="button" data-slide="5" aria-label="Featured ACT AD Shirt">
+                        <img src="assets/img/act-ad.jpg" alt="ACT AD Shirt">
+                    </button>
+                    <button class="slide-card hidden-slide" type="button" data-slide="6" aria-label="Featured ACT AD Alternate Shirt">
+                        <img src="assets/img/act-ad-3.jpg" alt="ACT AD Alternate Shirt">
+                    </button>
+                </div>
+
+                <div class="hero-slider-meta">
+                    <div>
+                        <p class="slider-label">Featured Drop</p>
+                        <h2 id="hero-slide-title">BSCS Shirt</h2>
+                    </div>
+                    <div id="hero-dots" class="hero-dots" aria-label="Slideshow navigation"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="shop-section" id="products" aria-labelledby="products-title">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Available now</p>
+                    <h2 id="products-title">CCS Shirt Picks</h2>
+                </div>
+
+                <div class="shop-tools">
+                    <select id="sort-products" class="sort-dropdown" aria-label="Sort products">
+                        <option value="latest">Latest</option>
+                        <option value="popular">Most Popular</option>
+                        <option value="rating">Top Rated</option>
+                        <option value="low-high">Price: Low to High</option>
+                        <option value="high-low">Price: High to Low</option>
+                    </select>
+
+                    <form id="search-form" class="search-form">
+                        <input id="search-input" type="search" placeholder="Search products" class="searchbar" autocomplete="off">
+                        <button type="submit" class="search-btn">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="category-bar" aria-label="Product categories">
+                <button class="category-btn active" type="button" data-category="all">All</button>
+                <button class="category-btn" type="button" data-category="bscs">BSCS</button>
+                <button class="category-btn" type="button" data-category="bsit">BSIT</button>
+                <button class="category-btn" type="button" data-category="act-ad">ACT AD</button>
+            </div>
+
+            <div id="product-grid" class="product-grid">
+                <article class="product-card" data-id="bs-shirt" data-category="bscs" data-rating="4.8" data-sold="320" data-price="259">
+                    <button class="product-image-btn" type="button" aria-label="View BSCS Shirt details">
+                        <img src="assets/img/bs-shirt.png" alt="BSCS shirt" class="product-img">
+                    </button>
+                    <div class="product-info">
+                        <p class="product-tag">BSCS</p>
+                        <h3 class="prod-name">BSCS Shirt</h3>
+                        <p class="price">₱259</p>
+                    </div>
+                    <button class="preorder-btn" type="button">Preorder</button>
+                </article>
+
+                <article class="product-card" data-id="bs-shirt-2" data-category="bsit" data-rating="4.6" data-sold="210" data-price="259">
+                    <button class="product-image-btn" type="button" aria-label="View BSIT Shirt details">
+                        <img src="assets/img/bs-shirt-2.png" alt="BSIT shirt" class="product-img">
+                    </button>
+                    <div class="product-info">
+                        <p class="product-tag">BSIT</p>
+                        <h3 class="prod-name">BSIT Shirt</h3>
+                        <p class="price">₱259</p>
+                    </div>
+                    <button class="preorder-btn" type="button">Preorder</button>
+                </article>
+
+                <article class="product-card" data-id="bs-shirt-3" data-category="act-ad" data-rating="4.7" data-sold="180" data-price="259">
+                    <button class="product-image-btn" type="button" aria-label="View ACT AD Shirt details">
+                        <img src="assets/img/bs-shirt-3.png" alt="ACT AD shirt" class="product-img">
+                    </button>
+                    <div class="product-info">
+                        <p class="product-tag">ACT AD</p>
+                        <h3 class="prod-name">ACT AD Shirt</h3>
+                        <p class="price">₱259</p>
+                    </div>
+                    <button class="preorder-btn" type="button">Preorder</button>
+                </article>
+
+                <article class="product-card" data-id="bs-it-3" data-category="bsit" data-rating="4.5" data-sold="150" data-price="259">
+                    <button class="product-image-btn" type="button" aria-label="View BSIT Classic Shirt details">
+                        <img src="assets/img/bs-it-3.jpg" alt="BSIT classic shirt" class="product-img">
+                    </button>
+                    <div class="product-info">
+                        <p class="product-tag">BSIT</p>
+                        <h3 class="prod-name">BSIT Classic Shirt</h3>
+                        <p class="price">₱259</p>
+                    </div>
+                    <button class="preorder-btn" type="button">Preorder</button>
+                </article>
+
+                <article class="product-card" data-id="act-ad-2" data-category="act-ad" data-rating="4.9" data-sold="410" data-price="259">
+                    <button class="product-image-btn" type="button" aria-label="View ACT AD Premium Shirt details">
+                        <img src="assets/img/act-ad-2.jpg" alt="ACT AD premium shirt" class="product-img">
+                    </button>
+                    <div class="product-info">
+                        <p class="product-tag">ACT AD</p>
+                        <h3 class="prod-name">ACT AD Premium Shirt</h3>
+                        <p class="price">₱259</p>
+                    </div>
+                    <button class="preorder-btn" type="button">Preorder</button>
+                </article>
+
+                <article class="product-card" data-id="act-ad" data-category="bscs" data-rating="4.4" data-sold="95" data-price="259">
+                    <button class="product-image-btn" type="button" aria-label="View BSCS Classic Shirt details">
+                        <img src="assets/img/act-ad.jpg" alt="BSCS classic shirt" class="product-img">
+                    </button>
+                    <div class="product-info">
+                        <p class="product-tag">BSCS</p>
+                        <h3 class="prod-name">BSCS Classic Shirt</h3>
+                        <p class="price">₱259</p>
+                    </div>
+                    <button class="preorder-btn" type="button">Preorder</button>
+                </article>
+            </div>
+
+            <p id="empty-products" class="empty-products" hidden>No products match your search.</p>
+        </section>
+
+        <section class="info-section" id="about" aria-labelledby="about-title">
+            <div>
+                <p class="eyebrow">For students</p>
+                <h2 id="about-title">Simple preorder flow</h2>
+            </div>
+            <div class="info-grid">
+                <div>
+                    <h3>Pick a shirt</h3>
+                    <p>Open any product to review sizes, rating, sold count, and preview the item image.</p>
+                </div>
+                <div>
+                    <h3>Checkout</h3>
+                    <p>Your preorder is saved to the cart with quantity controls before payment.</p>
+                </div>
+                <div>
+                    <h3>Payment method</h3>
+                    <p>Choose GCash, card, or cash on pickup on the next page.</p>
+                </div>
+            </div>
+        </section>
     </main>
-
-    <div id="hover-preview">
-        <img id="preview-img" src="" alt="">
-
-        <h3 id="preview-name"></h3>
-
-        <p id="preview-rating"></p>
-        <p id="preview-sold"></p>
-        <p id="preview-price"></p>
-        <p id="preview-review"></p>
-        <p id="preview-sizes"></p>
-    </div>
 
     <div id="overlay"></div>
 
-    <div id="product-sidebar" class="sidebar">
+    <aside id="product-sidebar" class="sidebar" aria-hidden="true" aria-labelledby="side-name">
         <div class="sidebar-content">
-
-            <span id="close-sidebar" class="close-btn">×</span>
+            <button id="close-sidebar" class="close-btn" type="button" aria-label="Close product details">×</button>
 
             <div class="img-zoom-wrapper">
                 <img id="side-img" src="" alt="">
                 <div class="zoom-lens"></div>
-
                 <div class="zoom-result"></div>
             </div>
 
+            <p id="side-category" class="product-tag"></p>
             <h2 id="side-name"></h2>
-
             <p id="side-rating"></p>
             <p id="side-sold"></p>
             <p id="side-price"></p>
             <p id="side-sizes"></p>
+            <p id="side-stock"></p>
+            <p id="side-delivery"></p>
+            <p id="side-material"></p>
 
-            <h3>Reviews</h3>
+            <h3>Review Highlight</h3>
             <p id="side-review"></p>
 
-            <button class="preorder-btn">Preorder</button>
-
+            <button id="side-preorder-btn" class="preorder-btn" type="button">Preorder</button>
         </div>
-    </div>
+    </aside>
 
-    <div id="left-sidebar" class="left-sidebar">
-
+    <aside id="left-sidebar" class="left-sidebar" aria-hidden="true">
         <div class="left-sidebar-content">
-            <span id="close-left" class="close-left">×</span>
-
+            <button id="close-left" class="close-left" type="button" aria-label="Close menu">×</button>
             <h2>Menu</h2>
-
-            <a href="#">Home</a>
-            <a href="#">Products</a>
-            <a href="#">Orders</a>
-            <a href="#">Wishlist</a>
-            <a href="#">Settings</a>
-
+            <a href="index.html">Home</a>
+            <a href="#products">Products</a>
+            <a href="/assets/html/checkout.html">Cart</a>
+            <a href="/assets/html/order-history.html">History</a>
+            <a href="/assets/html/payment-method.html">Payment</a>
+            <a href="#support">Support</a>
             <hr>
-
             <p>WMSU Merch v1.0</p>
         </div>
+    </aside>
 
-    </div>
+    <footer class="footer" id="support">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>WMSU Merch</h3>
+                <p>Official-looking student project for CCS merchandise browsing and preorder demos.</p>
+            </div>
 
-    <footer class="footer">
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <a href="#products">Products</a>
+                <a href="/assets/html/checkout.html">Checkout</a>
+                <a href="/assets/html/order-history.html">Order History</a>
+                <a href="/assets/html/login.html">Login</a>
+                <a href="/assets/html/signup.html">Sign Up</a>
+            </div>
 
-    <div class="footer-container">
+            <div class="footer-col">
+                <h3>Support</h3>
+                <p>Email: support@wmsumerch.fake</p>
+                <p>Response: 1-3 business days</p>
+            </div>
 
-        <div class="footer-col">
-            <h3>WMSU Merch</h3>
-            <p>Official CCS student merchandise shop.</p>
-            <p>Built for students, by students.</p>
+            <div class="footer-col">
+                <h3>Disclaimer</h3>
+                <p>This is a student project, not an official university store.</p>
+            </div>
         </div>
 
-        <div class="footer-col">
-            <h3>Quick Links</h3>
-            <a href="#">Home</a>
-            <a href="#">Products</a>
-            <a href="#">About</a>
-            <a href="#">Contacts</a>
+        <div class="footer-bottom">
+            <p>© 2026 WMSU Merch | CCS Department</p>
         </div>
-
-        <div class="footer-col">
-            <h3>Support</h3>
-            <p>Email: support@wmsumerch.fake</p>
-            <p>Response: 1–3 business days</p>
-        </div>
-
-        <div class="footer-col">
-            <h3>Disclaimer</h3>
-            <p>This is a student project, not an official store.</p>
-        </div>
-
-    </div>
-
-    <div class="footer-bottom">
-        <p>© 2026 WMSU Merch | CCS Department</p>
-    </div>
-
-</footer>
+    </footer>
 
     <script src="assets/js/script.js"></script>
 </body>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method</title>
+    <link rel="stylesheet" href="/assets/css/payment-method.css">
+</head>
+<body>
+
+<header class="payment-header">
+    <button id="back-btn" type="button" aria-label="Go back to checkout">← Back</button>
+    <h2>Payment Method</h2>
+</header>
+
+<main class="payment-container">
+    <section class="payment-panel" aria-labelledby="payment-title">
+        <h1 id="payment-title">Complete Your Order</h1>
+
+        <form id="payment-form" novalidate>
+            <div class="form-grid">
+                <label>
+                    Full Name
+                    <input id="customer-name" name="customerName" type="text" autocomplete="name" required>
+                </label>
+
+                <label>
+                    Mobile Number
+                    <input id="customer-phone" name="customerPhone" type="tel" autocomplete="tel" placeholder="09XXXXXXXXX" required>
+                </label>
+            </div>
+
+            <label>
+                Delivery / Pickup Notes
+                <textarea id="customer-notes" name="customerNotes" rows="3" placeholder="Example: CCS building pickup, room number, or preferred time"></textarea>
+            </label>
+
+            <fieldset class="method-group">
+                <legend>Choose payment method</legend>
+
+                <label class="method-card">
+                    <input type="radio" name="paymentMethod" value="GCash" checked>
+                    <span>
+                        <strong>GCash</strong>
+                        <small>Pay using your mobile wallet.</small>
+                    </span>
+                </label>
+
+                <label class="method-card">
+                    <input type="radio" name="paymentMethod" value="Cash on Pickup">
+                    <span>
+                        <strong>Cash on Pickup</strong>
+                        <small>Pay when you claim your order.</small>
+                    </span>
+                </label>
+
+                <label class="method-card">
+                    <input type="radio" name="paymentMethod" value="Card">
+                    <span>
+                        <strong>Card</strong>
+                        <small>Save card payment details for this order.</small>
+                    </span>
+                </label>
+            </fieldset>
+
+            <div id="method-fields" class="method-fields"></div>
+
+            <p id="form-message" class="form-message" role="status"></p>
+
+            <button id="place-order-btn" type="submit">Continue to Verification</button>
+        </form>
+    </section>
+
+    <aside class="order-summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">Order Summary</h2>
+        <div id="summary-items"></div>
+
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <strong id="subtotal">₱0</strong>
+        </div>
+
+        <div class="summary-row">
+            <span>Service Fee</span>
+            <strong id="service-fee">₱0</strong>
+        </div>
+
+        <div class="summary-total">
+            <span>Total</span>
+            <strong id="grand-total">₱0</strong>
+        </div>
+    </aside>
+</main>
+
+<script src="/assets/js/payment-method.js"></script>
+</body>
+</html>

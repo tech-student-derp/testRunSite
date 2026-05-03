@@ -8,37 +8,53 @@
 </head>
 <body>
 
-<div class="login-wrap">
+<main class="auth-page">
+    <section class="auth-card" aria-labelledby="login-title">
+        <a href="/index.html" class="back-btn">← Back</a>
 
-    <div class="login-box">
-        <a href="javascript:history.back()" class="back-btn">← Back</a>
         <div class="brand">
-            <img src="/assets/img/ico/WMSU logo.png" alt="">
-            <h2>WMSU Merch</h2>
+            <img src="/assets/img/ico/WMSU logo.png" alt="WMSU logo">
+            <div>
+                <p class="eyebrow">Welcome back</p>
+                <h1 id="login-title">WMSU Merch</h1>
+            </div>
         </div>
 
-        <p class="sub">Sign in to continue</p>
+        <p class="sub">Sign in to manage orders, checkout faster, or access your dashboard.</p>
 
-        <form>
-            <input type="text" placeholder="Username" id="login-username" required>
+        <form id="login-form" novalidate>
+            <label>
+                Username
+                <input type="text" placeholder="Enter username" id="login-username" autocomplete="username" required>
+            </label>
 
-            <div class="pass-box">
-                <input type="password" id="login-password" placeholder="Password" required>
-                <img src="/assets/img/ico/eye-close.png" class="toggle" id="toggle-pass" alt="toggle password">
-            </div>
+            <label>
+                Password
+                <div class="pass-box">
+                    <input type="password" id="login-password" placeholder="Enter password" autocomplete="current-password" required>
+                    <button class="toggle-pass" type="button" data-target="login-password" aria-label="Show password">
+                        <img src="/assets/img/ico/eye-close.png" alt="">
+                    </button>
+                </div>
+            </label>
+
+            <p id="login-message" class="form-message" role="status"></p>
 
             <button type="submit" id="login-btn">Login</button>
         </form>
 
-        <div class="meta">
-            <p>No account? <a href="/assets/html/signup.html">Sign up</a></p>
+        <div class="demo-box">
+            <p><strong>Demo accounts</strong></p>
+            <p>Admin: <code>ADMIN</code> / <code>69420</code></p>
+            <p>Merchant: <code>MERCHANT</code> / <code>12345</code></p>
         </div>
 
-    </div>
-
-</div>
+        <div class="meta">
+            <p>No account? <a href="/assets/html/signup.html">Create one</a></p>
+        </div>
+    </section>
+</main>
 
 <script src="/assets/js/login.js"></script>
-
 </body>
 </html>

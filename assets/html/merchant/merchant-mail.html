@@ -45,58 +45,71 @@
     <!-- MAIN -->
     <main class="admin-main">
 
-        <!-- REPORT SUMMARY -->
         <section class="report-summary">
 
             <div class="report-card">
-                <h3>Total Reports</h3>
+                <h3>Inbox</h3>
                 <p>18</p>
             </div>
 
             <div class="report-card">
-                <h3>Pending</h3>
+                <h3>Unread</h3>
                 <p>7</p>
             </div>
 
             <div class="report-card">
-                <h3>Resolved</h3>
+                <h3>Replied</h3>
                 <p>11</p>
             </div>
 
         </section>
 
-        <!-- REPORT LIST -->
         <section class="report-panel">
 
-            <h3>Active Reports</h3>
+            <h3>Customer Messages</h3>
 
             <div class="report-row">
-                <span class="r-type">Fake Product</span>
-                <span class="r-target">BSCS Shirt Listing</span>
+                <span class="r-type">Pickup Schedule</span>
+                <span class="r-target">maria_ccs: Can I claim at 3 PM?</span>
                 <span class="r-status pending">Pending</span>
 
                 <button class="view-btn">View</button>
-                <button class="resolve-btn">Resolve</button>
+                <button class="resolve-btn">Reply</button>
             </div>
 
             <div class="report-row">
-                <span class="r-type">Spam User</span>
-                <span class="r-target">user123</span>
+                <span class="r-type">Size Check</span>
+                <span class="r-target">john_doe: Is XL still available?</span>
                 <span class="r-status pending">Pending</span>
 
                 <button class="view-btn">View</button>
-                <button class="resolve-btn">Resolve</button>
+                <button class="resolve-btn">Reply</button>
             </div>
 
             <div class="report-row">
-                <span class="r-type">Suspicious Activity</span>
-                <span class="r-target">admin_alt</span>
+                <span class="r-type">Payment Proof</span>
+                <span class="r-target">ana_it: Sent GCash reference</span>
                 <span class="r-status resolved">Resolved</span>
 
                 <button class="view-btn">View</button>
-                <button class="resolve-btn disabled">Resolved</button>
+                <button class="resolve-btn disabled">Replied</button>
             </div>
 
+        </section>
+
+        <section class="mock-grid">
+            <div class="mock-panel">
+                <h3>Message Templates</h3>
+                <p class="panel-note">Pickup confirmation: "Your order is ready for claiming at the CCS lobby."</p>
+                <p class="panel-note">Payment review: "Please send your GCash reference number for verification."</p>
+            </div>
+
+            <div class="mock-panel">
+                <h3>Response Targets</h3>
+                <div class="metric-line"><span>Average response</span><strong>18 min</strong></div>
+                <div class="metric-line"><span>Needs reply today</span><strong>7</strong></div>
+                <div class="metric-line"><span>Resolved threads</span><strong>11</strong></div>
+            </div>
         </section>
 
     </main>

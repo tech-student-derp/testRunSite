@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - WMSU Merch</title>
+    <link rel="stylesheet" href="/assets/css/order-history.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/ico/WMSU logo.png">
+</head>
+<body>
+
+<header class="history-header">
+    <a href="/index.html" class="back-link">← Store</a>
+    <h1>Order History</h1>
+    <a href="/assets/html/checkout.html" class="cart-link">Cart</a>
+</header>
+
+<main class="history-container">
+    <section class="history-summary" aria-label="History summary">
+        <div class="summary-card">
+            <span>Completed</span>
+            <strong id="completed-count">0</strong>
+        </div>
+        <div class="summary-card">
+            <span>Failed</span>
+            <strong id="failed-count">0</strong>
+        </div>
+        <div class="summary-card">
+            <span>Total Spent</span>
+            <strong id="total-spent">₱0</strong>
+        </div>
+    </section>
+
+    <section class="history-toolbar" aria-label="History controls">
+        <div>
+            <p class="eyebrow">Mock transactions</p>
+            <h2>Recent Activity</h2>
+        </div>
+
+        <select id="status-filter" aria-label="Filter history by status">
+            <option value="all">All Statuses</option>
+            <option value="complete">Complete</option>
+            <option value="failed">Failed</option>
+        </select>
+    </section>
+
+    <section id="history-list" class="history-list" aria-live="polite"></section>
+
+    <section id="empty-history" class="empty-history" hidden>
+        <h2>No history yet</h2>
+        <p>Complete a checkout transaction and it will show up here.</p>
+        <a href="/index.html">Shop Products</a>
+    </section>
+</main>
+
+<script src="/assets/js/order-history.js"></script>
+</body>
+</html>
