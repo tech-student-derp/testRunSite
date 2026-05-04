@@ -1,7 +1,7 @@
 const products = {
     "bs-shirt": {
         name: "BSCS Shirt",
-        category: "BSCS",
+        category: "CCS - BSCS",
         price: "₱259",
         img: "/assets/img/bs-shirt.png",
         rating: 4.8,
@@ -11,7 +11,7 @@ const products = {
         delivery: "Pickup or campus delivery",
         material: "Cotton blend",
         sizes: "S, M, L, XL",
-        merchant: "College Department Head - BSCS",
+        merchant: "College of Computing Studies - BSCS Department",
         description: "A clean BSCS department shirt made for regular campus wear, organization days, and preorder batches. The fabric is light enough for daily use while keeping the print readable.",
         comments: [
             { name: "Mika", rating: 5, text: "The print looks clean and the shirt feels comfortable during long classes." },
@@ -21,7 +21,7 @@ const products = {
     },
     "bs-shirt-2": {
         name: "BSIT Shirt",
-        category: "BSIT",
+        category: "CCS - BSIT",
         price: "₱259",
         img: "/assets/img/bs-shirt-2.png",
         rating: 4.6,
@@ -31,7 +31,7 @@ const products = {
         delivery: "Pickup available",
         material: "Breathable cotton",
         sizes: "M, L, XL",
-        merchant: "College Department Head - BSIT",
+        merchant: "College of Computing Studies - BSIT Department",
         description: "A straightforward BSIT shirt with a breathable cotton feel and a neat department layout for student events and daily campus use.",
         comments: [
             { name: "Renz", rating: 5, text: "The material is breathable and the shirt does not feel heavy." },
@@ -41,7 +41,7 @@ const products = {
     },
     "bs-shirt-3": {
         name: "ACT AD Shirt",
-        category: "ACT AD",
+        category: "CCS - ACT AD",
         price: "₱259",
         img: "/assets/img/bs-shirt-3.png",
         rating: 4.7,
@@ -51,8 +51,8 @@ const products = {
         delivery: "Campus delivery",
         material: "Soft jersey",
         sizes: "S, M, L",
-        merchant: "College Department Head - ACT AD",
-        description: "A soft jersey shirt for ACT AD students with strong print contrast, made for campus activities and casual department wear.",
+        merchant: "College of Computing Studies - ACT AD Department",
+        description: "A soft jersey ACT AD shirt with strong print contrast, made for campus activities and casual department wear.",
         comments: [
             { name: "Nico", rating: 5, text: "The design stands out without being too loud." },
             { name: "Aira", rating: 4, text: "Soft fabric and good print, but I hope XL gets added next batch." },
@@ -61,7 +61,7 @@ const products = {
     },
     "bs-it-3": {
         name: "BSIT Classic Shirt",
-        category: "BSIT",
+        category: "CCS - BSIT",
         price: "₱259",
         img: "/assets/img/bs-it-3.jpg",
         rating: 4.5,
@@ -71,7 +71,7 @@ const products = {
         delivery: "Ships after preorder cutoff",
         material: "Cotton jersey",
         sizes: "M, L, XL",
-        merchant: "College Department Head - BSIT",
+        merchant: "College of Computing Studies - BSIT Department",
         description: "A classic BSIT preorder design with durable print and a familiar department look for students who prefer a simpler style.",
         comments: [
             { name: "Dane", rating: 4, text: "Classic design and decent fabric for the price." },
@@ -81,7 +81,7 @@ const products = {
     },
     "act-ad-2": {
         name: "ACT AD Premium Shirt",
-        category: "ACT AD",
+        category: "CCS - ACT AD",
         price: "₱259",
         img: "/assets/img/act-ad-2.jpg",
         rating: 4.9,
@@ -91,7 +91,7 @@ const products = {
         delivery: "Fast campus pickup",
         material: "Premium cotton blend",
         sizes: "S, M, L",
-        merchant: "College Department Head - ACT AD",
+        merchant: "College of Computing Studies - ACT AD Department",
         description: "A top-rated ACT AD shirt with a premium cotton blend and bolder department styling for students who want a sharper campus merch piece.",
         comments: [
             { name: "Kath", rating: 5, text: "Best looking ACT AD shirt so far. The print is clear." },
@@ -101,7 +101,7 @@ const products = {
     },
     "act-ad": {
         name: "BSCS Classic Shirt",
-        category: "BSCS",
+        category: "CCS - BSCS",
         price: "₱259",
         img: "/assets/img/act-ad.jpg",
         rating: 4.4,
@@ -111,12 +111,145 @@ const products = {
         delivery: "Pickup available",
         material: "Cotton blend",
         sizes: "M, L",
-        merchant: "College Department Head - BSCS",
-        description: "A value pick for students who want a clean department shirt with a simple print and an easy campus pickup option.",
+        merchant: "College of Computing Studies - BSCS Department",
+        description: "A value pick for BSCS students who want a clean department shirt with a simple print and an easy campus pickup option.",
         comments: [
             { name: "Lea", rating: 4, text: "Simple and affordable. Good for regular school days." },
             { name: "Paolo", rating: 4, text: "The shirt is okay, but more sizes would help." },
             { name: "Kim", rating: 5, text: "Nice option when you need department merch quickly." }
+        ]
+    },
+    "bscs-lanyard": {
+        name: "BSCS Lanyard",
+        category: "CCS - BSCS",
+        price: "₱99",
+        img: "/assets/img/bscs-lanyard.png",
+        rating: 4.5,
+        reviews: 31,
+        sold: 120,
+        stock: "In stock",
+        delivery: "Campus pickup",
+        material: "Polyester strap with metal hook",
+        sizes: "One size",
+        merchant: "College of Computing Studies - BSCS Department",
+        description: "A BSCS lanyard mockup for IDs, keys, and daily campus use.",
+        comments: [
+            { name: "Erika", rating: 5, text: "The strap feels sturdy and the department label is easy to read." },
+            { name: "Jay", rating: 4, text: "Good everyday lanyard for the price." }
+        ]
+    },
+    "bsit-lanyard": {
+        name: "BSIT Lanyard",
+        category: "CCS - BSIT",
+        price: "₱99",
+        img: "/assets/img/bsit-lanyard.png",
+        rating: 4.6,
+        reviews: 36,
+        sold: 135,
+        stock: "In stock",
+        delivery: "Campus pickup",
+        material: "Polyester strap with swivel hook",
+        sizes: "One size",
+        merchant: "College of Computing Studies - BSIT Department",
+        description: "A BSIT lanyard mockup with a clean department style for daily ID use.",
+        comments: [
+            { name: "Aldrin", rating: 5, text: "Simple, clean, and useful for lab days." },
+            { name: "Mara", rating: 4, text: "Nice print and easy pickup." }
+        ]
+    },
+    "bsit-lanyard-2": {
+        name: "BSIT Alternate Lanyard",
+        category: "CCS - BSIT",
+        price: "₱109",
+        img: "/assets/img/bsit-lanyard-2.png",
+        rating: 4.4,
+        reviews: 22,
+        sold: 88,
+        stock: "Preorder",
+        delivery: "Pickup after preorder cutoff",
+        material: "Woven polyester strap",
+        sizes: "One size",
+        merchant: "College of Computing Studies - BSIT Department",
+        description: "An alternate BSIT lanyard mockup for students who want a cleaner department accessory.",
+        comments: [
+            { name: "Louie", rating: 4, text: "Good accessory, especially with the department shirt." },
+            { name: "Tina", rating: 5, text: "The strap design looks neat." }
+        ]
+    },
+    "ccs-lanyard": {
+        name: "CCS Lanyard",
+        category: "CCS",
+        price: "₱109",
+        img: "/assets/img/ccs-lanyard.png",
+        rating: 4.7,
+        reviews: 42,
+        sold: 160,
+        stock: "In stock",
+        delivery: "Campus pickup",
+        material: "Printed polyester strap",
+        sizes: "One size",
+        merchant: "College of Computing Studies",
+        description: "A CCS lanyard mockup for IDs, keys, and student organization events.",
+        comments: [
+            { name: "Carlo", rating: 5, text: "The print is sharp and the hook feels reliable." },
+            { name: "Neri", rating: 4, text: "Nice department accessory." }
+        ]
+    },
+    "coe-jacket": {
+        name: "COE Jacket",
+        category: "CE",
+        price: "₱499",
+        img: "/assets/img/coe-jacket.png",
+        rating: 4.8,
+        reviews: 28,
+        sold: 74,
+        stock: "Limited sizes",
+        delivery: "Pickup or campus delivery",
+        material: "Lightweight fleece blend",
+        sizes: "S, M, L, XL",
+        merchant: "College of Engineering",
+        description: "A College of Engineering jacket mockup for cooler classrooms, campus events, and organization activities.",
+        comments: [
+            { name: "Miguel", rating: 5, text: "Warm enough for class and still light to carry." },
+            { name: "Aya", rating: 4, text: "Looks polished with the COE branding." }
+        ]
+    },
+    "coe-yellow-jacket": {
+        name: "COE Yellow Jacket",
+        category: "EE",
+        price: "₱529",
+        img: "/assets/img/coe-yellow-jacket.png",
+        rating: 4.7,
+        reviews: 25,
+        sold: 69,
+        stock: "Preorder",
+        delivery: "Ships after preorder cutoff",
+        material: "Fleece blend with ribbed cuffs",
+        sizes: "S, M, L, XL",
+        merchant: "College of Engineering",
+        description: "A brighter COE jacket mockup for students who want a stronger engineering-college color statement.",
+        comments: [
+            { name: "June", rating: 5, text: "The color stands out nicely during events." },
+            { name: "Rei", rating: 4, text: "Good jacket, but preorder timing matters." }
+        ]
+    },
+    "python-shirt": {
+        name: "Python Shirt",
+        category: "CCS - BSCS",
+        price: "₱279",
+        img: "/assets/img/python-shirt.png",
+        rating: 4.6,
+        reviews: 39,
+        sold: 101,
+        stock: "In stock",
+        delivery: "Pickup available",
+        material: "Cotton blend",
+        sizes: "S, M, L, XL",
+        merchant: "College of Computing Studies - BSCS Department",
+        description: "A Python-themed shirt mockup for programming classes, org days, and casual campus wear.",
+        comments: [
+            { name: "Iris", rating: 5, text: "Fun design for programming subjects." },
+            { name: "Ken", rating: 4, text: "Comfortable and easy to match with jeans." }
         ]
     }
 };
@@ -130,6 +263,7 @@ try {
                 category: item.category || "Merchant",
                 price: `₱${Number(item.price || 0).toLocaleString("en-PH")}`,
                 img: item.img || "/assets/img/bs-shirt.png",
+                imageKey: item.imageKey || "",
                 rating: item.rating || 4.5,
                 reviews: item.reviews || 0,
                 sold: item.sold || 0,
@@ -151,7 +285,45 @@ const params = new URLSearchParams(window.location.search);
 const productId = params.get("product") || "bs-shirt";
 const product = products[productId] || products["bs-shirt"];
 const storedReviewKey = `reviews-${productId}`;
+const MERCHANT_IMAGE_DB = "wmsuMerchImages";
+const MERCHANT_IMAGE_STORE = "productImages";
 let selectedSize = "";
+
+function openMerchantImageDb() {
+    return new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+            reject(new Error("IndexedDB is unavailable."));
+            return;
+        }
+
+        const request = indexedDB.open(MERCHANT_IMAGE_DB, 1);
+        request.onupgradeneeded = () => {
+            if (!request.result.objectStoreNames.contains(MERCHANT_IMAGE_STORE)) {
+                request.result.createObjectStore(MERCHANT_IMAGE_STORE);
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function getMerchantImageUrl(key) {
+    if (!key) return "";
+
+    const db = await openMerchantImageDb();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(MERCHANT_IMAGE_STORE, "readonly");
+        const request = tx.objectStore(MERCHANT_IMAGE_STORE).get(key);
+        request.onsuccess = () => {
+            db.close();
+            resolve(request.result ? URL.createObjectURL(request.result) : "");
+        };
+        request.onerror = () => {
+            db.close();
+            reject(request.error);
+        };
+    });
+}
 
 function setText(id, value) {
     const element = document.getElementById(id);
@@ -178,6 +350,11 @@ function getStoredObject(key) {
 
 function isLoggedIn() {
     return Boolean(getStoredObject("loggedInUser"));
+}
+
+function getReviewUsername() {
+    const user = getStoredObject("loggedInUser");
+    return user?.username || "Student";
 }
 
 function saveCart(cart) {
@@ -300,6 +477,18 @@ function hydrateProduct() {
         image.alt = product.name;
     }
 
+    if (product.imageKey) {
+        getMerchantImageUrl(product.imageKey)
+            .then(url => {
+                if (!url) return;
+                product.img = url;
+                if (image) image.src = url;
+                const preview = document.getElementById("zoom-preview");
+                if (preview) preview.style.backgroundImage = `url("${url}")`;
+            })
+            .catch(() => {});
+    }
+
     if (stars) {
         stars.style.setProperty("--rating-percent", ratingPercent(product.rating));
         stars.setAttribute("aria-label", `${product.rating} out of 5 stars`);
@@ -374,13 +563,12 @@ document.getElementById("add-cart-btn")?.addEventListener("click", () => {
 document.getElementById("review-form")?.addEventListener("submit", event => {
     event.preventDefault();
 
-    const nameInput = document.getElementById("review-name");
     const ratingInput = document.getElementById("review-rating");
     const commentInput = document.getElementById("review-comment");
     const storedReviews = getStoredArray(storedReviewKey);
 
     storedReviews.unshift({
-        name: nameInput.value.trim() || "Student",
+        name: getReviewUsername(),
         rating: Number(ratingInput.value) || 5,
         text: commentInput.value.trim()
     });

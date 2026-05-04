@@ -1,10 +1,93 @@
 const baseProducts = [
-    { name: "BSCS Shirt", category: "BSCS", price: 259, stock: 24 },
-    { name: "BSIT Shirt", category: "BSIT", price: 259, stock: 18 },
-    { name: "ACT AD Shirt", category: "ACT AD", price: 259, stock: 15 },
-    { name: "ACT AD Premium Shirt", category: "ACT AD", price: 259, stock: 18 },
-    { name: "BSCS Classic Shirt", category: "BSCS", price: 259, stock: 9 }
+    { name: "BSCS Shirt", category: "CCS", price: 259, stock: 24 },
+    { name: "BSIT Shirt", category: "CCS", price: 259, stock: 18 },
+    { name: "ACT AD Shirt", category: "CCS", price: 259, stock: 15 },
+    { name: "BSIT Classic Shirt", category: "CCS", price: 259, stock: 12 },
+    { name: "ACT AD Premium Shirt", category: "CCS", price: 259, stock: 18 },
+    { name: "BSCS Classic Shirt", category: "CCS", price: 259, stock: 9 },
+    { name: "BSCS Lanyard", category: "CCS", price: 99, stock: 40 },
+    { name: "BSIT Lanyard", category: "CCS", price: 99, stock: 36 },
+    { name: "BSIT Alternate Lanyard", category: "CCS", price: 109, stock: 28 },
+    { name: "CCS Lanyard", category: "CCS", price: 109, stock: 32 },
+    { name: "Python Shirt", category: "CCS", price: 279, stock: 20 },
+    { name: "COE Jacket", category: "COE", price: 499, stock: 14 },
+    { name: "COE Yellow Jacket", category: "COE", price: 529, stock: 11 }
 ];
+
+const MERCHANT_IMAGE_DB = "wmsuMerchImages";
+const MERCHANT_IMAGE_STORE = "productImages";
+
+function openMerchantImageDb() {
+    return new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+            reject(new Error("IndexedDB is unavailable."));
+            return;
+        }
+
+        const request = indexedDB.open(MERCHANT_IMAGE_DB, 1);
+        request.onupgradeneeded = () => {
+            if (!request.result.objectStoreNames.contains(MERCHANT_IMAGE_STORE)) {
+                request.result.createObjectStore(MERCHANT_IMAGE_STORE);
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function saveMerchantImage(key, file) {
+    const db = await openMerchantImageDb();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(MERCHANT_IMAGE_STORE, "readwrite");
+        tx.objectStore(MERCHANT_IMAGE_STORE).put(file, key);
+        tx.oncomplete = () => {
+            db.close();
+            resolve(key);
+        };
+        tx.onerror = () => {
+            db.close();
+            reject(tx.error);
+        };
+    });
+}
+
+async function getMerchantImageUrl(key) {
+    if (!key) return "";
+
+    const db = await openMerchantImageDb();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(MERCHANT_IMAGE_STORE, "readonly");
+        const request = tx.objectStore(MERCHANT_IMAGE_STORE).get(key);
+        request.onsuccess = () => {
+            db.close();
+            resolve(request.result ? URL.createObjectURL(request.result) : "");
+        };
+        request.onerror = () => {
+            db.close();
+            reject(request.error);
+        };
+    });
+}
+
+async function hydrateProductImage(img, product) {
+    if (!img || !product?.imageKey) return;
+
+    try {
+        const url = await getMerchantImageUrl(product.imageKey);
+        if (url) img.src = url;
+    } catch {
+        // Keep the fallback image if the IndexedDB image cannot be loaded.
+    }
+}
+
+function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => resolve(reader.result));
+        reader.addEventListener("error", () => reject(reader.error));
+        reader.readAsDataURL(file);
+    });
+}
 
 function getStoredArray(key) {
     try {
@@ -70,6 +153,29 @@ function saveMailThreads(threads) {
     localStorage.setItem("mailThreads", JSON.stringify(threads));
 }
 
+function notifyMerchantProductReview(request, status) {
+    const threads = getMailThreads();
+    const approved = status === "approved";
+    const subject = approved ? "Product approved" : "Product rejected";
+    const message = approved
+        ? `${request.name} was approved and is now visible on the storefront.`
+        : `${request.name} was rejected. ${request.adminNote || "Please review the listing details and submit again."}`;
+
+    threads.unshift({
+        id: `MAIL-${Date.now()}-${request.id}`,
+        recipient: "merchant",
+        sender: "Admin",
+        subject,
+        message,
+        status: "pending",
+        productId: request.id,
+        replies: [],
+        createdAt: new Date().toISOString()
+    });
+
+    saveMailThreads(threads);
+}
+
 function getAllProducts() {
     return [...baseProducts, ...getMerchantProducts()];
 }
@@ -79,19 +185,17 @@ function getOrderItems(order) {
 }
 
 function getDepartmentTotals(orders) {
-    const totals = { BSCS: 0, BSIT: 0, "ACT AD": 0 };
+    const totals = { CCS: 0, COE: 0 };
 
     orders.forEach(order => {
         getOrderItems(order).forEach(item => {
             const name = String(item.name || "").toUpperCase();
             const qty = Number(item.qty) || 1;
 
-            if (name.includes("BSIT")) {
-                totals.BSIT += qty;
-            } else if (name.includes("ACT")) {
-                totals["ACT AD"] += qty;
+            if (name.includes("COE")) {
+                totals.COE += qty;
             } else {
-                totals.BSCS += qty;
+                totals.CCS += qty;
             }
         });
     });
@@ -166,6 +270,7 @@ function renderProductApprovals() {
             <div class="approval-main">
                 <strong>${request.name}</strong>
                 <p class="panel-note">${request.category} | ${request.productType || "Product"} | ${formatPeso(request.price)} | Stock ${request.stock}</p>
+                <p class="panel-note">Image: ${request.imageName || "Uploaded image"}</p>
                 <p class="panel-note">Submitted by ${request.merchant || "Merchant"}.</p>
             </div>
             <div class="approval-actions">
@@ -175,6 +280,7 @@ function renderProductApprovals() {
             </div>
         `;
 
+        hydrateProductImage(row.querySelector("img"), request);
         const note = row.querySelector("textarea");
         row.querySelector(".accept-btn").addEventListener("click", () => reviewProductRequest(request.id, "approved", note.value));
         row.querySelector(".reject-btn").addEventListener("click", () => reviewProductRequest(request.id, "rejected", note.value));
@@ -207,8 +313,12 @@ function reviewProductRequest(id, status, note) {
         }
     }
 
+    notifyMerchantProductReview(request, status);
+
     renderAdminDashboard();
+    renderProductApprovals();
     renderMerchantProducts();
+    renderMerchantMail();
 }
 
 function renderPieChart(orders) {
@@ -217,19 +327,16 @@ function renderPieChart(orders) {
     if (!chart || !legend) return;
 
     const totals = getDepartmentTotals(orders);
-    const values = [totals.BSCS, totals.BSIT, totals["ACT AD"]];
+    const values = [totals.CCS, totals.COE];
     const total = values.reduce((sum, value) => sum + value, 0) || 1;
-    const bscs = values[0] / total * 100;
-    const bsit = values[1] / total * 100;
-    const act = values[2] / total * 100;
+    const ccs = values[0] / total * 100;
 
-    chart.style.background = `conic-gradient(#c40000 0 ${bscs}%, #111 ${bscs}% ${bscs + bsit}%, #f5a400 ${bscs + bsit}% 100%)`;
+    chart.style.background = `conic-gradient(#c40000 0 ${ccs}%, #111 ${ccs}% 100%)`;
 
     legend.innerHTML = "";
     [
-        ["#c40000", "BSCS", totals.BSCS],
-        ["#111", "BSIT", totals.BSIT],
-        ["#f5a400", "ACT AD", totals["ACT AD"]]
+        ["#c40000", "CCS", totals.CCS],
+        ["#111", "COE", totals.COE]
     ].forEach(([color, label, value]) => {
         const row = document.createElement("div");
         row.className = "legend-row";
@@ -238,7 +345,7 @@ function renderPieChart(orders) {
     });
 
     if (!orders.length) {
-        chart.style.background = "conic-gradient(#c40000 0 40%, #111 40% 70%, #f5a400 70% 100%)";
+        chart.style.background = "conic-gradient(#c40000 0 65%, #111 65% 100%)";
     }
 }
 
@@ -411,7 +518,7 @@ function renderMerchantProducts() {
 
     if (!form.dataset.bound) {
         form.dataset.bound = "true";
-        form.addEventListener("submit", event => {
+        form.addEventListener("submit", async event => {
             event.preventDefault();
 
             const requests = getMerchantProductRequests();
@@ -436,35 +543,40 @@ function renderMerchantProducts() {
                 return;
             }
 
-            const reader = new FileReader();
-            reader.addEventListener("load", () => {
-                const product = {
-                    id: `MERCH-${Date.now()}`,
-                    name: document.getElementById("new-product-name").value.trim(),
-                    price: Number(document.getElementById("new-product-price").value) || 0,
+            const productId = `MERCH-${Date.now()}`;
+            const product = {
+                id: productId,
+                name: document.getElementById("new-product-name").value.trim(),
+                price: Number(document.getElementById("new-product-price").value) || 0,
                 stock: Number(document.getElementById("new-product-stock").value) || 0,
                 category: document.getElementById("new-product-category").value,
                 productType: document.getElementById("new-product-type").value,
-                img: reader.result,
-                    imageName: imageFile.name,
-                    merchant: user?.username || "Merchant",
-                    status: "pending",
-                    createdAt: new Date().toISOString()
-                };
+                img: "",
+                imageKey: `product-image-${productId}`,
+                imageName: imageFile.name,
+                merchant: user?.username || "Merchant",
+                status: "pending",
+                createdAt: new Date().toISOString()
+            };
 
-                requests.unshift(product);
-                saveMerchantProductRequests(requests);
-                form.reset();
-                if (message) message.textContent = `${product.name} was submitted to admin for approval.`;
-                if (activity) {
-                    const li = document.createElement("li");
-                    li.textContent = `${product.name} submitted for admin approval with ${product.imageName}.`;
-                    activity.prepend(li);
-                }
-                draw();
-                renderMerchantDashboard();
-            });
-            reader.readAsDataURL(imageFile);
+            try {
+                await saveMerchantImage(product.imageKey, imageFile);
+            } catch {
+                product.img = await readFileAsDataUrl(imageFile);
+                delete product.imageKey;
+            }
+
+            requests.unshift(product);
+            saveMerchantProductRequests(requests);
+            form.reset();
+            if (message) message.textContent = `${product.name} was submitted to admin for approval.`;
+            if (activity) {
+                const li = document.createElement("li");
+                li.textContent = `${product.name} submitted for admin approval with ${product.imageName}.`;
+                activity.prepend(li);
+            }
+            draw();
+            renderMerchantDashboard();
         });
     }
 
@@ -525,10 +637,12 @@ function renderMerchantMail() {
 
     const threads = getMailThreads().filter(thread => thread.recipient === "merchant");
     setText("merchant-inbox-count", String(threads.length));
+    setText("merchant-unread-count", String(threads.filter(thread => thread.status !== "replied").length));
+    setText("merchant-replied-count", String(threads.filter(thread => thread.status === "replied").length));
     list.innerHTML = "";
 
     if (!threads.length) {
-        list.innerHTML = '<p class="panel-note">No customer mail for merchant yet.</p>';
+        list.innerHTML = '<p class="panel-note">No merchant mail yet.</p>';
         return;
     }
 
@@ -589,6 +703,7 @@ function initContextButtons() {
 
 renderLogout();
 renderAdminDashboard();
+renderProductApprovals();
 renderAdminReports();
 renderMerchantDashboard();
 renderMerchantProducts();
@@ -597,6 +712,7 @@ initContextButtons();
 
 window.addEventListener("storage", () => {
     renderAdminDashboard();
+    renderProductApprovals();
     renderAdminReports();
     renderMerchantDashboard();
     renderMerchantProducts();

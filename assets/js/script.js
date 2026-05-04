@@ -6,7 +6,7 @@ const productData = {
         stock: "In stock",
         delivery: "Pickup or campus delivery",
         material: "Cotton blend",
-        badge: "Best Seller",
+        badge: "BSCS Pick",
         review: "Soft fabric, clean print, and easy to wear on regular class days.",
         sizes: "S, M, L, XL"
     },
@@ -17,7 +17,7 @@ const productData = {
         stock: "Limited sizes",
         delivery: "Pickup available",
         material: "Breathable cotton",
-        badge: "Student Pick",
+        badge: "BSIT Pick",
         review: "A simple CCS staple with a comfortable everyday fit.",
         sizes: "M, L, XL"
     },
@@ -28,7 +28,7 @@ const productData = {
         stock: "In stock",
         delivery: "Campus delivery",
         material: "Soft jersey",
-        badge: "New Drop",
+        badge: "ACT AD Drop",
         review: "Good print contrast and a solid choice for organization events.",
         sizes: "S, M, L"
     },
@@ -39,7 +39,7 @@ const productData = {
         stock: "Preorder",
         delivery: "Ships after preorder cutoff",
         material: "Cotton jersey",
-        badge: "Classic",
+        badge: "BSIT Classic",
         review: "Classic layout, durable print, and works well for casual use.",
         sizes: "M, L, XL"
     },
@@ -50,7 +50,7 @@ const productData = {
         stock: "In stock",
         delivery: "Fast campus pickup",
         material: "Premium cotton blend",
-        badge: "Top Rated",
+        badge: "ACT AD Top Rated",
         review: "Popular pick because the design is bold without feeling too busy.",
         sizes: "S, M, L"
     },
@@ -61,9 +61,86 @@ const productData = {
         stock: "Few left",
         delivery: "Pickup available",
         material: "Cotton blend",
-        badge: "Value Pick",
+        badge: "BSCS Value Pick",
         review: "Clean student-project merch with a straightforward campus look.",
         sizes: "M, L"
+    },
+    "bscs-lanyard": {
+        rating: 4.5,
+        sold: 120,
+        reviews: 31,
+        stock: "In stock",
+        delivery: "Campus pickup",
+        material: "Polyester strap",
+        badge: "BSCS Accessory",
+        review: "Useful everyday lanyard with a clean department look.",
+        sizes: "One size"
+    },
+    "bsit-lanyard": {
+        rating: 4.6,
+        sold: 135,
+        reviews: 36,
+        stock: "In stock",
+        delivery: "Campus pickup",
+        material: "Polyester strap",
+        badge: "BSIT Accessory",
+        review: "Simple lanyard for lab days, IDs, and keys.",
+        sizes: "One size"
+    },
+    "bsit-lanyard-2": {
+        rating: 4.4,
+        sold: 88,
+        reviews: 22,
+        stock: "Preorder",
+        delivery: "Pickup after preorder cutoff",
+        material: "Woven polyester",
+        badge: "BSIT Accessory",
+        review: "Clean accessory that pairs well with the department shirt.",
+        sizes: "One size"
+    },
+    "ccs-lanyard": {
+        rating: 4.7,
+        sold: 160,
+        reviews: 42,
+        stock: "In stock",
+        delivery: "Campus pickup",
+        material: "Printed polyester",
+        badge: "CCS Accessory",
+        review: "Sharp print and a sturdy hook for daily campus use.",
+        sizes: "One size"
+    },
+    "coe-jacket": {
+        rating: 4.8,
+        sold: 74,
+        reviews: 28,
+        stock: "Limited sizes",
+        delivery: "Pickup or campus delivery",
+        material: "Lightweight fleece blend",
+        badge: "COE Outerwear",
+        review: "Polished COE branding with a comfortable lightweight fit.",
+        sizes: "S, M, L, XL"
+    },
+    "coe-yellow-jacket": {
+        rating: 4.7,
+        sold: 69,
+        reviews: 25,
+        stock: "Preorder",
+        delivery: "Ships after preorder cutoff",
+        material: "Fleece blend",
+        badge: "COE Highlight",
+        review: "Bright event-ready jacket with a strong engineering-college look.",
+        sizes: "S, M, L, XL"
+    },
+    "python-shirt": {
+        rating: 4.6,
+        sold: 101,
+        reviews: 39,
+        stock: "In stock",
+        delivery: "Pickup available",
+        material: "Cotton blend",
+        badge: "Coding Pick",
+        review: "Fun programming-themed shirt for classes and org days.",
+        sizes: "S, M, L, XL"
     }
 };
 
@@ -88,11 +165,60 @@ const heroSlideTitle = document.getElementById("hero-slide-title");
 const heroDots = document.getElementById("hero-dots");
 const authPopup = document.getElementById("auth-popup");
 const closeAuthPopup = document.getElementById("close-auth-popup");
+const MERCHANT_IMAGE_DB = "wmsuMerchImages";
+const MERCHANT_IMAGE_STORE = "productImages";
 
 let activeCategory = "all";
 let activeProductId = "";
 let activeHeroSlide = 0;
 let heroTimer = null;
+
+function openMerchantImageDb() {
+    return new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+            reject(new Error("IndexedDB is unavailable."));
+            return;
+        }
+
+        const request = indexedDB.open(MERCHANT_IMAGE_DB, 1);
+        request.onupgradeneeded = () => {
+            if (!request.result.objectStoreNames.contains(MERCHANT_IMAGE_STORE)) {
+                request.result.createObjectStore(MERCHANT_IMAGE_STORE);
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function getMerchantImageUrl(key) {
+    if (!key) return "";
+
+    const db = await openMerchantImageDb();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(MERCHANT_IMAGE_STORE, "readonly");
+        const request = tx.objectStore(MERCHANT_IMAGE_STORE).get(key);
+        request.onsuccess = () => {
+            db.close();
+            resolve(request.result ? URL.createObjectURL(request.result) : "");
+        };
+        request.onerror = () => {
+            db.close();
+            reject(request.error);
+        };
+    });
+}
+
+async function hydrateProductImage(img, product) {
+    if (!img || !product?.imageKey) return;
+
+    try {
+        const url = await getMerchantImageUrl(product.imageKey);
+        if (url) img.src = url;
+    } catch {
+        // Keep the fallback image if the IndexedDB image cannot be loaded.
+    }
+}
 
 function getStoredArray(key) {
     try {
@@ -157,7 +283,7 @@ function getCardProduct(card) {
         stock: data.stock || "Preorder",
         delivery: data.delivery || "Pickup available",
         material: data.material || "Cotton blend",
-        badge: data.badge || "CCS Merch",
+        badge: data.badge || "WMSU Merch",
         review: data.review || "No review highlight yet.",
         sizes: data.sizes || "S, M, L"
     };
@@ -399,6 +525,7 @@ function renderApprovedProducts() {
                 <button class="preorder-btn" type="button">Preorder</button>
             `;
 
+            hydrateProductImage(article.querySelector(".product-img"), product);
             grid.appendChild(article);
         });
 
@@ -407,6 +534,21 @@ function renderApprovedProducts() {
     });
 
     cards = Array.from(document.querySelectorAll(".product-card"));
+}
+
+function bindProductCards() {
+    cards.forEach(card => {
+        if (card.dataset.bound === "true") return;
+        card.dataset.bound = "true";
+
+        card.querySelector(".product-image-btn")?.addEventListener("click", () => {
+            window.location.href = `/assets/html/product-info.html?product=${encodeURIComponent(card.dataset.id || "")}`;
+        });
+
+        card.querySelector(".preorder-btn")?.addEventListener("click", () => {
+            addToCart(card);
+        });
+    });
 }
 
 function saveMailThread(thread) {
@@ -579,16 +721,7 @@ function initHeroSlideshow() {
 }
 
 renderApprovedProducts();
-
-cards.forEach(card => {
-    card.querySelector(".product-image-btn")?.addEventListener("click", () => {
-        window.location.href = `/assets/html/product-info.html?product=${encodeURIComponent(card.dataset.id || "")}`;
-    });
-
-    card.querySelector(".preorder-btn")?.addEventListener("click", () => {
-        addToCart(card);
-    });
-});
+bindProductCards();
 
 document.querySelectorAll(".category-btn").forEach(button => {
     button.addEventListener("click", () => {
@@ -657,7 +790,16 @@ if (zoomWrapper && lens && zoomResult) {
     });
 }
 
-window.addEventListener("storage", updateCartCount);
+window.addEventListener("storage", event => {
+    updateCartCount();
+
+    if (event.key === "approvedProducts") {
+        renderApprovedProducts();
+        bindProductCards();
+        renderProductInfo();
+        applyProductFilters();
+    }
+});
 
 renderAuthArea();
 renderMerchantShortcut();

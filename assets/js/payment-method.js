@@ -7,6 +7,8 @@ const paymentForm = document.getElementById("payment-form");
 const formMessage = document.getElementById("form-message");
 const placeOrderBtn = document.getElementById("place-order-btn");
 const backBtn = document.getElementById("back-btn");
+const customerNameInput = document.getElementById("customer-name");
+const customerPhoneInput = document.getElementById("customer-phone");
 
 const serviceFee = 0;
 
@@ -16,6 +18,58 @@ function getCart() {
         return Array.isArray(cart) ? cart : [];
     } catch {
         return [];
+    }
+}
+
+function getStoredObject(key) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return value && typeof value === "object" ? value : null;
+    } catch {
+        return null;
+    }
+}
+
+function getStoredArray(key) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(value) ? value : [];
+    } catch {
+        return [];
+    }
+}
+
+function getLoggedInProfile() {
+    const loggedInUser = getStoredObject("loggedInUser");
+    if (!loggedInUser) return null;
+
+    const users = getStoredArray("users");
+    return users.find(user => user.id === loggedInUser.id || user.username === loggedInUser.username) || loggedInUser;
+}
+
+function buildFullName(profile) {
+    if (!profile) return "";
+    if (profile.name) return profile.name;
+
+    return [profile.given, profile.middle, profile.surname]
+        .filter(Boolean)
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function hydrateCustomerFields() {
+    const profile = getLoggedInProfile();
+    const fullName = buildFullName(profile);
+
+    if (customerNameInput && fullName) {
+        customerNameInput.value = fullName;
+        customerNameInput.readOnly = true;
+        customerNameInput.title = "Full name is taken from your signed-up account.";
+    }
+
+    if (customerPhoneInput && profile?.phone && !customerPhoneInput.value) {
+        customerPhoneInput.value = profile.phone;
     }
 }
 
@@ -154,11 +208,12 @@ paymentForm.addEventListener("submit", event => {
     }
 
     const formData = new FormData(paymentForm);
+    const profileName = buildFullName(getLoggedInProfile());
     const transaction = {
         id: `TXN-${Date.now()}`,
         orderId: `ORD-${Date.now()}`,
         items: cart,
-        customerName: formData.get("customerName"),
+        customerName: profileName || formData.get("customerName"),
         customerPhone: formData.get("customerPhone"),
         customerNotes: formData.get("customerNotes"),
         paymentMethod: getSelectedMethod(),
@@ -190,3 +245,4 @@ window.addEventListener("storage", renderSummary);
 
 renderSummary();
 renderMethodFields();
+hydrateCustomerFields();
