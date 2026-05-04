@@ -47,22 +47,22 @@
 
             <div class="card">
                 <h3>Total Sales</h3>
-                <p>₱12,450</p>
+                <p id="admin-total-sales">₱0</p>
             </div>
 
             <div class="card">
-                <h3>Orders</h3>
-                <p>34 Pending</p>
+                <h3>Completed Orders</h3>
+                <p id="admin-order-count">0</p>
             </div>
 
             <div class="card">
-                <h3>Products</h3>
-                <p>18 Items</p>
+                <h3>Product Reports</h3>
+                <p id="admin-report-count">0</p>
             </div>
 
             <div class="card">
                 <h3>Users</h3>
-                <p>120 Registered</p>
+                <p id="admin-user-count">0</p>
             </div>
 
         </div>
@@ -71,13 +71,33 @@
 
             <h2>Recent Activity</h2>
 
-            <ul>
-                <li>New order placed - BSCS Shirt</li>
-                <li>Product updated - BSIT Shirt</li>
-                <li>New user registered - john_doe</li>
-                <li>Admin updated price - ACT AD Shirt</li>
+            <ul id="admin-activity-list">
+                <li>No completed purchase activity yet.</li>
             </ul>
 
+        </section>
+
+        <section class="analytics-grid">
+            <div class="mock-panel">
+                <h2>Sales by Department</h2>
+                <div class="pie-chart" id="admin-pie-chart" aria-label="Mock pie chart for sales by department"></div>
+                <div id="admin-pie-legend" class="chart-legend"></div>
+            </div>
+
+            <div class="mock-panel">
+                <h2>Mock Weekly Orders</h2>
+                <div id="admin-bar-chart" class="bar-chart" aria-label="Mock bar graph for weekly orders"></div>
+            </div>
+        </section>
+
+        <section class="admin-section">
+            <h2>Merchant Product Approvals</h2>
+            <div id="admin-product-approval-list"></div>
+        </section>
+
+        <section class="admin-section">
+            <h2>Mail Inbox</h2>
+            <div id="admin-mail-list"></div>
         </section>
 
         <section class="mock-grid">

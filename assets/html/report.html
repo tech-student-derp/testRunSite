@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Product | WMSU Merch</title>
+    <link rel="icon" type="image/png" href="/assets/img/ico/WMSU logo.png">
+    <link rel="stylesheet" href="/assets/css/report.css">
+</head>
+<body>
+    <header class="report-header">
+        <a href="/assets/html/product-info.html" id="back-product" data-back-button>Back</a>
+        <h1>Report Product</h1>
+    </header>
+
+    <main class="report-page">
+        <section class="report-card">
+            <div class="reported-product">
+                <img id="report-product-image" src="/assets/img/bs-shirt.png" alt="Reported product">
+                <div>
+                    <p class="label">Product</p>
+                    <h2 id="report-product-name">BSCS Shirt</h2>
+                    <p id="report-merchant">Merchant: College Department Head</p>
+                </div>
+            </div>
+
+            <form id="report-form">
+                <fieldset>
+                    <legend>What is bad about the product?</legend>
+                    <label><input type="checkbox" name="issue" value="Misleading product photo"> Misleading product photo</label>
+                    <label><input type="checkbox" name="issue" value="Wrong department label"> Wrong department label</label>
+                    <label><input type="checkbox" name="issue" value="Poor print quality"> Poor print quality</label>
+                    <label><input type="checkbox" name="issue" value="Damaged or defective item"> Damaged or defective item</label>
+                    <label><input type="checkbox" name="issue" value="Incorrect size information"> Incorrect size information</label>
+                    <label><input type="checkbox" name="issue" value="Suspicious merchant details"> Suspicious merchant details</label>
+                </fieldset>
+
+                <label class="text-label">
+                    Additional details
+                    <textarea id="report-details" rows="5" placeholder="Describe the issue so the admin can review it."></textarea>
+                </label>
+
+                <button type="submit">Submit Report</button>
+            </form>
+
+            <p id="report-status" class="report-status" role="status"></p>
+        </section>
+    </main>
+
+    <script src="/assets/js/back-navigation.js"></script>
+    <script src="/assets/js/report.js"></script>
+</body>
+</html>

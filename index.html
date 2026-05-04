@@ -119,6 +119,7 @@
                         <h3 class="prod-name">BSCS Shirt</h3>
                         <p class="price">₱259</p>
                     </div>
+                    <a class="details-link" href="/assets/html/product-info.html?product=bs-shirt">View Details</a>
                     <button class="preorder-btn" type="button">Preorder</button>
                 </article>
 
@@ -131,6 +132,7 @@
                         <h3 class="prod-name">BSIT Shirt</h3>
                         <p class="price">₱259</p>
                     </div>
+                    <a class="details-link" href="/assets/html/product-info.html?product=bs-shirt-2">View Details</a>
                     <button class="preorder-btn" type="button">Preorder</button>
                 </article>
 
@@ -143,6 +145,7 @@
                         <h3 class="prod-name">ACT AD Shirt</h3>
                         <p class="price">₱259</p>
                     </div>
+                    <a class="details-link" href="/assets/html/product-info.html?product=bs-shirt-3">View Details</a>
                     <button class="preorder-btn" type="button">Preorder</button>
                 </article>
 
@@ -155,6 +158,7 @@
                         <h3 class="prod-name">BSIT Classic Shirt</h3>
                         <p class="price">₱259</p>
                     </div>
+                    <a class="details-link" href="/assets/html/product-info.html?product=bs-it-3">View Details</a>
                     <button class="preorder-btn" type="button">Preorder</button>
                 </article>
 
@@ -167,6 +171,7 @@
                         <h3 class="prod-name">ACT AD Premium Shirt</h3>
                         <p class="price">₱259</p>
                     </div>
+                    <a class="details-link" href="/assets/html/product-info.html?product=act-ad-2">View Details</a>
                     <button class="preorder-btn" type="button">Preorder</button>
                 </article>
 
@@ -179,11 +184,23 @@
                         <h3 class="prod-name">BSCS Classic Shirt</h3>
                         <p class="price">₱259</p>
                     </div>
+                    <a class="details-link" href="/assets/html/product-info.html?product=act-ad">View Details</a>
                     <button class="preorder-btn" type="button">Preorder</button>
                 </article>
             </div>
 
             <p id="empty-products" class="empty-products" hidden>No products match your search.</p>
+        </section>
+
+        <section class="shop-section merchant-release-section" id="merchant-releases" aria-labelledby="merchant-releases-title" hidden>
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Merchant releases</p>
+                    <h2 id="merchant-releases-title">New Merchant Products</h2>
+                </div>
+            </div>
+
+            <div id="merchant-product-groups" class="merchant-product-groups"></div>
         </section>
 
         <section class="info-section" id="about" aria-labelledby="about-title">
@@ -209,6 +226,19 @@
     </main>
 
     <div id="overlay"></div>
+
+    <div id="auth-popup" class="auth-popup" role="dialog" aria-modal="true" aria-labelledby="auth-popup-title" hidden>
+        <div class="auth-popup-card">
+            <button id="close-auth-popup" class="auth-popup-close" type="button" aria-label="Close login reminder">×</button>
+            <p class="eyebrow">Account required</p>
+            <h2 id="auth-popup-title">Please log in or register first</h2>
+            <p>You need an account before you can preorder WMSU Merch items.</p>
+            <div class="auth-popup-actions">
+                <a href="/assets/html/login.html">Login</a>
+                <a href="/assets/html/signup.html">Register</a>
+            </div>
+        </div>
+    </div>
 
     <aside id="product-sidebar" class="sidebar" aria-hidden="true" aria-labelledby="side-name">
         <div class="sidebar-content">
@@ -272,6 +302,17 @@
                 <h3>Support</h3>
                 <p>Email: support@wmsumerch.fake</p>
                 <p>Response: 1-3 business days</p>
+                <form id="mail-form" class="mail-form">
+                    <select id="mail-recipient" aria-label="Message recipient">
+                        <option value="merchant">Merchant</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <input id="mail-subject" type="text" placeholder="Subject" required>
+                    <textarea id="mail-message" rows="3" placeholder="Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                    <p id="mail-status" role="status"></p>
+                </form>
+                <div id="mail-thread-list" class="mail-thread-list"></div>
             </div>
 
             <div class="footer-col">
@@ -284,6 +325,8 @@
             <p>© 2026 WMSU Merch | CCS Department</p>
         </div>
     </footer>
+
+    <a id="merchant-add-product" class="merchant-add-product" href="/assets/html/merchant/merchant-product.html" hidden>Add Product</a>
 
     <script src="assets/js/script.js"></script>
 </body>

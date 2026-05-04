@@ -107,7 +107,12 @@ function renderCart() {
 
 /* 🔙 back button */
 backBtn.addEventListener("click", () => {
-    window.location.href = "../../index.html";
+    if (window.history.length > 1) {
+        window.history.back();
+        return;
+    }
+
+    window.location.href = "/index.html#products";
 });
 
 /* 💳 pay button */

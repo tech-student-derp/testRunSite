@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | WMSU Merch</title>
+    <link rel="icon" type="image/png" href="/assets/img/ico/WMSU logo.png">
+    <link rel="stylesheet" href="/assets/css/product-info.css">
+</head>
+<body>
+    <header class="page-header">
+        <a class="back-link" href="/index.html#products" data-back-button>Back</a>
+        <a class="brand" href="/index.html">
+            <img src="/assets/img/ico/WMSU logo.png" alt="WMSU logo">
+            <span>WMSU Merch</span>
+        </a>
+        <a class="cart-link" href="/assets/html/checkout.html">Cart <span id="cart-count">0</span></a>
+    </header>
+
+    <main class="product-page">
+        <section class="product-shell" aria-labelledby="product-name">
+            <div class="gallery-panel">
+                <div class="image-zoom" id="image-zoom">
+                    <img id="product-image" src="/assets/img/bs-shirt.png" alt="BSCS Shirt">
+                    <span class="zoom-lens" id="zoom-lens"></span>
+                </div>
+                <div class="zoom-preview" id="zoom-preview" aria-hidden="true"></div>
+                <p class="zoom-note">Hover over the product image to zoom.</p>
+            </div>
+
+            <div class="details-panel">
+                <p class="product-tag" id="product-category">BSCS</p>
+                <h1 id="product-name">BSCS Shirt</h1>
+                <div class="rating-line">
+                    <span class="stars" id="rating-stars" aria-label="4.8 out of 5 stars"></span>
+                    <strong id="rating-score">4.8</strong>
+                    <span id="rating-count">86 reviews</span>
+                    <span id="sold-count">320 sold</span>
+                </div>
+                <p class="price" id="product-price">₱259</p>
+                <p class="merchant">Merchant: <strong id="merchant-name">College Department Head</strong></p>
+
+                <p class="description" id="product-description">
+                    Student preorder shirt with a clean department-inspired layout, soft cotton blend, and comfortable everyday fit.
+                </p>
+
+                <dl class="spec-grid">
+                    <div>
+                        <dt>Sizes</dt>
+                        <dd id="product-sizes">S, M, L, XL</dd>
+                    </div>
+                    <div>
+                        <dt>Status</dt>
+                        <dd id="product-stock">In stock</dd>
+                    </div>
+                    <div>
+                        <dt>Material</dt>
+                        <dd id="product-material">Cotton blend</dd>
+                    </div>
+                    <div>
+                        <dt>Delivery</dt>
+                        <dd id="product-delivery">Pickup or campus delivery</dd>
+                    </div>
+                </dl>
+
+                <div class="size-picker" id="size-picker" aria-labelledby="size-picker-title">
+                    <p id="size-picker-title">Choose Size</p>
+                    <div class="size-options" id="size-options"></div>
+                </div>
+
+                <div class="actions">
+                    <button id="add-cart-btn" type="button">Preorder</button>
+                    <a id="report-link" href="/assets/html/report.html?product=bs-shirt">Report Product</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="review-section" aria-labelledby="reviews-title">
+            <div class="section-title">
+                <div>
+                    <p class="product-tag">Student feedback</p>
+                    <h2 id="reviews-title">Reviews</h2>
+                </div>
+                <p id="review-summary">Average rating 4.8 from 86 reviews.</p>
+            </div>
+
+            <div id="review-list" class="review-list"></div>
+
+            <form id="review-form" class="review-form">
+                <h3>Add a Comment</h3>
+                <label>
+                    Name
+                    <input id="review-name" type="text" placeholder="Your name" required>
+                </label>
+                <label>
+                    Rating
+                    <select id="review-rating" required>
+                        <option value="5">5 stars</option>
+                        <option value="4">4 stars</option>
+                        <option value="3">3 stars</option>
+                        <option value="2">2 stars</option>
+                        <option value="1">1 star</option>
+                    </select>
+                </label>
+                <label>
+                    Comment
+                    <textarea id="review-comment" rows="4" placeholder="Share your thoughts about the product" required></textarea>
+                </label>
+                <button type="submit">Post Comment</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="/assets/js/back-navigation.js"></script>
+    <script src="/assets/js/product-info.js"></script>
+</body>
+</html>

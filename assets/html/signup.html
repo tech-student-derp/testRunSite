@@ -33,7 +33,7 @@
 
 <main class="auth-page">
     <section class="auth-card" aria-labelledby="signup-title">
-        <a href="/index.html" class="back-btn">← Back</a>
+        <a href="/index.html" class="back-btn" data-back-button>← Back</a>
 
         <div class="brand">
             <img src="/assets/img/ico/WMSU logo.png" alt="WMSU logo">
@@ -112,7 +112,50 @@
 
             <label>
                 College Course
-                <input id="course" name="course" type="text" placeholder="Example: BSCS, BSIT" required>
+                <select id="course" name="course" required>
+                    <option value="" disabled selected>Choose college course</option>
+                    <optgroup label="CCS - College of Computing Studies">
+                        <option>CCS - BSCS</option>
+                        <option>CCS - BSIT</option>
+                        <option>CCS - ACT AD</option>
+                    </optgroup>
+                    <optgroup label="COE - College of Engineering">
+                        <option>COE - BS Civil Engineering</option>
+                        <option>COE - BS Electrical Engineering</option>
+                        <option>COE - BS Mechanical Engineering</option>
+                        <option>COE - BS Computer Engineering</option>
+                        <option>COE - BS Electronics Engineering</option>
+                    </optgroup>
+                    <optgroup label="CTE - College of Teacher Education">
+                        <option>CTE - Bachelor of Elementary Education</option>
+                        <option>CTE - Bachelor of Secondary Education - English</option>
+                        <option>CTE - Bachelor of Secondary Education - Mathematics</option>
+                        <option>CTE - Bachelor of Early Childhood Education</option>
+                    </optgroup>
+                    <optgroup label="Other Colleges">
+                        <option>CCJE - BS Criminology</option>
+                        <option>COA - BS Architecture</option>
+                        <option>COM - Doctor of Medicine</option>
+                        <option>CON - BS Nursing</option>
+                        <option>CBA - BS Accountancy</option>
+                        <option>CBA - BS Business Administration - Marketing</option>
+                        <option>CAS - BA Communication</option>
+                        <option>CAS - BS Psychology</option>
+                        <option>CA - BS Agriculture</option>
+                        <option>CFES - BS Forestry</option>
+                        <option>CHE - BS Hospitality Management</option>
+                        <option>CT - BS Tourism Management</option>
+                        <option>CSM - BS Biology</option>
+                        <option>CSM - BS Mathematics</option>
+                        <option>CSM - BS Chemistry</option>
+                        <option>CPADS - BA Political Science</option>
+                        <option>CSWCD - BS Social Work</option>
+                        <option>CPE - Bachelor of Physical Education</option>
+                        <option>CFA - Bachelor of Fine Arts</option>
+                        <option>COL - Bachelor of Laws</option>
+                        <option>GS - Graduate Studies</option>
+                    </optgroup>
+                </select>
             </label>
 
             <div class="form-grid">
@@ -148,6 +191,7 @@
     </section>
 </main>
 
-<script src="/assets/js/signup.js"></script>
+    <script src="/assets/js/back-navigation.js"></script>
+    <script src="/assets/js/signup.js"></script>
 </body>
 </html>

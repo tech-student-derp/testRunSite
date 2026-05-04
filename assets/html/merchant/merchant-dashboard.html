@@ -48,22 +48,22 @@
 
             <div class="card">
                 <h3>Total Revenue</h3>
-                <p>₱12,450</p>
+                <p id="merchant-total-revenue">₱0</p>
             </div>
 
             <div class="card">
-                <h3>Pending Orders</h3>
-                <p>34</p>
+                <h3>Completed Orders</h3>
+                <p id="merchant-order-count">0</p>
             </div>
 
             <div class="card">
                 <h3>Active Products</h3>
-                <p>18</p>
+                <p id="merchant-product-count">0</p>
             </div>
 
             <div class="card">
                 <h3>Total Customers</h3>
-                <p>120</p>
+                <p id="merchant-customer-count">0</p>
             </div>
 
         </div>
@@ -72,13 +72,15 @@
 
             <h2>Recent Activity</h2>
 
-            <ul>
-                <li>Order received - BSCS Shirt</li>
-                <li>Product updated - BSIT Shirt stock adjusted</li>
-                <li>New customer registered - john_doe</li>
-                <li>Price updated - ACT AD Shirt</li>
+            <ul id="merchant-activity-list">
+                <li>No purchase notifications yet.</li>
             </ul>
 
+        </section>
+
+        <section class="notification-panel">
+            <h2>Merchant Notifications</h2>
+            <div id="merchant-notifications" class="notification-list"></div>
         </section>
 
         <section class="mock-grid">

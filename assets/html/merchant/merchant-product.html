@@ -41,11 +41,66 @@
 
     <main class="admin-main">
 
+        <section class="add-product-panel">
+            <h3>Add Product</h3>
+            <form id="merchant-add-product-form" class="add-product-form">
+                <input id="new-product-name" type="text" placeholder="Product name" required>
+                <input id="new-product-price" type="number" min="1" placeholder="Price" required>
+                <input id="new-product-stock" type="number" min="0" placeholder="Stock" required>
+                <select id="new-product-category" required>
+                    <option value="" disabled selected>College / course</option>
+                    <option value="CCS - BSCS">CCS - BSCS</option>
+                    <option value="CCS - BSIT">CCS - BSIT</option>
+                    <option value="CCS - ACT AD">CCS - ACT AD</option>
+                    <option value="COE - BS Civil Engineering">COE - BS Civil Engineering</option>
+                    <option value="COE - BS Electrical Engineering">COE - BS Electrical Engineering</option>
+                    <option value="COE - BS Mechanical Engineering">COE - BS Mechanical Engineering</option>
+                    <option value="CTE - Bachelor of Elementary Education">CTE - Bachelor of Elementary Education</option>
+                    <option value="CTE - Bachelor of Secondary Education">CTE - Bachelor of Secondary Education</option>
+                    <option value="CCJE - BS Criminology">CCJE - BS Criminology</option>
+                    <option value="COA - BS Architecture">COA - BS Architecture</option>
+                    <option value="COM - Doctor of Medicine">COM - Doctor of Medicine</option>
+                    <option value="CON - BS Nursing">CON - BS Nursing</option>
+                    <option value="CBA - BS Accountancy">CBA - BS Accountancy</option>
+                    <option value="CBA - BS Business Administration">CBA - BS Business Administration</option>
+                    <option value="CAS - BA Communication">CAS - BA Communication</option>
+                    <option value="CAS - BS Psychology">CAS - BS Psychology</option>
+                    <option value="CA - BS Agriculture">CA - BS Agriculture</option>
+                    <option value="CFES - BS Forestry">CFES - BS Forestry</option>
+                    <option value="CHE - BS Hospitality Management">CHE - BS Hospitality Management</option>
+                    <option value="CT - BS Tourism Management">CT - BS Tourism Management</option>
+                    <option value="CSM - BS Biology">CSM - BS Biology</option>
+                    <option value="CSM - BS Mathematics">CSM - BS Mathematics</option>
+                    <option value="CSM - BS Chemistry">CSM - BS Chemistry</option>
+                    <option value="CPADS - BA Political Science">CPADS - BA Political Science</option>
+                    <option value="CSWCD - BS Social Work">CSWCD - BS Social Work</option>
+                    <option value="CPE - Bachelor of Physical Education">CPE - Bachelor of Physical Education</option>
+                    <option value="CFA - Bachelor of Fine Arts">CFA - Bachelor of Fine Arts</option>
+                    <option value="COL - Bachelor of Laws">COL - Bachelor of Laws</option>
+                    <option value="GS - Graduate Studies">GS - Graduate Studies</option>
+                </select>
+                <select id="new-product-type" required>
+                    <option value="" disabled selected>Product type</option>
+                    <option value="shirts">Shirts</option>
+                    <option value="lanyard">Lanyard</option>
+                    <option value="stickers">Stickers</option>
+                    <option value="pins">Pins</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+                <label class="file-field">
+                    Product image (.jpg, .png, .svg, .webp)
+                    <input id="new-product-image" type="file" accept=".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp" required>
+                </label>
+                <button type="submit">Add Product</button>
+            </form>
+            <p id="merchant-product-message" class="panel-note"></p>
+        </section>
+
         <section class="activity-panel">
 
             <h3>Recent Product Activity</h3>
 
-            <ul>
+            <ul id="merchant-product-activity">
                 <li>BSCS Shirt added (system sync)</li>
                 <li>BSIT Shirt price updated</li>
                 <li>ACT AD Shirt flagged for review</li>
@@ -57,6 +112,7 @@
         <section class="product-panel">
 
             <h3>All Products (Control View)</h3>
+            <div id="merchant-product-list"></div>
 
             <div class="product-row">
                 <span class="p-name">BSCS Shirt</span>
@@ -116,5 +172,6 @@
 
 </div>
 
+<script src="/assets/js/admin.js"></script>
 </body>
 </html>

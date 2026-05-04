@@ -1,0 +1,188 @@
+:root {
+    --gcash-blue: #0072ff;
+    --gcash-dark: #0450b8;
+    --ink: #111111;
+    --muted: #5f6f86;
+    --line: #d8e6f7;
+    --surface: #ffffff;
+    --page: #edf6ff;
+    --radius: 12px;
+    --font-main: Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-main);
+}
+
+body {
+    min-height: 100vh;
+    background: var(--page);
+    color: var(--ink);
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button {
+    font: inherit;
+}
+
+.gcash-header {
+    background: var(--gcash-blue);
+    color: #ffffff;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: 0 3px 14px rgba(0,70,160,0.25);
+}
+
+.gcash-header a {
+    color: #ffffff;
+    background: rgba(0,0,0,0.18);
+    border-radius: var(--radius);
+    padding: 0.55rem 0.85rem;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-weight: 900;
+}
+
+.brand img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 999px;
+    background: #ffffff;
+}
+
+.gcash-page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.payment-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 16px 36px rgba(0,70,160,0.16);
+    padding: 1.25rem;
+    display: grid;
+    gap: 1rem;
+}
+
+.disclaimer {
+    border: 1px solid #9ac6ff;
+    border-radius: var(--radius);
+    background: #e9f3ff;
+    color: #06458f;
+    padding: 0.9rem;
+    font-weight: 900;
+    line-height: 1.45;
+}
+
+.merchant-box {
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--gcash-blue), var(--gcash-dark));
+    color: #ffffff;
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.35rem;
+}
+
+.merchant-box p {
+    opacity: 0.9;
+    font-weight: 700;
+}
+
+.merchant-box h1 {
+    font-size: clamp(1.8rem, 7vw, 2.7rem);
+    line-height: 1;
+}
+
+.merchant-box strong {
+    font-size: 1.6rem;
+}
+
+.qr-panel {
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+    text-align: center;
+}
+
+.qr-panel a {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    background: #ffffff;
+}
+
+.qr-panel img {
+    width: 240px;
+    height: 240px;
+}
+
+.qr-panel p,
+.mock-details span {
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+.mock-details {
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 1rem;
+}
+
+.mock-details p {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.mock-details strong {
+    text-align: right;
+}
+
+#mock-paid-btn {
+    min-height: 48px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--gcash-blue);
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+#mock-paid-btn:hover {
+    background: var(--gcash-dark);
+}
+
+@media (max-width: 520px) {
+    .gcash-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .mock-details p {
+        flex-direction: column;
+    }
+
+    .mock-details strong {
+        text-align: left;
+    }
+}

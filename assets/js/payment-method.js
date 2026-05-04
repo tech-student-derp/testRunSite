@@ -95,10 +95,7 @@ function renderMethodFields() {
                 GCash Number
                 <input id="gcash-number" name="gcashNumber" type="tel" placeholder="09XXXXXXXXX" required>
             </label>
-            <label>
-                Reference Number
-                <input id="gcash-reference" name="gcashReference" type="text" placeholder="Enter payment reference" required>
-            </label>
+            <p class="method-note">GCash does not need a reference number before payment. The app generates a random reference after a successful transaction.</p>
         `;
         return;
     }
@@ -172,14 +169,20 @@ paymentForm.addEventListener("submit", event => {
 
     localStorage.setItem("pendingPurchase", JSON.stringify(transaction));
     localStorage.removeItem("purchaseOtpCode");
-    setMessage("Payment details saved. Redirecting to verification...", true);
+    const isGcash = transaction.paymentMethod === "GCash";
+    setMessage(isGcash ? "Redirecting to the mock GCash payment page..." : "Payment details saved. Redirecting to verification...", true);
 
     window.setTimeout(() => {
-        window.location.href = "/assets/html/purchase-otp.html";
+        window.location.href = isGcash ? "/assets/html/mock-gcash.html" : "/assets/html/purchase-otp.html";
     }, 500);
 });
 
 backBtn.addEventListener("click", () => {
+    if (window.history.length > 1) {
+        window.history.back();
+        return;
+    }
+
     window.location.href = "/assets/html/checkout.html";
 });
 

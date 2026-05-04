@@ -67,7 +67,7 @@ const productData = {
     }
 };
 
-const cards = Array.from(document.querySelectorAll(".product-card"));
+let cards = Array.from(document.querySelectorAll(".product-card"));
 const overlay = document.getElementById("overlay");
 const sidebar = document.getElementById("product-sidebar");
 const closeBtn = document.getElementById("close-sidebar");
@@ -86,6 +86,8 @@ const zoomResult = document.querySelector(".zoom-result");
 const heroSlider = document.getElementById("hero-slider");
 const heroSlideTitle = document.getElementById("hero-slide-title");
 const heroDots = document.getElementById("hero-dots");
+const authPopup = document.getElementById("auth-popup");
+const closeAuthPopup = document.getElementById("close-auth-popup");
 
 let activeCategory = "all";
 let activeProductId = "";
@@ -108,6 +110,20 @@ function getStoredObject(key) {
     } catch {
         return null;
     }
+}
+
+function isLoggedIn() {
+    return Boolean(getStoredObject("loggedInUser"));
+}
+
+function showAuthPopup() {
+    if (!authPopup) return;
+    authPopup.hidden = false;
+    closeAuthPopup?.focus();
+}
+
+function hideAuthPopup() {
+    if (authPopup) authPopup.hidden = true;
 }
 
 function saveCart(cart) {
@@ -197,6 +213,11 @@ function renderProductInfo() {
 }
 
 function addToCart(card) {
+    if (!isLoggedIn()) {
+        showAuthPopup();
+        return;
+    }
+
     const product = getCardProduct(card);
     const cart = getStoredArray("cart");
     const existing = cart.find(item => item.id === product.id && item.size === "M");
@@ -304,6 +325,145 @@ function renderAuthArea() {
     authArea.appendChild(block);
 }
 
+function renderMerchantShortcut() {
+    const shortcut = document.getElementById("merchant-add-product");
+    const user = getStoredObject("loggedInUser");
+    if (!shortcut) return;
+
+    shortcut.hidden = user?.role !== "merchant";
+}
+
+function renderApprovedProducts() {
+    const section = document.getElementById("merchant-releases");
+    const groups = document.getElementById("merchant-product-groups");
+    if (!section || !groups) return;
+
+    const approvedProducts = getStoredArray("approvedProducts");
+    groups.innerHTML = "";
+
+    if (!approvedProducts.length) {
+        section.hidden = true;
+        return;
+    }
+
+    section.hidden = false;
+
+    const typeLabels = {
+        shirts: "Merchant Released Shirts",
+        lanyard: "Merchant Released Lanyards",
+        stickers: "Merchant Released Stickers",
+        pins: "Merchant Released Pins",
+        accessories: "Merchant Released Accessories"
+    };
+
+    const grouped = approvedProducts.reduce((result, product) => {
+        const type = product.productType || "accessories";
+        result[type] = result[type] || [];
+        result[type].push(product);
+        return result;
+    }, {});
+
+    Object.entries(grouped).forEach(([type, products]) => {
+        const group = document.createElement("section");
+        group.className = "merchant-product-group";
+        group.setAttribute("aria-labelledby", `merchant-${type}-title`);
+
+        const title = document.createElement("h3");
+        title.id = `merchant-${type}-title`;
+        title.textContent = typeLabels[type] || `Merchant Released ${type}`;
+
+        const grid = document.createElement("div");
+        grid.className = "merchant-type-grid";
+
+        products.forEach(product => {
+            if (!product.id) return;
+
+            const article = document.createElement("article");
+            article.className = "product-card";
+            article.dataset.id = product.id;
+            article.dataset.category = String(product.category || "merchant").toLowerCase().replace(/\s+/g, "-");
+            article.dataset.rating = product.rating || "4.5";
+            article.dataset.sold = product.sold || "0";
+            article.dataset.price = product.price || "0";
+
+            article.innerHTML = `
+                <button class="product-image-btn" type="button" aria-label="View ${product.name} details">
+                    <img src="${product.img || "/assets/img/bs-shirt.png"}" alt="${product.name}" class="product-img">
+                </button>
+                <div class="product-info">
+                    <p class="product-tag">${product.category || "Merchant"} · ${product.productType || "Product"}</p>
+                    <h3 class="prod-name">${product.name}</h3>
+                    <p class="price">₱${Number(product.price || 0).toLocaleString("en-PH")}</p>
+                </div>
+                <a class="details-link" href="/assets/html/product-info.html?product=${encodeURIComponent(product.id)}">View Details</a>
+                <button class="preorder-btn" type="button">Preorder</button>
+            `;
+
+            grid.appendChild(article);
+        });
+
+        group.append(title, grid);
+        groups.appendChild(group);
+    });
+
+    cards = Array.from(document.querySelectorAll(".product-card"));
+}
+
+function saveMailThread(thread) {
+    const threads = getStoredArray("mailThreads");
+    threads.unshift(thread);
+    localStorage.setItem("mailThreads", JSON.stringify(threads));
+}
+
+function initMailForm() {
+    const form = document.getElementById("mail-form");
+    if (!form) return;
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+        const user = getStoredObject("loggedInUser");
+        const recipient = document.getElementById("mail-recipient").value;
+        const subject = document.getElementById("mail-subject").value.trim();
+        const message = document.getElementById("mail-message").value.trim();
+        const status = document.getElementById("mail-status");
+
+        saveMailThread({
+            id: `MAIL-${Date.now()}`,
+            recipient,
+            sender: user?.username || "Guest user",
+            subject,
+            message,
+            status: "pending",
+            replies: [],
+            createdAt: new Date().toISOString()
+        });
+
+        form.reset();
+        if (status) status.textContent = `Message sent to ${recipient}.`;
+        renderMailThreads();
+    });
+}
+
+function renderMailThreads() {
+    const list = document.getElementById("mail-thread-list");
+    if (!list) return;
+
+    const user = getStoredObject("loggedInUser");
+    const sender = user?.username || "Guest user";
+    const threads = getStoredArray("mailThreads").filter(thread => thread.sender === sender).slice(0, 3);
+
+    list.innerHTML = "";
+    threads.forEach(thread => {
+        const latestReply = Array.isArray(thread.replies) ? thread.replies.at(-1) : null;
+        const article = document.createElement("article");
+        article.innerHTML = `
+            <strong>${thread.subject} (${thread.status})</strong>
+            <p>${latestReply ? `Reply from ${latestReply.from}: ${latestReply.message}` : `Sent to ${thread.recipient}: ${thread.message}`}</p>
+        `;
+        list.appendChild(article);
+    });
+}
+
 function applyProductFilters() {
     const query = searchInput?.value.trim().toLowerCase() || "";
     let visibleCount = 0;
@@ -328,7 +488,7 @@ function sortProducts() {
     const grid = document.getElementById("product-grid");
     if (!grid || !sortSelect) return;
 
-    const sortedCards = [...cards];
+    const sortedCards = Array.from(grid.querySelectorAll(".product-card"));
 
     sortedCards.sort((a, b) => {
         const mode = sortSelect.value;
@@ -418,9 +578,11 @@ function initHeroSlideshow() {
     restartHeroTimer();
 }
 
+renderApprovedProducts();
+
 cards.forEach(card => {
     card.querySelector(".product-image-btn")?.addEventListener("click", () => {
-        openProductDetails(card);
+        window.location.href = `/assets/html/product-info.html?product=${encodeURIComponent(card.dataset.id || "")}`;
     });
 
     card.querySelector(".preorder-btn")?.addEventListener("click", () => {
@@ -454,10 +616,17 @@ closeBtn?.addEventListener("click", closeProductDetails);
 menuBtn?.addEventListener("click", openLeftMenu);
 closeLeft?.addEventListener("click", closeLeftMenu);
 overlay?.addEventListener("click", closeAllPanels);
+closeAuthPopup?.addEventListener("click", hideAuthPopup);
+authPopup?.addEventListener("click", event => {
+    if (event.target === authPopup) {
+        hideAuthPopup();
+    }
+});
 
 document.addEventListener("keydown", event => {
     if (event.key === "Escape") {
         closeAllPanels();
+        hideAuthPopup();
     }
 });
 
@@ -491,7 +660,10 @@ if (zoomWrapper && lens && zoomResult) {
 window.addEventListener("storage", updateCartCount);
 
 renderAuthArea();
+renderMerchantShortcut();
 renderProductInfo();
+initMailForm();
+renderMailThreads();
 initHeroSlideshow();
 updateCartCount();
 sortProducts();

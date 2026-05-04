@@ -455,6 +455,26 @@ img {
     gap: 1rem;
 }
 
+.merchant-product-groups {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.merchant-product-group {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.merchant-product-group h3 {
+    font-size: clamp(1.35rem, 3vw, 1.9rem);
+}
+
+.merchant-type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
 .product-card {
     background: var(--surface);
     border: 1px solid #eeeeee;
@@ -597,6 +617,25 @@ img {
     padding: 0.7rem 1rem;
 }
 
+.details-link {
+    width: 100%;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #ffffff;
+    color: var(--ink);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.details-link:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
 .empty-products {
     margin-top: 1.5rem;
     color: var(--muted);
@@ -644,6 +683,77 @@ img {
 #overlay.active {
     opacity: 1;
     pointer-events: all;
+}
+
+.auth-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(0,0,0,0.55);
+}
+
+.auth-popup[hidden] {
+    display: none;
+}
+
+.auth-popup-card {
+    width: min(420px, 100%);
+    position: relative;
+    display: grid;
+    gap: 0.85rem;
+    border-radius: var(--radius);
+    background: #ffffff;
+    padding: 1.35rem;
+    box-shadow: var(--shadow);
+}
+
+.auth-popup-card h2 {
+    font-size: clamp(1.45rem, 4vw, 2rem);
+}
+
+.auth-popup-card p:not(.eyebrow) {
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.auth-popup-close {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: var(--radius);
+    background: #f1f1f1;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.auth-popup-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.auth-popup-actions a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    background: var(--dark);
+    color: #ffffff;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.auth-popup-actions a:last-child {
+    background: var(--primary);
 }
 
 .sidebar {
@@ -817,6 +927,65 @@ img {
     line-height: 1.5;
 }
 
+.mail-form {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.mail-form input,
+.mail-form select,
+.mail-form textarea {
+    width: 100%;
+    border: 1px solid #333333;
+    border-radius: var(--radius);
+    background: #ffffff;
+    color: var(--ink);
+    padding: 0.6rem;
+    font: inherit;
+}
+
+.mail-form textarea {
+    resize: vertical;
+}
+
+.mail-form button {
+    border: none;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: #ffffff;
+    padding: 0.65rem;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.mail-form #mail-status {
+    min-height: 1.2rem;
+    color: #ffffff;
+    font-size: 0.85rem;
+}
+
+.mail-thread-list {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.mail-thread-list article {
+    border-top: 1px solid #333333;
+    padding-top: 0.5rem;
+}
+
+.mail-thread-list strong {
+    color: #ffffff;
+    display: block;
+    font-size: 0.9rem;
+}
+
+.mail-thread-list p {
+    font-size: 0.85rem;
+}
+
 .footer-col a:hover {
     color: #ffffff;
 }
@@ -829,6 +998,32 @@ img {
     text-align: center;
     color: #c8c8c8;
     font-size: 0.9rem;
+}
+
+.merchant-add-product {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 9000;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: #ffffff;
+    padding: 0.85rem 1.1rem;
+    box-shadow: var(--shadow);
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.merchant-add-product[hidden] {
+    display: none;
+}
+
+.merchant-add-product:hover {
+    background: var(--primary-dark);
 }
 
 @media (max-width: 920px) {
@@ -865,6 +1060,7 @@ img {
     }
 
     .product-grid,
+    .merchant-type-grid,
     .info-grid,
     .footer-container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -902,6 +1098,7 @@ img {
     }
 
     .product-grid,
+    .merchant-type-grid,
     .info-grid,
     .footer-container {
         grid-template-columns: 1fr;
