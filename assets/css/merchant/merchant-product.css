@@ -213,23 +213,109 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.06);
 }
 
-.add-product-panel h3 {
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
     margin-bottom: 1rem;
+}
+
+.panel-kicker {
+    color: #c40000;
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.approval-pill {
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #c2410c;
+    padding: .35rem .65rem;
+    font-size: .78rem;
+    font-weight: 800;
 }
 
 .add-product-form {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: 1rem;
+}
+
+.form-section {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 1rem;
+    display: grid;
+    gap: .8rem;
+}
+
+.form-section h4 {
+    color: #111827;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .75rem;
+}
+
+.add-product-form label {
+    display: grid;
+    gap: .35rem;
+    color: #374151;
+    font-size: .85rem;
+    font-weight: 800;
 }
 
 .add-product-form input,
-.add-product-form select {
+.add-product-form select,
+.add-product-form textarea {
     width: 100%;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 0.7rem;
     font: inherit;
+    background: #fff;
+}
+
+.add-product-form textarea {
+    resize: vertical;
+}
+
+.wide-field {
+    grid-column: span 2;
+}
+
+.size-panel {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: .85rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem 1rem;
+}
+
+.size-panel[hidden] {
+    display: none;
+}
+
+.size-panel legend {
+    color: #374151;
+    font-size: .85rem;
+    font-weight: 800;
+    padding: 0 .3rem;
+}
+
+.size-panel label {
+    display: inline-flex;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: .35rem;
+}
+
+.size-panel input {
+    width: auto;
 }
 
 .file-field {
@@ -244,6 +330,11 @@ body {
     min-height: 42px;
 }
 
+.submit-section {
+    grid-template-columns: minmax(260px, 1fr) 220px;
+    align-items: end;
+}
+
 .add-product-form button {
     border: none;
     border-radius: 8px;
@@ -251,6 +342,9 @@ body {
     color: white;
     cursor: pointer;
     font-weight: bold;
+    min-height: 44px;
 }
 
-.mock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.mock-panel{background:white;padding:1.5rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.06)}.mock-panel h3{margin-bottom:1rem}.metric-line{display:flex;justify-content:space-between;gap:1rem;padding:.75rem 0;border-bottom:1px solid #eee}.metric-line:last-child{border-bottom:none}.panel-note{color:#6b7280;line-height:1.5;margin-top:.7rem}@media(max-width:900px){.admin-container{flex-direction:column}.admin-sidebar{width:100%}.mock-grid,.add-product-form{grid-template-columns:1fr}.product-row{flex-wrap:wrap;gap:.75rem}}
+.product-row.is-pending {border-left:4px solid #f59e0b}.product-row.is-approved{border-left:4px solid #16a34a}.product-row.is-rejected{border-left:4px solid #ef4444}.status-chip{border-radius:999px;padding:.2rem .5rem;font-size:.75rem;font-weight:800}.status-chip.pending{background:#fff7ed;color:#c2410c}.status-chip.approved{background:#ecfdf5;color:#047857}.status-chip.rejected{background:#fef2f2;color:#b91c1c}.product-extra{width:100%;color:#6b7280;font-size:.85rem;line-height:1.45;margin-top:.35rem}
+
+.mock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.mock-panel{background:white;padding:1.5rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.06)}.mock-panel h3{margin-bottom:1rem}.metric-line{display:flex;justify-content:space-between;gap:1rem;padding:.75rem 0;border-bottom:1px solid #eee}.metric-line:last-child{border-bottom:none}.panel-note{color:#6b7280;line-height:1.5;margin-top:.7rem}@media(max-width:900px){.admin-container{flex-direction:column}.admin-sidebar{width:100%}.mock-grid,.add-product-form,.form-grid,.submit-section{grid-template-columns:1fr}.wide-field{grid-column:auto}.product-row{flex-wrap:wrap;gap:.75rem}.panel-heading{flex-direction:column}}

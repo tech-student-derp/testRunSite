@@ -281,11 +281,11 @@ function getCardProduct(card) {
         sold: data.sold || Number(card.dataset.sold) || 0,
         reviews: data.reviews || 0,
         stock: data.stock || "Preorder",
-        delivery: data.delivery || "Pickup available",
-        material: data.material || "Cotton blend",
+        delivery: data.delivery || card.dataset.delivery || "Pickup available",
+        material: data.material || card.dataset.material || "Cotton blend",
         badge: data.badge || "WMSU Merch",
         review: data.review || "No review highlight yet.",
-        sizes: data.sizes || "S, M, L"
+        sizes: data.sizes || card.dataset.sizes || "S, M, L"
     };
 }
 
@@ -511,6 +511,9 @@ function renderApprovedProducts() {
             article.dataset.rating = product.rating || "4.5";
             article.dataset.sold = product.sold || "0";
             article.dataset.price = product.price || "0";
+            article.dataset.sizes = product.sizes || "One size";
+            article.dataset.material = product.material || "Merchant listed material";
+            article.dataset.delivery = product.delivery || "Merchant pickup or campus delivery";
 
             article.innerHTML = `
                 <button class="product-image-btn" type="button" aria-label="View ${product.name} details">
@@ -592,7 +595,9 @@ function renderMailThreads() {
 
     const user = getStoredObject("loggedInUser");
     const sender = user?.username || "Guest user";
-    const threads = getStoredArray("mailThreads").filter(thread => thread.sender === sender).slice(0, 3);
+    const threads = getStoredArray("mailThreads").filter(thread => {
+        return thread.sender === sender || thread.recipient === sender;
+    }).slice(0, 3);
 
     list.innerHTML = "";
     threads.forEach(thread => {
@@ -600,7 +605,7 @@ function renderMailThreads() {
         const article = document.createElement("article");
         article.innerHTML = `
             <strong>${thread.subject} (${thread.status})</strong>
-            <p>${latestReply ? `Reply from ${latestReply.from}: ${latestReply.message}` : `Sent to ${thread.recipient}: ${thread.message}`}</p>
+            <p>${latestReply ? `Reply from ${latestReply.from}: ${latestReply.message}` : `${thread.sender} to ${thread.recipient}: ${thread.message}`}</p>
         `;
         list.appendChild(article);
     });

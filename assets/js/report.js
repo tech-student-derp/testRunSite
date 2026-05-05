@@ -173,10 +173,21 @@ document.getElementById("report-form")?.addEventListener("submit", event => {
     }
 
     const reports = getStoredArray("productReports");
+    let reporter = "Guest user";
+
+    try {
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (loggedInUser?.username) reporter = loggedInUser.username;
+    } catch {
+        reporter = "Guest user";
+    }
+
     reports.unshift({
+        id: `REPORT-${Date.now()}`,
         productId,
         productName: product.name,
         merchant: product.merchant,
+        reporter,
         issues: selectedIssues,
         details,
         status: "pending",

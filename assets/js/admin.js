@@ -153,27 +153,77 @@ function saveMailThreads(threads) {
     localStorage.setItem("mailThreads", JSON.stringify(threads));
 }
 
-function notifyMerchantProductReview(request, status) {
+function getAdminLogs() {
+    return getStoredArray("adminLogs");
+}
+
+function saveAdminLogs(logs) {
+    localStorage.setItem("adminLogs", JSON.stringify(logs));
+}
+
+function addAdminLog(type, action) {
+    const logs = getAdminLogs();
+    logs.unshift({
+        id: `LOG-${Date.now()}`,
+        type,
+        action,
+        createdAt: new Date().toISOString()
+    });
+    saveAdminLogs(logs.slice(0, 40));
+}
+
+function sendThread({ recipient, sender, subject, message, productId = "", reportId = "" }) {
     const threads = getMailThreads();
+    threads.unshift({
+        id: `MAIL-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        recipient,
+        sender,
+        subject,
+        message,
+        status: "pending",
+        productId,
+        reportId,
+        replies: [],
+        createdAt: new Date().toISOString()
+    });
+    saveMailThreads(threads);
+}
+
+function guardRoleAccess() {
+    const path = window.location.pathname;
+    const user = getStoredObject("loggedInUser");
+    const isAdminPage = path.includes("/assets/html/admin/");
+    const isMerchantPage = path.includes("/assets/html/merchant/");
+
+    if (!isAdminPage && !isMerchantPage) return true;
+
+    const expectedRole = isAdminPage ? "admin" : "merchant";
+    if (user?.role === expectedRole) return true;
+
+    const fallback = user?.role === "admin"
+        ? "/assets/html/admin/admin-dashboard.html"
+        : user?.role === "merchant"
+            ? "/assets/html/merchant/merchant-dashboard.html"
+            : "/assets/html/login.html";
+
+    window.location.replace(fallback);
+    return false;
+}
+
+function notifyMerchantProductReview(request, status) {
     const approved = status === "approved";
     const subject = approved ? "Product approved" : "Product rejected";
     const message = approved
         ? `${request.name} was approved and is now visible on the storefront.`
         : `${request.name} was rejected. ${request.adminNote || "Please review the listing details and submit again."}`;
 
-    threads.unshift({
-        id: `MAIL-${Date.now()}-${request.id}`,
+    sendThread({
         recipient: "merchant",
         sender: "Admin",
         subject,
         message,
-        status: "pending",
-        productId: request.id,
-        replies: [],
-        createdAt: new Date().toISOString()
+        productId: request.id
     });
-
-    saveMailThreads(threads);
 }
 
 function getAllProducts() {
@@ -247,6 +297,8 @@ function renderAdminDashboard() {
     renderBarChart(orders);
     renderProductApprovals();
     renderAdminMail();
+    renderAdminLogs();
+    renderAdminUsers();
 }
 
 function renderProductApprovals() {
@@ -270,7 +322,10 @@ function renderProductApprovals() {
             <div class="approval-main">
                 <strong>${request.name}</strong>
                 <p class="panel-note">${request.category} | ${request.productType || "Product"} | ${formatPeso(request.price)} | Stock ${request.stock}</p>
-                <p class="panel-note">Image: ${request.imageName || "Uploaded image"}</p>
+                <p class="panel-note">Sizes: ${request.sizes || "One size"} | Material: ${request.material || "Merchant listed"} | ${request.delivery || "Campus pickup"}</p>
+                <p class="panel-note">SKU: ${request.sku || "No SKU"} | Mode: ${request.visibility || "public"} | Low stock alert: ${request.lowStockThreshold ?? "none"}</p>
+                <p class="panel-note">${request.description || "No description provided."}</p>
+                <p class="panel-note">Image: ${request.imageName || "Uploaded image"} | Tags: ${request.tags || "none"}</p>
                 <p class="panel-note">Submitted by ${request.merchant || "Merchant"}.</p>
             </div>
             <div class="approval-actions">
@@ -306,7 +361,10 @@ function reviewProductRequest(id, status, note) {
                 sold: 0,
                 rating: 4.5,
                 reviews: 0,
-                sizes: "S, M, L",
+                stockLabel: request.visibility === "preorder" ? "Preorder" : "In stock",
+                sizes: request.sizes || "One size",
+                material: request.material || "Merchant listed material",
+                delivery: request.delivery || "Merchant pickup or campus delivery",
                 description: request.description || "Merchant-added product approved by admin."
             });
             saveApprovedProducts(approved);
@@ -314,6 +372,7 @@ function reviewProductRequest(id, status, note) {
     }
 
     notifyMerchantProductReview(request, status);
+    addAdminLog(status === "approved" ? "APPROVE" : "REJECT", `${request.name} ${status} by admin.`);
 
     renderAdminDashboard();
     renderProductApprovals();
@@ -396,7 +455,11 @@ function renderAdminReports() {
             <span class="r-status ${status}">${status}</span>
             <button class="view-btn" type="button">View</button>
             <button class="resolve-btn ${status === "resolved" ? "disabled" : ""}" type="button">${status === "resolved" ? "Resolved" : "Resolve"}</button>
-            <p class="report-details" hidden>${report.details || "No extra details."}</p>
+            <div class="report-details" hidden>
+                <p>${report.details || "No extra details."}</p>
+                <p>Merchant: ${report.merchant || "Unknown merchant"}</p>
+                <p>${report.resolutionNote ? `Resolution: ${report.resolutionNote}` : "No resolution note yet."}</p>
+            </div>
         `;
 
         row.querySelector(".view-btn").addEventListener("click", () => {
@@ -410,6 +473,33 @@ function renderAdminReports() {
             reports[index].resolutionNote = note || "Reviewed by admin.";
             reports[index].resolvedAt = new Date().toISOString();
             localStorage.setItem("productReports", JSON.stringify(reports));
+            sendThread({
+                recipient: "merchant",
+                sender: "Admin",
+                subject: `Report reviewed: ${reports[index].productName || "Product"}`,
+                message: reports[index].resolutionNote,
+                productId: reports[index].productId,
+                reportId: reports[index].id || ""
+            });
+            if (reports[index].reporter) {
+                sendThread({
+                    recipient: reports[index].reporter,
+                    sender: "Admin",
+                    subject: `Your report was reviewed`,
+                    message: reports[index].resolutionNote,
+                    productId: reports[index].productId,
+                    reportId: reports[index].id || ""
+                });
+            }
+            sendThread({
+                recipient: "admin",
+                sender: "System",
+                subject: "Report resolved",
+                message: `${reports[index].productName || "Product"} was marked resolved.`,
+                productId: reports[index].productId,
+                reportId: reports[index].id || ""
+            });
+            addAdminLog("RESOLVE", `Report resolved for ${reports[index].productName || "product"}.`);
             renderAdminReports();
         });
 
@@ -492,21 +582,37 @@ function renderMerchantProducts() {
 
     function draw() {
         const requests = getMerchantProductRequests();
-        const products = [...baseProducts, ...requests];
+        const user = getStoredObject("loggedInUser");
+        const merchantName = user?.username || "Merchant";
+        const merchantRequests = requests.filter(product => {
+            return !product.merchant || product.merchant === merchantName || merchantName === "MERCHANT";
+        });
+        const products = [...baseProducts, ...merchantRequests];
         list.innerHTML = "";
 
         products.forEach(product => {
             const row = document.createElement("div");
             row.className = "product-row";
+            row.classList.add(`is-${product.status || "approved"}`);
             row.innerHTML = `
                 <span class="p-name">${product.name}</span>
-                <span class="p-seller">${product.category} | ${product.productType || "shirt"} | Stock: ${product.stock} | ${product.status || "system"}</span>
+                <span class="p-seller">${product.category} | ${product.productType || "shirt"} | Stock: ${product.stock} | Sizes: ${product.sizes || "One size"} | <span class="status-chip ${product.status || "approved"}">${product.status || "approved"}</span></span>
                 <span class="p-price">${formatPeso(product.price)}</span>
                 <button class="flag-btn" type="button">Edit</button>
                 <button class="delete-btn" type="button">Hide</button>
+                <p class="product-extra">${product.description || "System product."} ${product.adminNote ? `Admin note: ${product.adminNote}` : ""}</p>
             `;
             row.querySelector(".flag-btn").addEventListener("click", () => {
-                if (message) message.textContent = `${product.name} is open for editing in this mock panel.`;
+                if (product.status === "pending") {
+                    if (message) message.textContent = `${product.name} is still pending admin review.`;
+                    return;
+                }
+
+                document.getElementById("new-product-name").value = `${product.name} Copy`;
+                document.getElementById("new-product-price").value = Number(product.price) || "";
+                document.getElementById("new-product-stock").value = Number(product.stock) || "";
+                document.getElementById("new-product-description").value = product.description || "";
+                if (message) message.textContent = `${product.name} loaded as a draft copy. Submit it as a new review request after editing.`;
             });
             row.querySelector(".delete-btn").addEventListener("click", () => {
                 row.hidden = true;
@@ -525,11 +631,18 @@ function renderMerchantProducts() {
             const user = getStoredObject("loggedInUser");
             const imageInput = document.getElementById("new-product-image");
             const imageFile = imageInput.files?.[0];
+            const productType = document.getElementById("new-product-type").value;
+            const selectedSizes = Array.from(document.querySelectorAll('input[name="shirt-size"]:checked')).map(input => input.value);
             const allowedExtensions = [".jpg", ".jpeg", ".png", ".svg", ".webp"];
             const allowedTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
 
             if (!imageFile) {
                 if (message) message.textContent = "Please choose a product image before submitting.";
+                return;
+            }
+
+            if (productType === "shirts" && !selectedSizes.length) {
+                if (message) message.textContent = "Please select at least one available shirt size.";
                 return;
             }
 
@@ -547,10 +660,18 @@ function renderMerchantProducts() {
             const product = {
                 id: productId,
                 name: document.getElementById("new-product-name").value.trim(),
+                sku: document.getElementById("new-product-sku").value.trim(),
                 price: Number(document.getElementById("new-product-price").value) || 0,
                 stock: Number(document.getElementById("new-product-stock").value) || 0,
+                lowStockThreshold: Number(document.getElementById("new-product-low-stock").value) || 0,
                 category: document.getElementById("new-product-category").value,
-                productType: document.getElementById("new-product-type").value,
+                productType,
+                sizes: productType === "shirts" ? selectedSizes.join(", ") : "One size",
+                material: document.getElementById("new-product-material").value.trim() || "Merchant listed material",
+                delivery: document.getElementById("new-product-delivery").value,
+                visibility: document.getElementById("new-product-visibility").value,
+                tags: document.getElementById("new-product-tags").value.trim(),
+                description: document.getElementById("new-product-description").value.trim(),
                 img: "",
                 imageKey: `product-image-${productId}`,
                 imageName: imageFile.name,
@@ -568,7 +689,9 @@ function renderMerchantProducts() {
 
             requests.unshift(product);
             saveMerchantProductRequests(requests);
+            addAdminLog("CREATE", `${product.name} submitted by ${product.merchant}.`);
             form.reset();
+            updateSizePanel();
             if (message) message.textContent = `${product.name} was submitted to admin for approval.`;
             if (activity) {
                 const li = document.createElement("li");
@@ -581,6 +704,18 @@ function renderMerchantProducts() {
     }
 
     draw();
+}
+
+function updateSizePanel() {
+    const typeSelect = document.getElementById("new-product-type");
+    const sizePanel = document.getElementById("shirt-size-panel");
+    if (!typeSelect || !sizePanel) return;
+
+    const isShirt = typeSelect.value === "shirts";
+    sizePanel.hidden = !isShirt;
+    sizePanel.querySelectorAll("input").forEach(input => {
+        if (!isShirt) input.checked = false;
+    });
 }
 
 function createMailRow(thread, actor) {
@@ -624,6 +759,7 @@ function createMailRow(thread, actor) {
             createdAt: new Date().toISOString()
         });
         saveMailThreads(threads);
+        addAdminLog("UPDATE", `${actor} replied to ${saved.subject || "message"}.`);
         renderAdminMail();
         renderMerchantMail();
     });
@@ -649,6 +785,139 @@ function renderMerchantMail() {
     threads.forEach(thread => {
         list.appendChild(createMailRow(thread, "merchant"));
     });
+}
+
+function renderMerchantCustomers() {
+    const list = document.getElementById("merchant-customer-list");
+    if (!list) return;
+
+    const orders = getOrders();
+    const users = getStoredArray("users");
+    const customerMap = new Map();
+
+    users.forEach(user => {
+        customerMap.set(user.username || user.email || user.id, {
+            name: user.username || user.name || "Student",
+            email: user.email || "No email",
+            orders: 0,
+            total: 0,
+            lastItem: "No orders yet"
+        });
+    });
+
+    orders.forEach(order => {
+        const key = order.customerName || order.username || order.customerPhone || "Student";
+        const existing = customerMap.get(key) || {
+            name: key,
+            email: order.customerEmail || order.customerPhone || "No contact saved",
+            orders: 0,
+            total: 0,
+            lastItem: "Merch order"
+        };
+        existing.orders += 1;
+        existing.total += Number(order.total) || 0;
+        existing.lastItem = getOrderItems(order).map(item => item.name).filter(Boolean).join(", ") || existing.lastItem;
+        customerMap.set(key, existing);
+    });
+
+    list.innerHTML = "";
+    const customers = Array.from(customerMap.values()).slice(0, 10);
+
+    if (!customers.length) {
+        list.innerHTML = '<p class="panel-note">Registered users and buyers will appear here.</p>';
+        return;
+    }
+
+    customers.forEach(customer => {
+        const row = document.createElement("div");
+        row.className = "product-row";
+        row.innerHTML = `
+            <span class="p-name">${customer.name}</span>
+            <span class="p-seller">${customer.orders} orders | Last item: ${customer.lastItem}</span>
+            <span class="p-price">${formatPeso(customer.total)}</span>
+            <button class="flag-btn" type="button">Message</button>
+            <button class="delete-btn" type="button">Flag</button>
+        `;
+
+        row.querySelector(".flag-btn").addEventListener("click", () => {
+            sendThread({
+                recipient: "admin",
+                sender: "Merchant",
+                subject: `Customer follow-up: ${customer.name}`,
+                message: `Merchant wants to follow up with ${customer.name} about ${customer.lastItem}.`
+            });
+            row.querySelector(".flag-btn").textContent = "Queued";
+        });
+
+        row.querySelector(".delete-btn").addEventListener("click", () => {
+            sendThread({
+                recipient: "admin",
+                sender: "Merchant",
+                subject: `Customer flag: ${customer.name}`,
+                message: `${customer.name} was flagged for merchant review.`
+            });
+            row.querySelector(".delete-btn").textContent = "Flagged";
+        });
+
+        list.appendChild(row);
+    });
+}
+
+function renderAdminUsers() {
+    const panel = document.querySelector(".user-panel");
+    if (!panel || panel.dataset.dynamicBound) return;
+
+    const storedUsers = getStoredArray("users");
+    if (!storedUsers.length) {
+        panel.dataset.dynamicBound = "true";
+        return;
+    }
+
+    storedUsers.slice(0, 8).forEach(user => {
+        const row = document.createElement("div");
+        row.className = "user-row";
+        row.innerHTML = `
+            <span class="u-name">${user.username || user.name || "student"}</span>
+            <span class="u-email">${user.email || "No email"}</span>
+            <span class="u-role">${user.role || "user"} | ${user.verified ? "Verified" : "Unverified"}</span>
+            <button class="warn-btn" type="button">Warn</button>
+            <button class="ban-btn" type="button">Ban</button>
+        `;
+        panel.appendChild(row);
+    });
+
+    panel.dataset.dynamicBound = "true";
+}
+
+function renderAdminLogs() {
+    const panel = document.querySelector(".log-panel");
+    if (!panel) return;
+
+    document.getElementById("dynamic-log-list")?.remove();
+
+    const logs = getAdminLogs();
+    const list = document.createElement("div");
+    list.id = "dynamic-log-list";
+
+    if (!logs.length) {
+        list.innerHTML = '<p class="panel-note">No saved admin activity yet.</p>';
+        panel.prepend(list);
+        return;
+    }
+
+    logs.slice(0, 12).forEach(log => {
+        const entry = document.createElement("div");
+        const type = String(log.type || "INFO").toLowerCase();
+        entry.className = "log-entry";
+        entry.innerHTML = `
+            <span class="log-time">${formatDate(log.createdAt)}</span>
+            <span class="log-action">${log.action || "System activity"}</span>
+            <span class="log-type ${type === "reject" || type === "delete" ? "danger" : type === "resolve" || type === "approve" ? "ok" : type === "warn" ? "warn" : "info"}">${log.type || "INFO"}</span>
+        `;
+        list.appendChild(entry);
+    });
+
+    panel.prepend(list);
 }
 
 function initContextButtons() {
@@ -684,8 +953,11 @@ function initContextButtons() {
         if (button.dataset.bound) return;
         button.dataset.bound = "true";
         button.addEventListener("click", () => {
+            const row = button.closest(".user-row");
+            const username = row?.querySelector(".u-name")?.textContent || "user";
             button.textContent = "Warned";
             button.disabled = true;
+            addAdminLog("WARN", `${username} was warned by admin.`);
         });
     });
 
@@ -694,21 +966,30 @@ function initContextButtons() {
         button.dataset.bound = "true";
         button.addEventListener("click", () => {
             const row = button.closest(".user-row");
+            const username = row?.querySelector(".u-name")?.textContent || "user";
             row?.classList.add("banned");
             button.textContent = "Banned";
             button.disabled = true;
+            addAdminLog("DELETE", `${username} was banned by admin.`);
         });
     });
 }
 
 renderLogout();
+guardRoleAccess();
 renderAdminDashboard();
 renderProductApprovals();
 renderAdminReports();
 renderMerchantDashboard();
 renderMerchantProducts();
 renderMerchantMail();
+renderMerchantCustomers();
+renderAdminUsers();
+renderAdminLogs();
 initContextButtons();
+
+document.getElementById("new-product-type")?.addEventListener("change", updateSizePanel);
+updateSizePanel();
 
 window.addEventListener("storage", () => {
     renderAdminDashboard();
@@ -717,5 +998,8 @@ window.addEventListener("storage", () => {
     renderMerchantDashboard();
     renderMerchantProducts();
     renderMerchantMail();
+    renderMerchantCustomers();
+    renderAdminUsers();
+    renderAdminLogs();
     initContextButtons();
 });

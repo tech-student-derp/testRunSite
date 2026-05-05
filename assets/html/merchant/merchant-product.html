@@ -42,56 +42,142 @@
     <main class="admin-main">
 
         <section class="add-product-panel">
-            <h3>Add Product</h3>
+            <div class="panel-heading">
+                <div>
+                    <p class="panel-kicker">Merchant listing builder</p>
+                    <h3>Add Product</h3>
+                </div>
+                <span class="approval-pill">Requires admin approval</span>
+            </div>
             <form id="merchant-add-product-form" class="add-product-form">
-                <input id="new-product-name" type="text" placeholder="Product name" required>
-                <input id="new-product-price" type="number" min="1" placeholder="Price" required>
-                <input id="new-product-stock" type="number" min="0" placeholder="Stock" required>
-                <select id="new-product-category" required>
-                    <option value="" disabled selected>College / course</option>
-                    <option value="CCS - BSCS">CCS - BSCS</option>
-                    <option value="CCS - BSIT">CCS - BSIT</option>
-                    <option value="CCS - ACT AD">CCS - ACT AD</option>
-                    <option value="COE - BS Civil Engineering">COE - BS Civil Engineering</option>
-                    <option value="COE - BS Electrical Engineering">COE - BS Electrical Engineering</option>
-                    <option value="COE - BS Mechanical Engineering">COE - BS Mechanical Engineering</option>
-                    <option value="CTE - Bachelor of Elementary Education">CTE - Bachelor of Elementary Education</option>
-                    <option value="CTE - Bachelor of Secondary Education">CTE - Bachelor of Secondary Education</option>
-                    <option value="CCJE - BS Criminology">CCJE - BS Criminology</option>
-                    <option value="COA - BS Architecture">COA - BS Architecture</option>
-                    <option value="COM - Doctor of Medicine">COM - Doctor of Medicine</option>
-                    <option value="CON - BS Nursing">CON - BS Nursing</option>
-                    <option value="CBA - BS Accountancy">CBA - BS Accountancy</option>
-                    <option value="CBA - BS Business Administration">CBA - BS Business Administration</option>
-                    <option value="CAS - BA Communication">CAS - BA Communication</option>
-                    <option value="CAS - BS Psychology">CAS - BS Psychology</option>
-                    <option value="CA - BS Agriculture">CA - BS Agriculture</option>
-                    <option value="CFES - BS Forestry">CFES - BS Forestry</option>
-                    <option value="CHE - BS Hospitality Management">CHE - BS Hospitality Management</option>
-                    <option value="CT - BS Tourism Management">CT - BS Tourism Management</option>
-                    <option value="CSM - BS Biology">CSM - BS Biology</option>
-                    <option value="CSM - BS Mathematics">CSM - BS Mathematics</option>
-                    <option value="CSM - BS Chemistry">CSM - BS Chemistry</option>
-                    <option value="CPADS - BA Political Science">CPADS - BA Political Science</option>
-                    <option value="CSWCD - BS Social Work">CSWCD - BS Social Work</option>
-                    <option value="CPE - Bachelor of Physical Education">CPE - Bachelor of Physical Education</option>
-                    <option value="CFA - Bachelor of Fine Arts">CFA - Bachelor of Fine Arts</option>
-                    <option value="COL - Bachelor of Laws">COL - Bachelor of Laws</option>
-                    <option value="GS - Graduate Studies">GS - Graduate Studies</option>
-                </select>
-                <select id="new-product-type" required>
-                    <option value="" disabled selected>Product type</option>
-                    <option value="shirts">Shirts</option>
-                    <option value="lanyard">Lanyard</option>
-                    <option value="stickers">Stickers</option>
-                    <option value="pins">Pins</option>
-                    <option value="accessories">Accessories</option>
-                </select>
-                <label class="file-field">
-                    Product image (.jpg, .png, .svg, .webp)
-                    <input id="new-product-image" type="file" accept=".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp" required>
-                </label>
-                <button type="submit">Add Product</button>
+                <div class="form-section">
+                    <h4>Product identity</h4>
+                    <div class="form-grid">
+                        <label>
+                            Product name
+                            <input id="new-product-name" type="text" placeholder="Example: CCS Founder Shirt" required>
+                        </label>
+                        <label>
+                            SKU / batch code
+                            <input id="new-product-sku" type="text" placeholder="Example: CCS-SHIRT-2026">
+                        </label>
+                        <label>
+                            College / course
+                            <select id="new-product-category" required>
+                                <option value="" disabled selected>Choose college / course</option>
+                                <option value="CCS - BSCS">CCS - BSCS</option>
+                                <option value="CCS - BSIT">CCS - BSIT</option>
+                                <option value="CCS - ACT AD">CCS - ACT AD</option>
+                                <option value="COE - BS Civil Engineering">COE - BS Civil Engineering</option>
+                                <option value="COE - BS Electrical Engineering">COE - BS Electrical Engineering</option>
+                                <option value="COE - BS Mechanical Engineering">COE - BS Mechanical Engineering</option>
+                                <option value="CTE - Bachelor of Elementary Education">CTE - Bachelor of Elementary Education</option>
+                                <option value="CTE - Bachelor of Secondary Education">CTE - Bachelor of Secondary Education</option>
+                                <option value="CCJE - BS Criminology">CCJE - BS Criminology</option>
+                                <option value="COA - BS Architecture">COA - BS Architecture</option>
+                                <option value="COM - Doctor of Medicine">COM - Doctor of Medicine</option>
+                                <option value="CON - BS Nursing">CON - BS Nursing</option>
+                                <option value="CBA - BS Accountancy">CBA - BS Accountancy</option>
+                                <option value="CBA - BS Business Administration">CBA - BS Business Administration</option>
+                                <option value="CAS - BA Communication">CAS - BA Communication</option>
+                                <option value="CAS - BS Psychology">CAS - BS Psychology</option>
+                                <option value="CA - BS Agriculture">CA - BS Agriculture</option>
+                                <option value="CFES - BS Forestry">CFES - BS Forestry</option>
+                                <option value="CHE - BS Hospitality Management">CHE - BS Hospitality Management</option>
+                                <option value="CT - BS Tourism Management">CT - BS Tourism Management</option>
+                                <option value="CSM - BS Biology">CSM - BS Biology</option>
+                                <option value="CSM - BS Mathematics">CSM - BS Mathematics</option>
+                                <option value="CSM - BS Chemistry">CSM - BS Chemistry</option>
+                                <option value="CPADS - BA Political Science">CPADS - BA Political Science</option>
+                                <option value="CSWCD - BS Social Work">CSWCD - BS Social Work</option>
+                                <option value="CPE - Bachelor of Physical Education">CPE - Bachelor of Physical Education</option>
+                                <option value="CFA - Bachelor of Fine Arts">CFA - Bachelor of Fine Arts</option>
+                                <option value="COL - Bachelor of Laws">COL - Bachelor of Laws</option>
+                                <option value="GS - Graduate Studies">GS - Graduate Studies</option>
+                            </select>
+                        </label>
+                        <label>
+                            Product type
+                            <select id="new-product-type" required>
+                                <option value="" disabled selected>Choose product type</option>
+                                <option value="shirts">Shirts</option>
+                                <option value="lanyard">Lanyard</option>
+                                <option value="stickers">Stickers</option>
+                                <option value="pins">Pins</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>Pricing and inventory</h4>
+                    <div class="form-grid">
+                        <label>
+                            Price
+                            <input id="new-product-price" type="number" min="1" placeholder="259" required>
+                        </label>
+                        <label>
+                            Total stock
+                            <input id="new-product-stock" type="number" min="0" placeholder="50" required>
+                        </label>
+                        <label>
+                            Low stock alert
+                            <input id="new-product-low-stock" type="number" min="0" placeholder="10">
+                        </label>
+                        <label>
+                            Listing mode
+                            <select id="new-product-visibility">
+                                <option value="public">Public after approval</option>
+                                <option value="preorder">Preorder batch</option>
+                                <option value="draft">Draft review only</option>
+                            </select>
+                        </label>
+                    </div>
+                    <fieldset id="shirt-size-panel" class="size-panel">
+                        <legend>Available shirt sizes</legend>
+                        <label><input type="checkbox" name="shirt-size" value="S"> Small</label>
+                        <label><input type="checkbox" name="shirt-size" value="M"> Medium</label>
+                        <label><input type="checkbox" name="shirt-size" value="L"> Large</label>
+                        <label><input type="checkbox" name="shirt-size" value="XL"> XL</label>
+                        <label><input type="checkbox" name="shirt-size" value="2XL"> 2XL</label>
+                    </fieldset>
+                </div>
+
+                <div class="form-section">
+                    <h4>Fulfillment and details</h4>
+                    <div class="form-grid">
+                        <label>
+                            Material
+                            <input id="new-product-material" type="text" placeholder="Cotton blend, polyester, acrylic">
+                        </label>
+                        <label>
+                            Delivery / pickup
+                            <select id="new-product-delivery">
+                                <option value="Campus pickup">Campus pickup</option>
+                                <option value="Campus delivery">Campus delivery</option>
+                                <option value="Pickup or campus delivery">Pickup or campus delivery</option>
+                                <option value="Ships after preorder cutoff">Ships after preorder cutoff</option>
+                            </select>
+                        </label>
+                        <label class="wide-field">
+                            Product tags
+                            <input id="new-product-tags" type="text" placeholder="department shirt, event merch, preorder">
+                        </label>
+                    </div>
+                    <label class="wide-field">
+                        Product description
+                        <textarea id="new-product-description" rows="4" placeholder="Describe the item, design, fit, pickup instructions, or preorder notes." required></textarea>
+                    </label>
+                </div>
+
+                <div class="form-section submit-section">
+                    <label class="file-field">
+                        Product image (.jpg, .png, .svg, .webp)
+                        <input id="new-product-image" type="file" accept=".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp" required>
+                    </label>
+                    <button type="submit">Submit for Review</button>
+                </div>
             </form>
             <p id="merchant-product-message" class="panel-note"></p>
         </section>
