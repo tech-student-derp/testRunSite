@@ -374,6 +374,36 @@ function getAllReviews() {
     return [...product.comments, ...getStoredArray(storedReviewKey)];
 }
 
+function getCompletedOrders() {
+    return getStoredArray("orders").filter(order => order.status === "complete");
+}
+
+function getPurchasedQuantity() {
+    return getCompletedOrders().reduce((total, order) => {
+        const items = Array.isArray(order.items) ? order.items : [];
+        return total + items.reduce((sum, item) => {
+            return item.id === productId ? sum + (Number(item.qty) || 1) : sum;
+        }, 0);
+    }, 0);
+}
+
+function getDisplayMetrics() {
+    const storedReviews = getStoredArray(storedReviewKey);
+    const visibleReviews = getAllReviews();
+    const baseRating = Number(product.rating) || 0;
+    const visibleTotal = visibleReviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0);
+    const reviewCount = (Number(product.reviews) || 0) + storedReviews.length;
+    const rating = visibleReviews.length
+        ? visibleTotal / visibleReviews.length
+        : baseRating;
+
+    return {
+        rating: Number(rating.toFixed(1)),
+        reviews: reviewCount,
+        sold: (Number(product.sold) || 0) + getPurchasedQuantity()
+    };
+}
+
 function ratingPercent(rating) {
     return `${Math.max(0, Math.min(Number(rating) || 0, 5)) / 5 * 100}%`;
 }
@@ -453,12 +483,14 @@ function renderReviews() {
 }
 
 function hydrateProduct() {
+    const metrics = getDisplayMetrics();
+
     document.title = `${product.name} | WMSU Merch`;
     setText("product-category", product.category);
     setText("product-name", product.name);
-    setText("rating-score", product.rating);
-    setText("rating-count", `${product.reviews} reviews`);
-    setText("sold-count", `${product.sold} sold`);
+    setText("rating-score", metrics.rating);
+    setText("rating-count", `${metrics.reviews} reviews`);
+    setText("sold-count", `${metrics.sold} sold`);
     setText("product-price", product.price);
     setText("merchant-name", product.merchant);
     setText("product-description", product.description);
@@ -466,7 +498,7 @@ function hydrateProduct() {
     setText("product-stock", product.stock);
     setText("product-material", product.material);
     setText("product-delivery", product.delivery);
-    setText("review-summary", `Average rating ${product.rating} from ${product.reviews} reviews.`);
+    setText("review-summary", `Average rating ${metrics.rating} from ${metrics.reviews} reviews.`);
 
     const image = document.getElementById("product-image");
     const stars = document.getElementById("rating-stars");
@@ -490,8 +522,8 @@ function hydrateProduct() {
     }
 
     if (stars) {
-        stars.style.setProperty("--rating-percent", ratingPercent(product.rating));
-        stars.setAttribute("aria-label", `${product.rating} out of 5 stars`);
+        stars.style.setProperty("--rating-percent", ratingPercent(metrics.rating));
+        stars.setAttribute("aria-label", `${metrics.rating} out of 5 stars`);
     }
 
     if (reportLink) {
@@ -575,6 +607,7 @@ document.getElementById("review-form")?.addEventListener("submit", event => {
 
     localStorage.setItem(storedReviewKey, JSON.stringify(storedReviews));
     event.target.reset();
+    hydrateProduct();
     renderReviews();
 });
 

@@ -267,9 +267,21 @@ function updateCartCount() {
     cartCount.textContent = totalQty;
 }
 
+function getProductSoldQuantity(productId) {
+    return getStoredArray("orders")
+        .filter(order => order.status === "complete")
+        .reduce((total, order) => {
+            const items = Array.isArray(order.items) ? order.items : [];
+            return total + items.reduce((sum, item) => {
+                return item.id === productId ? sum + (Number(item.qty) || 1) : sum;
+            }, 0);
+        }, 0);
+}
+
 function getCardProduct(card) {
     const id = card.dataset.id;
     const data = productData[id] || {};
+    const baseSold = data.sold || Number(card.dataset.sold) || 0;
 
     return {
         id,
@@ -278,7 +290,7 @@ function getCardProduct(card) {
         price: card.querySelector(".price")?.textContent.trim() || "₱0",
         category: card.querySelector(".product-tag")?.textContent.trim() || "Merch",
         rating: data.rating || Number(card.dataset.rating) || 0,
-        sold: data.sold || Number(card.dataset.sold) || 0,
+        sold: baseSold + getProductSoldQuantity(id),
         reviews: data.reviews || 0,
         stock: data.stock || "Preorder",
         delivery: data.delivery || card.dataset.delivery || "Pickup available",

@@ -145,6 +145,21 @@ body {
     font-size: 0.8rem;
 }
 
+.log-message-btn {
+    border: none;
+    border-radius: 6px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    padding: .4rem .7rem;
+    font-weight: 700;
+}
+
+.log-message-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
 /* TYPES */
 .danger {
     color: crimson;

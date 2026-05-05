@@ -35,6 +35,36 @@ function getOrders() {
     }
 }
 
+function getStoredArray(key) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(value) ? value : [];
+    } catch {
+        return [];
+    }
+}
+
+function updateApprovedProductSales(items) {
+    const approvedProducts = getStoredArray("approvedProducts");
+    if (!approvedProducts.length) return;
+
+    let changed = false;
+    items.forEach(item => {
+        const product = approvedProducts.find(entry => entry.id === item.id);
+        if (!product) return;
+
+        const qty = Number(item.qty) || 1;
+        if (Number.isFinite(Number(product.stock))) {
+            product.stock = Math.max(0, Number(product.stock) - qty);
+        }
+        changed = true;
+    });
+
+    if (changed) {
+        localStorage.setItem("approvedProducts", JSON.stringify(approvedProducts));
+    }
+}
+
 function formatPeso(amount) {
     return `₱${Number(amount || 0).toLocaleString("en-PH")}`;
 }
@@ -119,6 +149,7 @@ function saveStatus(transaction, status, reason) {
             status: "complete"
         });
         localStorage.setItem("orders", JSON.stringify(orders));
+        updateApprovedProductSales(Array.isArray(transaction.items) ? transaction.items : []);
         localStorage.removeItem("cart");
     }
 

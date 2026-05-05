@@ -465,8 +465,8 @@ function renderAdminReports() {
             <span class="r-type">${escapeHtml((report.issues || ["Product report"])[0])}</span>
             <span class="r-target">${escapeHtml(report.productName || "Unknown product")}</span>
             <span class="r-status ${status}">${status}</span>
-            <button class="view-btn" type="button">View</button>
-            <button class="resolve-btn ${status === "resolved" ? "disabled" : ""}" type="button">${status === "resolved" ? "Resolved" : "Resolve"}</button>
+            <button class="view-btn scoped-action" type="button">View</button>
+            <button class="resolve-btn scoped-action ${status === "resolved" ? "disabled" : ""}" type="button">${status === "resolved" ? "Resolved" : "Resolve"}</button>
             <div class="report-details" hidden>
                 <p>${escapeHtml(report.details || "No extra details.")}</p>
                 <p>Merchant: ${escapeHtml(report.merchant || "Unknown merchant")}</p>
@@ -738,12 +738,12 @@ function createMailRow(thread, actor) {
         <span class="r-type">${escapeHtml(thread.subject || "Message")}</span>
         <span class="r-target">${escapeHtml(thread.sender)}: ${escapeHtml(thread.message)}</span>
         <span class="r-status ${thread.status === "replied" ? "resolved" : "pending"}">${thread.status || "pending"}</span>
-        <button class="view-btn" type="button">View</button>
-        <button class="resolve-btn" type="button">${thread.status === "replied" ? "Reply Again" : "Reply"}</button>
+        <button class="view-btn scoped-action" type="button">View</button>
+        <button class="resolve-btn scoped-action" type="button">${thread.status === "replied" ? "Reply Again" : "Reply"}</button>
         <div class="mail-reply-box" hidden>
             <p class="panel-note">${latestReply ? `Last reply: ${escapeHtml(latestReply.message)}` : "No replies yet."}</p>
             <textarea rows="3" placeholder="Write a reply"></textarea>
-            <button class="resolve-btn" type="button">Send Reply</button>
+            <button class="resolve-btn scoped-action" type="button">Send Reply</button>
         </div>
     `;
 
@@ -925,11 +925,50 @@ function renderAdminLogs() {
             <span class="log-time">${formatDate(log.createdAt)}</span>
             <span class="log-action">${escapeHtml(log.action || "System activity")}</span>
             <span class="log-type ${type === "reject" || type === "delete" ? "danger" : type === "resolve" || type === "approve" ? "ok" : type === "warn" ? "warn" : "info"}">${log.type || "INFO"}</span>
+            <button class="log-message-btn" type="button">Send Note</button>
         `;
         list.appendChild(entry);
     });
 
     panel.prepend(list);
+}
+
+function getReportRecipient(type, target) {
+    const normalizedType = String(type || "").toLowerCase();
+    const normalizedTarget = String(target || "").trim();
+
+    if (normalizedType.includes("user") || normalizedType.includes("spam")) {
+        return normalizedTarget.split(/\s+/)[0] || "admin";
+    }
+
+    return "merchant";
+}
+
+function initAdminLogButtons() {
+    document.querySelectorAll(".log-entry").forEach(entry => {
+        let button = entry.querySelector(".log-message-btn");
+        if (!button) {
+            button = document.createElement("button");
+            button.className = "log-message-btn";
+            button.type = "button";
+            button.textContent = "Send Note";
+            entry.appendChild(button);
+        }
+
+        if (button.dataset.bound) return;
+        button.dataset.bound = "true";
+        button.addEventListener("click", () => {
+            const action = entry.querySelector(".log-action")?.textContent || "Admin log activity";
+            sendThread({
+                recipient: "admin",
+                sender: "System",
+                subject: "Log follow-up",
+                message: action
+            });
+            button.textContent = "Sent";
+            button.disabled = true;
+        });
+    });
 }
 
 function initContextButtons() {
@@ -952,14 +991,43 @@ function initContextButtons() {
     });
 
     document.querySelectorAll(".report-panel .resolve-btn:not(.disabled)").forEach(button => {
+        if (button.classList.contains("scoped-action")) return;
         if (button.dataset.bound) return;
         button.dataset.bound = "true";
         button.addEventListener("click", () => {
             const row = button.closest(".report-row");
+            const type = row?.querySelector(".r-type")?.textContent || "Report";
+            const target = row?.querySelector(".r-target")?.textContent || "Unknown target";
+            const recipient = getReportRecipient(type, target);
+
             row?.querySelector(".r-status")?.classList.remove("pending");
             row?.querySelector(".r-status")?.classList.add("resolved");
             if (row?.querySelector(".r-status")) row.querySelector(".r-status").textContent = "Resolved";
+            sendThread({
+                recipient,
+                sender: "Admin",
+                subject: `Report resolved: ${type}`,
+                message: `The report for ${target} was reviewed and marked resolved.`
+            });
+            addAdminLog("RESOLVE", `Static report resolved for ${target}.`);
             button.textContent = "Done";
+        });
+    });
+
+    document.querySelectorAll(".report-panel .view-btn").forEach(button => {
+        if (button.classList.contains("scoped-action")) return;
+        if (button.dataset.bound) return;
+        button.dataset.bound = "true";
+        button.addEventListener("click", () => {
+            const row = button.closest(".report-row");
+            let details = row?.querySelector(".report-details");
+            if (!details && row) {
+                details = document.createElement("p");
+                details.className = "report-details";
+                details.textContent = "This report is queued for admin review and target notification.";
+                row.appendChild(details);
+            }
+            if (details) details.hidden = !details.hidden;
         });
     });
 
@@ -1001,6 +1069,7 @@ renderMerchantCustomers();
 renderAdminUsers();
 renderAdminLogs();
 initContextButtons();
+initAdminLogButtons();
 
 document.getElementById("new-product-type")?.addEventListener("change", updateSizePanel);
 updateSizePanel();
@@ -1016,4 +1085,5 @@ window.addEventListener("storage", () => {
     renderAdminUsers();
     renderAdminLogs();
     initContextButtons();
+    initAdminLogButtons();
 });
