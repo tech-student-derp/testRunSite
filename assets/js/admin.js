@@ -121,6 +121,15 @@ function formatDate(value) {
     });
 }
 
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 function getOrders() {
     return getStoredArray("orders");
 }
@@ -212,9 +221,12 @@ function guardRoleAccess() {
 
 function notifyMerchantProductReview(request, status) {
     const approved = status === "approved";
+    const draftOnly = request.visibility === "draft";
     const subject = approved ? "Product approved" : "Product rejected";
-    const message = approved
-        ? `${request.name} was approved and is now visible on the storefront.`
+    const message = approved && draftOnly
+        ? `${request.name} was approved as a draft review. Change the listing mode and resubmit when it is ready for the storefront.`
+        : approved
+            ? `${request.name} was approved and is now visible on the storefront.`
         : `${request.name} was rejected. ${request.adminNote || "Please review the listing details and submit again."}`;
 
     sendThread({
@@ -318,15 +330,15 @@ function renderProductApprovals() {
         const row = document.createElement("div");
         row.className = "approval-row";
         row.innerHTML = `
-            <img src="${request.img || "/assets/img/bs-shirt.png"}" alt="${request.name}">
+            <img src="${request.img || "/assets/img/bs-shirt.png"}" alt="${escapeHtml(request.name)}">
             <div class="approval-main">
-                <strong>${request.name}</strong>
-                <p class="panel-note">${request.category} | ${request.productType || "Product"} | ${formatPeso(request.price)} | Stock ${request.stock}</p>
-                <p class="panel-note">Sizes: ${request.sizes || "One size"} | Material: ${request.material || "Merchant listed"} | ${request.delivery || "Campus pickup"}</p>
-                <p class="panel-note">SKU: ${request.sku || "No SKU"} | Mode: ${request.visibility || "public"} | Low stock alert: ${request.lowStockThreshold ?? "none"}</p>
-                <p class="panel-note">${request.description || "No description provided."}</p>
-                <p class="panel-note">Image: ${request.imageName || "Uploaded image"} | Tags: ${request.tags || "none"}</p>
-                <p class="panel-note">Submitted by ${request.merchant || "Merchant"}.</p>
+                <strong>${escapeHtml(request.name)}</strong>
+                <p class="panel-note">${escapeHtml(request.category)} | ${escapeHtml(request.productType || "Product")} | ${formatPeso(request.price)} | Stock ${escapeHtml(request.stock)}</p>
+                <p class="panel-note">Sizes: ${escapeHtml(request.sizes || "One size")} | Material: ${escapeHtml(request.material || "Merchant listed")} | ${escapeHtml(request.delivery || "Campus pickup")}</p>
+                <p class="panel-note">SKU: ${escapeHtml(request.sku || "No SKU")} | Mode: ${escapeHtml(request.visibility || "public")} | Low stock alert: ${escapeHtml(request.lowStockThreshold ?? "none")}</p>
+                <p class="panel-note">${escapeHtml(request.description || "No description provided.")}</p>
+                <p class="panel-note">Image: ${escapeHtml(request.imageName || "Uploaded image")} | Tags: ${escapeHtml(request.tags || "none")}</p>
+                <p class="panel-note">Submitted by ${escapeHtml(request.merchant || "Merchant")}.</p>
             </div>
             <div class="approval-actions">
                 <textarea rows="2" placeholder="Admin message to merchant"></textarea>
@@ -353,7 +365,7 @@ function reviewProductRequest(id, status, note) {
     request.reviewedAt = new Date().toISOString();
     saveMerchantProductRequests(requests);
 
-    if (status === "approved") {
+    if (status === "approved" && request.visibility !== "draft") {
         const approved = getMerchantProducts();
         if (!approved.some(item => item.id === request.id)) {
             approved.unshift({
@@ -372,7 +384,7 @@ function reviewProductRequest(id, status, note) {
     }
 
     notifyMerchantProductReview(request, status);
-    addAdminLog(status === "approved" ? "APPROVE" : "REJECT", `${request.name} ${status} by admin.`);
+    addAdminLog(status === "approved" ? "APPROVE" : "REJECT", `${request.name} ${status}${request.visibility === "draft" ? " as draft" : ""} by admin.`);
 
     renderAdminDashboard();
     renderProductApprovals();
@@ -447,18 +459,18 @@ function renderAdminReports() {
 
     reports.forEach((report, index) => {
         const row = document.createElement("div");
-        const status = report.status === "resolved" ? "resolved" : "pending";
-        row.className = "report-row";
-        row.innerHTML = `
-            <span class="r-type">${(report.issues || ["Product report"])[0]}</span>
-            <span class="r-target">${report.productName || "Unknown product"}</span>
+            const status = report.status === "resolved" ? "resolved" : "pending";
+            row.className = "report-row";
+            row.innerHTML = `
+            <span class="r-type">${escapeHtml((report.issues || ["Product report"])[0])}</span>
+            <span class="r-target">${escapeHtml(report.productName || "Unknown product")}</span>
             <span class="r-status ${status}">${status}</span>
             <button class="view-btn" type="button">View</button>
             <button class="resolve-btn ${status === "resolved" ? "disabled" : ""}" type="button">${status === "resolved" ? "Resolved" : "Resolve"}</button>
             <div class="report-details" hidden>
-                <p>${report.details || "No extra details."}</p>
-                <p>Merchant: ${report.merchant || "Unknown merchant"}</p>
-                <p>${report.resolutionNote ? `Resolution: ${report.resolutionNote}` : "No resolution note yet."}</p>
+                <p>${escapeHtml(report.details || "No extra details.")}</p>
+                <p>Merchant: ${escapeHtml(report.merchant || "Unknown merchant")}</p>
+                <p>${report.resolutionNote ? `Resolution: ${escapeHtml(report.resolutionNote)}` : "No resolution note yet."}</p>
             </div>
         `;
 
@@ -595,12 +607,12 @@ function renderMerchantProducts() {
             row.className = "product-row";
             row.classList.add(`is-${product.status || "approved"}`);
             row.innerHTML = `
-                <span class="p-name">${product.name}</span>
-                <span class="p-seller">${product.category} | ${product.productType || "shirt"} | Stock: ${product.stock} | Sizes: ${product.sizes || "One size"} | <span class="status-chip ${product.status || "approved"}">${product.status || "approved"}</span></span>
+                <span class="p-name">${escapeHtml(product.name)}</span>
+                <span class="p-seller">${escapeHtml(product.category)} | ${escapeHtml(product.productType || "shirt")} | Stock: ${escapeHtml(product.stock)} | Sizes: ${escapeHtml(product.sizes || "One size")} | <span class="status-chip ${product.status || "approved"}">${product.status || "approved"}</span></span>
                 <span class="p-price">${formatPeso(product.price)}</span>
-                <button class="flag-btn" type="button">Edit</button>
-                <button class="delete-btn" type="button">Hide</button>
-                <p class="product-extra">${product.description || "System product."} ${product.adminNote ? `Admin note: ${product.adminNote}` : ""}</p>
+                <button class="flag-btn scoped-action" type="button">Edit</button>
+                <button class="delete-btn scoped-action" type="button">Hide</button>
+                <p class="product-extra">${escapeHtml(product.description || "System product.")} ${product.adminNote ? `Admin note: ${escapeHtml(product.adminNote)}` : ""}</p>
             `;
             row.querySelector(".flag-btn").addEventListener("click", () => {
                 if (product.status === "pending") {
@@ -723,13 +735,13 @@ function createMailRow(thread, actor) {
     row.className = actor === "admin" ? "mail-row" : "report-row";
     const latestReply = thread.replies?.at?.(-1);
     row.innerHTML = `
-        <span class="r-type">${thread.subject || "Message"}</span>
-        <span class="r-target">${thread.sender}: ${thread.message}</span>
+        <span class="r-type">${escapeHtml(thread.subject || "Message")}</span>
+        <span class="r-target">${escapeHtml(thread.sender)}: ${escapeHtml(thread.message)}</span>
         <span class="r-status ${thread.status === "replied" ? "resolved" : "pending"}">${thread.status || "pending"}</span>
         <button class="view-btn" type="button">View</button>
         <button class="resolve-btn" type="button">${thread.status === "replied" ? "Reply Again" : "Reply"}</button>
         <div class="mail-reply-box" hidden>
-            <p class="panel-note">${latestReply ? `Last reply: ${latestReply.message}` : "No replies yet."}</p>
+            <p class="panel-note">${latestReply ? `Last reply: ${escapeHtml(latestReply.message)}` : "No replies yet."}</p>
             <textarea rows="3" placeholder="Write a reply"></textarea>
             <button class="resolve-btn" type="button">Send Reply</button>
         </div>
@@ -832,11 +844,11 @@ function renderMerchantCustomers() {
         const row = document.createElement("div");
         row.className = "product-row";
         row.innerHTML = `
-            <span class="p-name">${customer.name}</span>
-            <span class="p-seller">${customer.orders} orders | Last item: ${customer.lastItem}</span>
+            <span class="p-name">${escapeHtml(customer.name)}</span>
+            <span class="p-seller">${customer.orders} orders | Last item: ${escapeHtml(customer.lastItem)}</span>
             <span class="p-price">${formatPeso(customer.total)}</span>
-            <button class="flag-btn" type="button">Message</button>
-            <button class="delete-btn" type="button">Flag</button>
+            <button class="flag-btn scoped-action" type="button">Message</button>
+            <button class="delete-btn scoped-action" type="button">Flag</button>
         `;
 
         row.querySelector(".flag-btn").addEventListener("click", () => {
@@ -877,9 +889,9 @@ function renderAdminUsers() {
         const row = document.createElement("div");
         row.className = "user-row";
         row.innerHTML = `
-            <span class="u-name">${user.username || user.name || "student"}</span>
-            <span class="u-email">${user.email || "No email"}</span>
-            <span class="u-role">${user.role || "user"} | ${user.verified ? "Verified" : "Unverified"}</span>
+            <span class="u-name">${escapeHtml(user.username || user.name || "student")}</span>
+            <span class="u-email">${escapeHtml(user.email || "No email")}</span>
+            <span class="u-role">${escapeHtml(user.role || "user")} | ${user.verified ? "Verified" : "Unverified"}</span>
             <button class="warn-btn" type="button">Warn</button>
             <button class="ban-btn" type="button">Ban</button>
         `;
@@ -911,7 +923,7 @@ function renderAdminLogs() {
         entry.className = "log-entry";
         entry.innerHTML = `
             <span class="log-time">${formatDate(log.createdAt)}</span>
-            <span class="log-action">${log.action || "System activity"}</span>
+            <span class="log-action">${escapeHtml(log.action || "System activity")}</span>
             <span class="log-type ${type === "reject" || type === "delete" ? "danger" : type === "resolve" || type === "approve" ? "ok" : type === "warn" ? "warn" : "info"}">${log.type || "INFO"}</span>
         `;
         list.appendChild(entry);
@@ -922,6 +934,7 @@ function renderAdminLogs() {
 
 function initContextButtons() {
     document.querySelectorAll(".product-panel .flag-btn").forEach(button => {
+        if (button.classList.contains("scoped-action")) return;
         if (button.dataset.bound) return;
         button.dataset.bound = "true";
         button.addEventListener("click", () => {
@@ -930,6 +943,7 @@ function initContextButtons() {
     });
 
     document.querySelectorAll(".product-panel .delete-btn").forEach(button => {
+        if (button.classList.contains("scoped-action")) return;
         if (button.dataset.bound) return;
         button.dataset.bound = "true";
         button.addEventListener("click", () => {
