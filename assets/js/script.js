@@ -444,6 +444,13 @@ function renderAuthArea() {
 
     authArea.innerHTML = "";
 
+    const themeButton = document.createElement("button");
+    themeButton.id = "theme-toggle";
+    themeButton.className = "theme-toggle";
+    themeButton.type = "button";
+    themeButton.setAttribute("aria-pressed", document.documentElement.dataset.theme === "dark" ? "true" : "false");
+    themeButton.textContent = document.documentElement.dataset.theme === "dark" ? "Light Mode" : "Dark Mode";
+
     const block = document.createElement("div");
     block.className = "user-block";
 
@@ -460,7 +467,7 @@ function renderAuthArea() {
     });
 
     block.append(welcome, logout);
-    authArea.appendChild(block);
+    authArea.append(themeButton, block);
 }
 
 function renderMerchantShortcut() {
