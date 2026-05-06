@@ -7,6 +7,7 @@ const statusFilter = document.getElementById("status-filter");
 const completedCount = document.getElementById("completed-count");
 const failedCount = document.getElementById("failed-count");
 const totalSpent = document.getElementById("total-spent");
+const progressSteps = ["pending", "delivery", "complete/failed"];
 
 function getArray(key) {
     try {
@@ -45,6 +46,15 @@ function getHistory() {
         status: order.status || "complete",
         transactionId: order.transactionId || order.id
     }));
+
+    const pendingPurchase = getObject("pendingPurchase");
+    if (pendingPurchase && !orders.some(order => order.transactionId === pendingPurchase.id)) {
+        orders.push({
+            ...pendingPurchase,
+            status: pendingPurchase.status || "pending",
+            transactionId: pendingPurchase.id
+        });
+    }
 
     const lastStatus = getObject(statusKey);
     const shouldIncludeLastStatus = lastStatus && (
@@ -86,6 +96,43 @@ function createItemRow(item) {
     details.append(name, meta);
     row.append(img, details);
     return row;
+}
+
+function getProgressState(order, step) {
+    if (step === "complete/failed") {
+        return order.status === "failed" ? "failed" : order.status === "complete" ? "complete" : "";
+    }
+
+    if (order.status === "failed") {
+        return step === "pending" ? "complete" : "";
+    }
+
+    if (step === "pending") return "complete";
+    if (step === "delivery" && (order.status === "delivery" || order.status === "complete")) return "complete";
+    return "";
+}
+
+function createProgressBreadcrumb(order) {
+    const nav = document.createElement("nav");
+    nav.className = "status-breadcrumb";
+    nav.setAttribute("aria-label", "Purchase progress");
+
+    progressSteps.forEach((step, index) => {
+        const crumb = document.createElement("span");
+        const state = getProgressState(order, step);
+        crumb.className = `breadcrumb-step ${state}`.trim();
+        crumb.textContent = step;
+        nav.appendChild(crumb);
+
+        if (index < progressSteps.length - 1) {
+            const divider = document.createElement("span");
+            divider.className = "breadcrumb-divider";
+            divider.textContent = ">";
+            nav.appendChild(divider);
+        }
+    });
+
+    return nav;
 }
 
 function createHistoryItem(order) {
@@ -136,7 +183,7 @@ function createHistoryItem(order) {
     total.className = "history-total";
     total.innerHTML = `<span>Total</span><strong>${formatPeso(order.total)}</strong>`;
 
-    item.append(top, details, list, total);
+    item.append(top, createProgressBreadcrumb(order), details, list, total);
     return item;
 }
 

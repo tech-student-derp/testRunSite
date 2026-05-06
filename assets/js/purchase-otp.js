@@ -160,6 +160,15 @@ function goToStatus() {
     window.location.href = "/assets/html/transaction-status.html";
 }
 
+function goToNextStep(transaction) {
+    if (transaction.paymentMethod === "GCash") {
+        window.location.href = "/assets/html/mock-gcash.html";
+        return;
+    }
+
+    goToStatus();
+}
+
 function failTransaction(reason) {
     const transaction = getPendingPurchase();
     if (!transaction) return;
@@ -222,11 +231,21 @@ verifyBtn.addEventListener("click", () => {
         return;
     }
 
-    saveStatus(transaction, "complete", "Purchase OTP verified.");
-    setMessage("Transaction verified. Redirecting...", true);
+    if (transaction.paymentMethod === "GCash") {
+        localStorage.setItem("pendingPurchase", JSON.stringify({
+            ...transaction,
+            verificationStatus: "verified",
+            verifiedAt: new Date().toISOString()
+        }));
+        localStorage.removeItem(OTP_KEY);
+    } else {
+        saveStatus(transaction, "complete", "Purchase OTP verified.");
+    }
+
+    setMessage(transaction.paymentMethod === "GCash" ? "Verified. Redirecting to mock GCash..." : "Transaction verified. Redirecting...", true);
     verifyBtn.disabled = true;
 
-    window.setTimeout(goToStatus, 700);
+    window.setTimeout(() => goToNextStep(transaction), 700);
 });
 
 resendBtn.addEventListener("click", () => {

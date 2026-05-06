@@ -224,11 +224,10 @@ paymentForm.addEventListener("submit", event => {
 
     localStorage.setItem("pendingPurchase", JSON.stringify(transaction));
     localStorage.removeItem("purchaseOtpCode");
-    const isGcash = transaction.paymentMethod === "GCash";
-    setMessage(isGcash ? "Redirecting to the mock GCash payment page..." : "Payment details saved. Redirecting to verification...", true);
+    setMessage("Payment details saved. Redirecting to purchase verification...", true);
 
     window.setTimeout(() => {
-        window.location.href = isGcash ? "/assets/html/mock-gcash.html" : "/assets/html/purchase-otp.html";
+        window.location.href = "/assets/html/purchase-otp.html";
     }, 500);
 });
 

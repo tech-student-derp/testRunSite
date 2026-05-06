@@ -153,6 +153,54 @@ body {
     background: #fee2e2;
 }
 
+.status-pill.pending,
+.status-pill.delivery {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.status-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.breadcrumb-step {
+    min-height: 30px;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0 0.75rem;
+    color: var(--muted);
+    background: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.breadcrumb-step.complete {
+    border-color: #bbf7d0;
+    color: var(--success);
+    background: #dcfce7;
+}
+
+.breadcrumb-step.failed {
+    border-color: #fecdd3;
+    color: var(--danger);
+    background: #fee2e2;
+}
+
+.breadcrumb-divider {
+    color: var(--muted);
+    font-weight: 900;
+}
+
 .item-list {
     display: grid;
     gap: 0.6rem;
