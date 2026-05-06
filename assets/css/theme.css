@@ -183,6 +183,30 @@ html[data-theme="dark"] .left-sidebar-content a {
     color: #f4f4f5;
 }
 
+html[data-theme="dark"] .back-btn {
+    background: #f2f2f2 !important;
+    color: #333333 !important;
+}
+
+html[data-theme="dark"] .back-btn:hover {
+    background: #dddddd !important;
+}
+
+html[data-theme="dark"] .demo-box {
+    background: #11151c !important;
+    border-color: var(--line) !important;
+    color: var(--ink) !important;
+}
+
+html[data-theme="dark"] .demo-box p {
+    color: var(--ink) !important;
+}
+
+html[data-theme="dark"] .demo-box code {
+    background: #232936 !important;
+    color: #ffffff !important;
+}
+
 html[data-theme="dark"] .footer {
     background: #05070a !important;
 }
