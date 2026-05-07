@@ -362,6 +362,14 @@ function saveCart(cart) {
     updateCartCount();
 }
 
+function saveMailThreads(threads) {
+    localStorage.setItem("mailThreads", JSON.stringify(threads));
+}
+
+function saveApprovedProducts(products) {
+    localStorage.setItem("approvedProducts", JSON.stringify(products));
+}
+
 function updateCartCount() {
     const cartCount = document.getElementById("cart-count");
     if (!cartCount) return;
@@ -388,24 +396,57 @@ function getPurchasedQuantity() {
 }
 
 function getDisplayMetrics() {
-    const storedReviews = getStoredArray(storedReviewKey);
     const visibleReviews = getAllReviews();
     const baseRating = Number(product.rating) || 0;
     const visibleTotal = visibleReviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0);
-    const reviewCount = (Number(product.reviews) || 0) + storedReviews.length;
     const rating = visibleReviews.length
         ? visibleTotal / visibleReviews.length
         : baseRating;
 
     return {
         rating: Number(rating.toFixed(1)),
-        reviews: reviewCount,
+        reviews: visibleReviews.length,
         sold: (Number(product.sold) || 0) + getPurchasedQuantity()
     };
 }
 
 function ratingPercent(rating) {
     return `${Math.max(0, Math.min(Number(rating) || 0, 5)) / 5 * 100}%`;
+}
+
+function formatReviewCount(count) {
+    const total = Number(count) || 0;
+    return `${total} ${total === 1 ? "review" : "reviews"}`;
+}
+
+function updateApprovedProductMetrics(metrics) {
+    const approvedProducts = getStoredArray("approvedProducts");
+    const index = approvedProducts.findIndex(item => item.id === productId);
+    if (index === -1) return;
+
+    approvedProducts[index] = {
+        ...approvedProducts[index],
+        rating: metrics.rating,
+        reviews: metrics.reviews
+    };
+    saveApprovedProducts(approvedProducts);
+}
+
+function notifyMerchantReview(review, metrics) {
+    const threads = getStoredArray("mailThreads");
+    threads.unshift({
+        id: `MAIL-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        recipient: "merchant",
+        sender: review.name || "Student",
+        subject: `New review: ${product.name}`,
+        message: `${review.name || "A student"} rated ${product.name} ${review.rating} out of 5. "${review.text}" Current average: ${metrics.rating} from ${formatReviewCount(metrics.reviews)}.`,
+        status: "pending",
+        productId,
+        reportId: "",
+        replies: [],
+        createdAt: new Date().toISOString()
+    });
+    saveMailThreads(threads);
 }
 
 function getProductSizes() {
@@ -489,7 +530,7 @@ function hydrateProduct() {
     setText("product-category", product.category);
     setText("product-name", product.name);
     setText("rating-score", metrics.rating);
-    setText("rating-count", `${metrics.reviews} reviews`);
+    setText("rating-count", formatReviewCount(metrics.reviews));
     setText("sold-count", `${metrics.sold} sold`);
     setText("product-price", product.price);
     setText("merchant-name", product.merchant);
@@ -498,7 +539,7 @@ function hydrateProduct() {
     setText("product-stock", product.stock);
     setText("product-material", product.material);
     setText("product-delivery", product.delivery);
-    setText("review-summary", `Average rating ${metrics.rating} from ${metrics.reviews} reviews.`);
+    setText("review-summary", `Average rating ${metrics.rating} from ${formatReviewCount(metrics.reviews)}.`);
 
     const image = document.getElementById("product-image");
     const stars = document.getElementById("rating-stars");
@@ -599,13 +640,18 @@ document.getElementById("review-form")?.addEventListener("submit", event => {
     const commentInput = document.getElementById("review-comment");
     const storedReviews = getStoredArray(storedReviewKey);
 
-    storedReviews.unshift({
+    const newReview = {
         name: getReviewUsername(),
         rating: Number(ratingInput.value) || 5,
         text: commentInput.value.trim()
-    });
+    };
+
+    storedReviews.unshift(newReview);
 
     localStorage.setItem(storedReviewKey, JSON.stringify(storedReviews));
+    const metrics = getDisplayMetrics();
+    updateApprovedProductMetrics(metrics);
+    notifyMerchantReview(newReview, metrics);
     event.target.reset();
     hydrateProduct();
     renderReviews();

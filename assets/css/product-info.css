@@ -203,10 +203,13 @@ textarea {
 .stars {
     position: relative;
     display: inline-block;
-    width: 5.4rem;
-    height: 1rem;
+    width: 5em;
+    height: 1.15em;
     line-height: 1;
+    letter-spacing: 0;
     color: #d8d8d8;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;
 }
 
 .stars::before,
@@ -217,7 +220,7 @@ textarea {
 }
 
 .stars::after {
-    width: var(--rating-percent);
+    width: var(--rating-percent, 0%);
     overflow: hidden;
     color: #f5a400;
 }

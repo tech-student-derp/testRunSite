@@ -544,6 +544,9 @@ function renderMerchantDashboard() {
     const orders = getOrders();
     const products = getAllProducts();
     const requests = getMerchantProductRequests();
+    const reviewThreads = getMailThreads().filter(thread => {
+        return thread.recipient === "merchant" && String(thread.subject || "").toLowerCase().includes("review");
+    });
     const customers = new Set(orders.map(order => order.customerName || order.customerPhone || "Student"));
     const total = orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
 
@@ -567,7 +570,14 @@ function renderMerchantDashboard() {
         notifications.appendChild(item);
     });
 
-    if (!orders.length && !requests.length) {
+    reviewThreads.slice(0, 4).forEach(thread => {
+        const item = document.createElement("div");
+        item.className = "notification-item";
+        item.innerHTML = `<p><strong>${escapeHtml(thread.subject || "New review")}</strong><br>${escapeHtml(thread.message || "A product received a new review.")}</p><time>${formatDate(thread.createdAt)}</time>`;
+        notifications.appendChild(item);
+    });
+
+    if (!orders.length && !requests.length && !reviewThreads.length) {
         notifications.innerHTML = '<p class="panel-note">New purchases and product review updates will appear here.</p>';
         return;
     }
