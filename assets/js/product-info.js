@@ -285,6 +285,7 @@ const params = new URLSearchParams(window.location.search);
 const productId = params.get("product") || "bs-shirt";
 const product = products[productId] || products["bs-shirt"];
 const storedReviewKey = `reviews-${productId}`;
+const deletedReviewKey = `deleted-reviews-${productId}`;
 const MERCHANT_IMAGE_DB = "wmsuMerchImages";
 const MERCHANT_IMAGE_STORE = "productImages";
 let selectedSize = "";
@@ -357,6 +358,11 @@ function getReviewUsername() {
     return user?.username || "Student";
 }
 
+function isAdminUser() {
+    const user = getStoredObject("loggedInUser");
+    return user?.role === "admin";
+}
+
 function saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
@@ -379,7 +385,46 @@ function updateCartCount() {
 }
 
 function getAllReviews() {
-    return [...product.comments, ...getStoredArray(storedReviewKey)];
+    const deletedReviews = new Set(getStoredArray(deletedReviewKey));
+    const defaultReviews = product.comments
+        .map((review, index) => ({
+            ...review,
+            source: "default",
+            reviewId: `default-${index}`
+        }))
+        .filter(review => !deletedReviews.has(review.reviewId));
+
+    const storedReviews = getStoredArray(storedReviewKey).map((review, index) => ({
+        ...review,
+        source: "stored",
+        reviewId: review.id || `stored-${index}`
+    }));
+
+    return [...defaultReviews, ...storedReviews];
+}
+
+function deleteReview(review) {
+    if (!isAdminUser()) return;
+
+    if (review.source === "default") {
+        const deletedReviews = getStoredArray(deletedReviewKey);
+        if (!deletedReviews.includes(review.reviewId)) {
+            deletedReviews.push(review.reviewId);
+            localStorage.setItem(deletedReviewKey, JSON.stringify(deletedReviews));
+        }
+    } else {
+        const storedReviews = getStoredArray(storedReviewKey);
+        const updatedReviews = storedReviews.filter((item, index) => {
+            const itemId = item.id || `stored-${index}`;
+            return itemId !== review.reviewId;
+        });
+        localStorage.setItem(storedReviewKey, JSON.stringify(updatedReviews));
+    }
+
+    const metrics = getDisplayMetrics();
+    updateApprovedProductMetrics(metrics);
+    hydrateProduct();
+    renderReviews();
 }
 
 function getCompletedOrders() {
@@ -498,6 +543,7 @@ function renderSizeOptions() {
 function renderReviews() {
     const list = document.getElementById("review-list");
     const reviews = getAllReviews();
+    const canDeleteReviews = isAdminUser();
     if (!list) return;
 
     list.innerHTML = "";
@@ -507,17 +553,34 @@ function renderReviews() {
         card.className = "review-card";
 
         const header = document.createElement("header");
+        const reviewMeta = document.createElement("div");
         const name = document.createElement("strong");
         const stars = document.createElement("span");
         const comment = document.createElement("p");
 
         name.textContent = review.name || "Student";
+        reviewMeta.className = "review-meta";
         stars.className = "stars";
         stars.style.setProperty("--rating-percent", ratingPercent(review.rating));
         stars.setAttribute("aria-label", `${review.rating} out of 5 stars`);
         comment.textContent = review.text || "";
 
-        header.append(name, stars);
+        reviewMeta.append(name, stars);
+        header.append(reviewMeta);
+
+        if (canDeleteReviews) {
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "review-delete-btn";
+            deleteButton.type = "button";
+            deleteButton.textContent = "Delete";
+            deleteButton.setAttribute("aria-label", `Delete review by ${review.name || "Student"}`);
+            deleteButton.addEventListener("click", () => {
+                const confirmed = window.confirm("Delete this review comment?");
+                if (confirmed) deleteReview(review);
+            });
+            header.appendChild(deleteButton);
+        }
+
         card.append(header, comment);
         list.appendChild(card);
     });
@@ -641,6 +704,7 @@ document.getElementById("review-form")?.addEventListener("submit", event => {
     const storedReviews = getStoredArray(storedReviewKey);
 
     const newReview = {
+        id: `review-${Date.now()}-${Math.random().toString(16).slice(2)}`,
         name: getReviewUsername(),
         rating: Number(ratingInput.value) || 5,
         text: commentInput.value.trim()

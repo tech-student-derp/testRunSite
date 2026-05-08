@@ -361,7 +361,29 @@ textarea {
 .review-card header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     gap: 0.75rem;
+}
+
+.review-meta {
+    display: grid;
+    gap: 0.3rem;
+}
+
+.review-delete-btn {
+    border: none;
+    border-radius: var(--radius);
+    background: #b91c1c;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 800;
+    min-height: 34px;
+    padding: 0.4rem 0.7rem;
+    white-space: nowrap;
+}
+
+.review-delete-btn:hover {
+    background: #8f1414;
 }
 
 .review-form {
