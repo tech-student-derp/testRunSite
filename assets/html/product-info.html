@@ -34,10 +34,10 @@
                 <p class="product-tag" id="product-category">CCS - BSCS</p>
                 <h1 id="product-name">BSCS Shirt</h1>
                 <div class="rating-line">
-                    <span class="stars" id="rating-stars" aria-label="4.8 out of 5 stars"></span>
-                    <strong id="rating-score">4.8</strong>
-                    <span id="rating-count">86 reviews</span>
-                    <span id="sold-count">320 sold</span>
+                    <span class="stars" id="rating-stars" aria-label="No ratings yet"></span>
+                    <strong id="rating-score">0.0</strong>
+                    <span id="rating-count">0 reviews</span>
+                    <span id="sold-count">0 sold</span>
                 </div>
                 <p class="price" id="product-price">₱259</p>
                 <p class="merchant">Merchant: <strong id="merchant-name">College Department Head</strong></p>
@@ -83,7 +83,7 @@
                     <p class="product-tag">Student feedback</p>
                     <h2 id="reviews-title">Reviews</h2>
                 </div>
-                <p id="review-summary">Average rating 4.8 from 86 reviews.</p>
+                <p id="review-summary">No ratings yet.</p>
             </div>
 
             <div id="review-list" class="review-list"></div>
@@ -92,19 +92,22 @@
                 <h3>Add a Comment</h3>
                 <label>
                     Rating
-                    <select id="review-rating" required>
-                        <option value="5">5 stars</option>
-                        <option value="4">4 stars</option>
-                        <option value="3">3 stars</option>
-                        <option value="2">2 stars</option>
-                        <option value="1">1 star</option>
-                    </select>
+                    <input id="review-rating" type="hidden" required>
+                    <span class="star-picker" id="review-star-picker" role="radiogroup" aria-label="Choose rating">
+                        <button type="button" class="star-choice" data-rating="1" role="radio" aria-checked="false" aria-label="1 star">★</button>
+                        <button type="button" class="star-choice" data-rating="2" role="radio" aria-checked="false" aria-label="2 stars">★</button>
+                        <button type="button" class="star-choice" data-rating="3" role="radio" aria-checked="false" aria-label="3 stars">★</button>
+                        <button type="button" class="star-choice" data-rating="4" role="radio" aria-checked="false" aria-label="4 stars">★</button>
+                        <button type="button" class="star-choice" data-rating="5" role="radio" aria-checked="false" aria-label="5 stars">★</button>
+                    </span>
+                    <span class="rating-hint" id="review-rating-hint">Choose a rating</span>
                 </label>
                 <label>
                     Comment
                     <textarea id="review-comment" rows="4" placeholder="Share your thoughts about the product" required></textarea>
                 </label>
-                <button type="submit">Post Comment</button>
+                <p id="review-login-note" class="review-login-note">Log in or register to post a comment.</p>
+                <button id="post-review-btn" type="submit" disabled>Post Comment</button>
             </form>
         </section>
     </main>

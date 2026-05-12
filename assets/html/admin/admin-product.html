@@ -48,7 +48,7 @@
 
             <h3>Recent Product Activity</h3>
 
-            <ul>
+            <ul id="admin-product-activity">
                 <li>BSCS Shirt added (system sync)</li>
                 <li>BSIT Shirt price updated</li>
                 <li>ACT AD Shirt flagged for review</li>
@@ -67,8 +67,9 @@
         <section class="product-panel">
 
             <h3>All Products (Control View)</h3>
+            <div id="admin-product-list"></div>
 
-            <div class="product-row">
+            <div class="product-row static-product-row">
                 <span class="p-name">BSCS Shirt</span>
                 <span class="p-seller">Seller: CCS Store</span>
                 <span class="p-price">₱259</span>
@@ -77,7 +78,7 @@
                 <button class="delete-btn">Delete</button>
             </div>
 
-            <div class="product-row">
+            <div class="product-row static-product-row">
                 <span class="p-name">BSIT Shirt</span>
                 <span class="p-seller">Seller: CCS Store</span>
                 <span class="p-price">₱259</span>
@@ -86,7 +87,7 @@
                 <button class="delete-btn">Delete</button>
             </div>
 
-            <div class="product-row">
+            <div class="product-row static-product-row">
                 <span class="p-name">ACT AD Premium Shirt</span>
                 <span class="p-seller">Seller: CCS Store | Stock: 18</span>
                 <span class="p-price">₱259</span>
@@ -95,7 +96,7 @@
                 <button class="delete-btn">Delete</button>
             </div>
 
-            <div class="product-row">
+            <div class="product-row static-product-row">
                 <span class="p-name">BSIT Classic Shirt</span>
                 <span class="p-seller">Seller: CCS Store | Preorder batch</span>
                 <span class="p-price">₱259</span>
@@ -115,9 +116,10 @@
 
             <div class="mock-panel">
                 <h3>Inventory Snapshot</h3>
-                <div class="metric-line"><span>In stock</span><strong>4 styles</strong></div>
-                <div class="metric-line"><span>Low stock</span><strong>1 style</strong></div>
-                <div class="metric-line"><span>Preorder</span><strong>1 style</strong></div>
+                <div class="metric-line"><span>Active</span><strong id="admin-product-total">0</strong></div>
+                <div class="metric-line"><span>Pending review</span><strong id="admin-product-pending">0</strong></div>
+                <div class="metric-line"><span>Flagged</span><strong id="admin-product-flagged">0</strong></div>
+                <div class="metric-line"><span>Hidden</span><strong id="admin-product-hidden">0</strong></div>
             </div>
         </section>
 

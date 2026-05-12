@@ -225,6 +225,7 @@ select:focus {
     width: min(100%, 560px);
     max-height: 82vh;
     background: #ffffff;
+    color: #111111;
     border-radius: 14px;
     padding: 1.5rem;
     display: flex;
@@ -239,6 +240,13 @@ select:focus {
     line-height: 1.55;
     display: grid;
     gap: 0.8rem;
+}
+
+.terms-box h2,
+.terms-box p,
+.terms-box label,
+.terms-box span {
+    color: #111111;
 }
 
 .terms-actions {

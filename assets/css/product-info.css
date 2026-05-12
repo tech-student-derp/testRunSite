@@ -174,6 +174,15 @@ textarea {
     line-height: 1.5;
 }
 
+.empty-review {
+    color: var(--muted);
+    line-height: 1.6;
+    padding: 1rem;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    background: #fff;
+}
+
 .details-panel {
     padding: 1.4rem;
     display: grid;
@@ -328,6 +337,11 @@ textarea {
     background: #2c2c2c;
 }
 
+.review-form button:disabled {
+    background: #b8b8b8;
+    cursor: not-allowed;
+}
+
 .review-section {
     margin-top: 1.5rem;
     display: grid;
@@ -417,6 +431,47 @@ textarea {
     border-radius: var(--radius);
     padding: 0.7rem;
     background: #ffffff;
+}
+
+.star-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    width: fit-content;
+}
+
+.star-choice {
+    border: none;
+    background: transparent;
+    color: #cfcfcf;
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    padding: 0.1rem;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-choice.is-active,
+.star-choice.is-preview {
+    color: #f5a400;
+}
+
+.star-choice:hover,
+.star-choice:focus-visible {
+    transform: translateY(-1px);
+}
+
+.rating-hint {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.review-login-note {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
 .review-form textarea {

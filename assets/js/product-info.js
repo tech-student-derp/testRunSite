@@ -254,17 +254,27 @@ const products = {
     }
 };
 
+Object.values(products).forEach(product => {
+    product.rating = 0;
+    product.reviews = 0;
+    product.sold = 0;
+    product.comments = [];
+});
+
 try {
     const approvedProducts = JSON.parse(localStorage.getItem("approvedProducts")) || [];
+    const moderation = getStoredObject("adminProductModeration") || {};
     if (Array.isArray(approvedProducts)) {
         approvedProducts.forEach(item => {
+            if (moderation[item.id]?.hidden) return;
+
             products[item.id] = {
                 name: item.name,
                 category: item.category || "Merchant",
                 price: `₱${Number(item.price || 0).toLocaleString("en-PH")}`,
                 img: item.img || "/assets/img/bs-shirt.png",
                 imageKey: item.imageKey || "",
-                rating: item.rating || 4.5,
+                rating: item.rating || 0,
                 reviews: item.reviews || 0,
                 sold: item.sold || 0,
                 stock: item.stockLabel || `Stock: ${item.stock ?? "Available"}`,
@@ -283,6 +293,10 @@ try {
 
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("product") || "bs-shirt";
+const hiddenProducts = getStoredObject("adminProductModeration") || {};
+if (hiddenProducts[productId]?.hidden) {
+    window.location.replace("/index.html#products");
+}
 const product = products[productId] || products["bs-shirt"];
 const storedReviewKey = `reviews-${productId}`;
 const deletedReviewKey = `deleted-reviews-${productId}`;
@@ -351,6 +365,11 @@ function getStoredObject(key) {
 
 function isLoggedIn() {
     return Boolean(getStoredObject("loggedInUser"));
+}
+
+function canPostReview() {
+    const user = getStoredObject("loggedInUser");
+    return Boolean(user?.username || user?.email || user?.id);
 }
 
 function getReviewUsername() {
@@ -442,21 +461,93 @@ function getPurchasedQuantity() {
 
 function getDisplayMetrics() {
     const visibleReviews = getAllReviews();
-    const baseRating = Number(product.rating) || 0;
     const visibleTotal = visibleReviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0);
     const rating = visibleReviews.length
         ? visibleTotal / visibleReviews.length
-        : baseRating;
+        : 0;
 
     return {
         rating: Number(rating.toFixed(1)),
         reviews: visibleReviews.length,
-        sold: (Number(product.sold) || 0) + getPurchasedQuantity()
+        sold: getPurchasedQuantity()
     };
 }
 
 function ratingPercent(rating) {
     return `${Math.max(0, Math.min(Number(rating) || 0, 5)) / 5 * 100}%`;
+}
+
+function normalizeRating(value) {
+    const rating = Number(value) || 0;
+    return Math.max(1, Math.min(5, Math.round(rating)));
+}
+
+function initStarPicker() {
+    const input = document.getElementById("review-rating");
+    const picker = document.getElementById("review-star-picker");
+    const hint = document.getElementById("review-rating-hint");
+    if (!input || !picker) return;
+
+    const stars = Array.from(picker.querySelectorAll(".star-choice"));
+    let selected = Number(input.value) || 0;
+
+    function paint(value, isPreview = false) {
+        stars.forEach(star => {
+            const rating = Number(star.dataset.rating) || 0;
+            star.classList.toggle("is-preview", isPreview && rating <= value);
+            star.classList.toggle("is-active", !isPreview && rating <= selected);
+            star.setAttribute("aria-checked", selected === rating ? "true" : "false");
+        });
+
+        if (hint) {
+            hint.textContent = value
+                ? `${value} out of 5 stars`
+                : selected
+                    ? `${selected} out of 5 stars`
+                    : "Choose a rating";
+        }
+    }
+
+    stars.forEach(star => {
+        const rating = Number(star.dataset.rating) || 0;
+
+        star.addEventListener("mouseenter", () => paint(rating, true));
+        star.addEventListener("focus", () => paint(rating, true));
+        star.addEventListener("mouseleave", () => paint(selected));
+        star.addEventListener("blur", () => paint(selected));
+        star.addEventListener("click", () => {
+            selected = rating;
+            input.value = String(rating);
+            paint(selected);
+        });
+    });
+
+    input.addEventListener("rating-reset", () => {
+        selected = 0;
+        input.value = "";
+        paint(selected);
+    });
+
+    paint(selected);
+}
+
+function updateReviewAccess() {
+    const allowed = canPostReview();
+    const form = document.getElementById("review-form");
+    const note = document.getElementById("review-login-note");
+    const button = document.getElementById("post-review-btn");
+    if (!form) return;
+
+    form.querySelectorAll(".star-choice, #review-comment").forEach(control => {
+        control.disabled = !allowed;
+    });
+
+    if (button) button.disabled = !allowed;
+    if (note) {
+        note.textContent = allowed
+            ? "Your review will be posted under your account name."
+            : "Log in or register to post a comment.";
+    }
 }
 
 function formatReviewCount(count) {
@@ -548,6 +639,11 @@ function renderReviews() {
 
     list.innerHTML = "";
 
+    if (!reviews.length) {
+        list.innerHTML = '<p class="empty-review">No comments yet. Be the first student to review this product.</p>';
+        return;
+    }
+
     reviews.forEach(review => {
         const card = document.createElement("article");
         card.className = "review-card";
@@ -592,7 +688,7 @@ function hydrateProduct() {
     document.title = `${product.name} | WMSU Merch`;
     setText("product-category", product.category);
     setText("product-name", product.name);
-    setText("rating-score", metrics.rating);
+    setText("rating-score", metrics.rating.toFixed(1));
     setText("rating-count", formatReviewCount(metrics.reviews));
     setText("sold-count", `${metrics.sold} sold`);
     setText("product-price", product.price);
@@ -602,7 +698,9 @@ function hydrateProduct() {
     setText("product-stock", product.stock);
     setText("product-material", product.material);
     setText("product-delivery", product.delivery);
-    setText("review-summary", `Average rating ${metrics.rating} from ${formatReviewCount(metrics.reviews)}.`);
+    setText("review-summary", metrics.reviews
+        ? `Average rating ${metrics.rating.toFixed(1)} from ${formatReviewCount(metrics.reviews)}.`
+        : "No ratings yet.");
 
     const image = document.getElementById("product-image");
     const stars = document.getElementById("rating-stars");
@@ -627,7 +725,7 @@ function hydrateProduct() {
 
     if (stars) {
         stars.style.setProperty("--rating-percent", ratingPercent(metrics.rating));
-        stars.setAttribute("aria-label", `${metrics.rating} out of 5 stars`);
+        stars.setAttribute("aria-label", metrics.reviews ? `${metrics.rating.toFixed(1)} out of 5 stars` : "No ratings yet");
     }
 
     if (reportLink) {
@@ -699,14 +797,25 @@ document.getElementById("add-cart-btn")?.addEventListener("click", () => {
 document.getElementById("review-form")?.addEventListener("submit", event => {
     event.preventDefault();
 
+    if (!canPostReview()) {
+        document.getElementById("review-login-note").textContent = "Please log in or register before posting a comment.";
+        return;
+    }
+
     const ratingInput = document.getElementById("review-rating");
     const commentInput = document.getElementById("review-comment");
     const storedReviews = getStoredArray(storedReviewKey);
+    const rating = normalizeRating(ratingInput.value);
+
+    if (!ratingInput.value) {
+        document.getElementById("review-rating-hint").textContent = "Please choose a rating.";
+        return;
+    }
 
     const newReview = {
         id: `review-${Date.now()}-${Math.random().toString(16).slice(2)}`,
         name: getReviewUsername(),
-        rating: Number(ratingInput.value) || 5,
+        rating,
         text: commentInput.value.trim()
     };
 
@@ -717,6 +826,7 @@ document.getElementById("review-form")?.addEventListener("submit", event => {
     updateApprovedProductMetrics(metrics);
     notifyMerchantReview(newReview, metrics);
     event.target.reset();
+    ratingInput.dispatchEvent(new Event("rating-reset"));
     hydrateProduct();
     renderReviews();
 });
@@ -725,4 +835,6 @@ hydrateProduct();
 renderSizeOptions();
 renderReviews();
 initZoom();
+initStarPicker();
+updateReviewAccess();
 updateCartCount();

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support | WMSU Merch</title>
+    <link rel="icon" type="image/png" href="/assets/img/ico/WMSU logo.png">
+    <link rel="stylesheet" href="/assets/css/support.css">
+    <link rel="stylesheet" href="/assets/css/theme.css">
+    <script src="/assets/js/theme.js"></script>
+</head>
+<body>
+    <header class="support-header">
+        <a class="back-link" href="/index.html">Back to Store</a>
+        <a class="brand" href="/index.html">
+            <img src="/assets/img/ico/WMSU logo.png" alt="WMSU logo">
+            <span>WMSU Merch</span>
+        </a>
+    </header>
+
+    <main class="support-page">
+        <section class="support-intro">
+            <p class="eyebrow">Support</p>
+            <h1>Contact Merchant or Admin</h1>
+            <p>Send product, order, payment, or account concerns to the right dashboard inbox.</p>
+        </section>
+
+        <section class="support-grid">
+            <form id="support-form" class="support-form">
+                <label>
+                    Send to
+                    <select id="support-recipient" required>
+                        <option value="merchant">Merchant</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </label>
+
+                <label>
+                    Topic
+                    <select id="support-topic" required>
+                        <option value="Product question">Product question</option>
+                        <option value="Order follow-up">Order follow-up</option>
+                        <option value="Payment concern">Payment concern</option>
+                        <option value="Account help">Account help</option>
+                        <option value="Other concern">Other concern</option>
+                    </select>
+                </label>
+
+                <label class="wide-field">
+                    Subject
+                    <input id="support-subject" type="text" placeholder="Example: Pickup schedule for my preorder" required>
+                </label>
+
+                <label class="wide-field">
+                    Message
+                    <textarea id="support-message" rows="7" placeholder="Write the details of your concern" required></textarea>
+                </label>
+
+                <button type="submit">Send Message</button>
+                <p id="support-status" role="status"></p>
+            </form>
+
+            <aside class="support-panel">
+                <h2>Recent Messages</h2>
+                <div id="support-thread-list" class="support-thread-list"></div>
+            </aside>
+        </section>
+    </main>
+
+    <script src="/assets/js/support.js"></script>
+</body>
+</html>

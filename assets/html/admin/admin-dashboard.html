@@ -67,6 +67,26 @@
                 <p id="admin-user-count">0</p>
             </div>
 
+            <div class="card">
+                <h3>Today Sales</h3>
+                <p id="admin-today-sales">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Avg Order</h3>
+                <p id="admin-average-order">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Pending Approvals</h3>
+                <p id="admin-pending-approvals">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Low Stock</h3>
+                <p id="admin-low-stock-count">0</p>
+            </div>
+
         </div>
 
         <section class="admin-section">
@@ -87,8 +107,24 @@
             </div>
 
             <div class="mock-panel">
-                <h2>Mock Weekly Orders</h2>
-                <div id="admin-bar-chart" class="bar-chart" aria-label="Mock bar graph for weekly orders"></div>
+                <h2>Weekly Orders</h2>
+                <div id="admin-bar-chart" class="bar-chart" aria-label="Weekly order chart"></div>
+            </div>
+        </section>
+
+        <section class="analytics-grid">
+            <div class="mock-panel">
+                <h2>Catalog Analytics</h2>
+                <div class="metric-line"><span>Active products</span><strong id="admin-active-product-count">0</strong></div>
+                <div class="metric-line"><span>Total stock</span><strong id="admin-total-stock">0</strong></div>
+                <div class="metric-line"><span>Top product</span><strong id="admin-top-product">No sales yet</strong></div>
+            </div>
+
+            <div class="mock-panel">
+                <h2>Moderation Queue</h2>
+                <div class="metric-line"><span>Open issues</span><strong id="admin-open-issues">0</strong></div>
+                <div class="metric-line"><span>Product reports</span><strong id="admin-report-count-inline">Synced above</strong></div>
+                <div class="metric-line"><span>Merchant approvals</span><strong id="admin-pending-approvals-inline">Synced above</strong></div>
             </div>
         </section>
 
@@ -105,25 +141,28 @@
         <section class="mock-grid">
             <div class="mock-panel">
                 <h2>Order Queue</h2>
-                <div class="info-row">
+                <div id="admin-live-order-queue">
+                <div class="info-row" hidden>
                     <span>ORD-2026-041</span>
                     <strong>BSCS Shirt x2</strong>
                     <span class="status-pill pending">Payment review</span>
                 </div>
-                <div class="info-row">
+                <div class="info-row" hidden>
                     <span>ORD-2026-040</span>
                     <strong>ACT AD Premium x1</strong>
                     <span class="status-pill ok">Ready for pickup</span>
                 </div>
-                <div class="info-row">
+                <div class="info-row" hidden>
                     <span>ORD-2026-039</span>
                     <strong>BSIT Classic x3</strong>
                     <span class="status-pill warn">Low stock check</span>
+                </div>
                 </div>
             </div>
 
             <div class="mock-panel">
                 <h2>Store Health</h2>
+                <div id="admin-store-health"></div>
                 <div class="metric-line"><span>Payment completion</span><strong>86%</strong></div>
                 <div class="metric-line"><span>Average order value</span><strong>₱318</strong></div>
                 <div class="metric-line"><span>Top category</span><strong>BSCS Shirts</strong></div>

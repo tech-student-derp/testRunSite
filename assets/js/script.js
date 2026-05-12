@@ -144,6 +144,13 @@ const productData = {
     }
 };
 
+Object.values(productData).forEach(product => {
+    product.rating = 0;
+    product.sold = 0;
+    product.reviews = 0;
+    product.review = "No review highlight yet.";
+});
+
 let cards = Array.from(document.querySelectorAll(".product-card"));
 const overlay = document.getElementById("overlay");
 const sidebar = document.getElementById("product-sidebar");
@@ -238,6 +245,25 @@ function getStoredObject(key) {
     }
 }
 
+function getProductModeration() {
+    return getStoredObject("adminProductModeration") || {};
+}
+
+function getProductModerationId(product) {
+    return product.id || String(product.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function applyProductModeration() {
+    const moderation = getProductModeration();
+
+    cards.forEach(card => {
+        const id = card.dataset.id || "";
+        const fallback = card.querySelector(".prod-name")?.textContent || "";
+        const key = id || fallback.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        card.hidden = moderation[key]?.hidden === true;
+    });
+}
+
 function isLoggedIn() {
     return Boolean(getStoredObject("loggedInUser"));
 }
@@ -278,10 +304,25 @@ function getProductSoldQuantity(productId) {
         }, 0);
 }
 
+function getProductReviews(productId) {
+    return getStoredArray(`reviews-${productId}`);
+}
+
+function getProductReviewMetrics(productId) {
+    const reviews = getProductReviews(productId);
+    const total = reviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0);
+    const rating = reviews.length ? Number((total / reviews.length).toFixed(1)) : 0;
+
+    return {
+        rating,
+        reviews: reviews.length
+    };
+}
+
 function getCardProduct(card) {
     const id = card.dataset.id;
     const data = productData[id] || {};
-    const baseSold = data.sold || Number(card.dataset.sold) || 0;
+    const metrics = getProductReviewMetrics(id);
 
     return {
         id,
@@ -289,14 +330,14 @@ function getCardProduct(card) {
         name: card.querySelector(".prod-name")?.textContent.trim() || "Unnamed item",
         price: card.querySelector(".price")?.textContent.trim() || "₱0",
         category: card.querySelector(".product-tag")?.textContent.trim() || "Merch",
-        rating: data.rating || Number(card.dataset.rating) || 0,
-        sold: baseSold + getProductSoldQuantity(id),
-        reviews: data.reviews || 0,
+        rating: metrics.rating,
+        sold: getProductSoldQuantity(id),
+        reviews: metrics.reviews,
         stock: data.stock || "Preorder",
         delivery: data.delivery || card.dataset.delivery || "Pickup available",
         material: data.material || card.dataset.material || "Cotton blend",
         badge: data.badge || "WMSU Merch",
-        review: data.review || "No review highlight yet.",
+        review: getProductReviews(id)[0]?.text || "No review highlight yet.",
         sizes: data.sizes || card.dataset.sizes || "S, M, L"
     };
 }
@@ -313,7 +354,12 @@ function renderProductInfo() {
     cards.forEach(card => {
         const product = getCardProduct(card);
         const productInfo = card.querySelector(".product-info");
-        if (!productInfo || productInfo.querySelector(".product-meta")) return;
+        if (!productInfo) return;
+
+        productInfo.querySelector(".product-badge")?.remove();
+        productInfo.querySelector(".rating-row")?.remove();
+        productInfo.querySelector(".product-meta")?.remove();
+        productInfo.querySelector(".delivery-note")?.remove();
 
         const badge = document.createElement("span");
         badge.className = "product-badge";
@@ -324,14 +370,14 @@ function renderProductInfo() {
         ratingRow.appendChild(createStars(product.rating));
 
         const ratingText = document.createElement("span");
-        ratingText.textContent = `${product.rating} (${product.reviews})`;
+        ratingText.textContent = product.reviews ? `${product.rating} (${product.reviews})` : "No ratings yet";
         ratingRow.appendChild(ratingText);
 
         const productMeta = document.createElement("div");
         productMeta.className = "product-meta";
 
         const sold = document.createElement("span");
-        sold.textContent = `${product.sold}+ sold`;
+        sold.textContent = `${product.sold} sold`;
 
         const stock = document.createElement("span");
         stock.textContent = product.stock;
@@ -347,6 +393,8 @@ function renderProductInfo() {
 
         productInfo.prepend(badge);
         productInfo.append(ratingRow, productMeta, delivery);
+        card.dataset.rating = String(product.rating);
+        card.dataset.sold = String(product.sold);
     });
 }
 
@@ -394,14 +442,14 @@ function openProductDetails(card) {
 
     setText("side-category", product.category);
     setText("side-name", product.name);
-    setText("side-rating", `Rating: ${product.rating} / 5`);
-    setText("side-sold", `Sold: ${product.sold}+ | Reviews: ${product.reviews}`);
+    setText("side-rating", product.reviews ? `Rating: ${product.rating} / 5` : "No ratings yet");
+    setText("side-sold", `Sold: ${product.sold} | Reviews: ${product.reviews}`);
     setText("side-price", `Price: ${product.price}`);
     setText("side-sizes", `Sizes: ${product.sizes}`);
     setText("side-stock", `Status: ${product.stock}`);
     setText("side-delivery", `Delivery: ${product.delivery}`);
     setText("side-material", `Material: ${product.material}`);
-    setText("side-review", `"${product.review}"`);
+    setText("side-review", product.reviews ? `"${product.review}"` : "No comments yet.");
 
     if (zoomResult) {
         zoomResult.style.backgroundImage = `url("${product.img}")`;
@@ -483,7 +531,10 @@ function renderApprovedProducts() {
     const groups = document.getElementById("merchant-product-groups");
     if (!section || !groups) return;
 
-    const approvedProducts = getStoredArray("approvedProducts");
+    const moderation = getProductModeration();
+    const approvedProducts = getStoredArray("approvedProducts").filter(product => {
+        return moderation[getProductModerationId(product)]?.hidden !== true;
+    });
     groups.innerHTML = "";
 
     if (!approvedProducts.length) {
@@ -527,7 +578,7 @@ function renderApprovedProducts() {
             article.className = "product-card";
             article.dataset.id = product.id;
             article.dataset.category = String(product.category || "merchant").toLowerCase().replace(/\s+/g, "-");
-            article.dataset.rating = product.rating || "4.5";
+            article.dataset.rating = product.rating || "0";
             article.dataset.sold = product.sold || "0";
             article.dataset.price = product.price || "0";
             article.dataset.sizes = product.sizes || "One size";
@@ -556,6 +607,7 @@ function renderApprovedProducts() {
     });
 
     cards = Array.from(document.querySelectorAll(".product-card"));
+    applyProductModeration();
 }
 
 function bindProductCards() {
@@ -632,6 +684,7 @@ function renderMailThreads() {
 
 function applyProductFilters() {
     const query = searchInput?.value.trim().toLowerCase() || "";
+    const moderation = getProductModeration();
     let visibleCount = 0;
 
     cards.forEach(card => {
@@ -639,7 +692,8 @@ function applyProductFilters() {
         const searchable = `${product.name} ${product.category} ${product.badge}`.toLowerCase();
         const matchesSearch = searchable.includes(query);
         const matchesCategory = activeCategory === "all" || card.dataset.category === activeCategory;
-        const shouldShow = matchesSearch && matchesCategory;
+        const isHiddenByAdmin = moderation[getProductModerationId(product)]?.hidden === true;
+        const shouldShow = matchesSearch && matchesCategory && !isHiddenByAdmin;
 
         card.hidden = !shouldShow;
         if (shouldShow) visibleCount += 1;
@@ -660,10 +714,12 @@ function sortProducts() {
         const mode = sortSelect.value;
         const aPrice = Number(a.dataset.price) || 0;
         const bPrice = Number(b.dataset.price) || 0;
-        const aSold = Number(a.dataset.sold) || 0;
-        const bSold = Number(b.dataset.sold) || 0;
-        const aRating = Number(a.dataset.rating) || 0;
-        const bRating = Number(b.dataset.rating) || 0;
+        const aProduct = getCardProduct(a);
+        const bProduct = getCardProduct(b);
+        const aSold = aProduct.sold;
+        const bSold = bProduct.sold;
+        const aRating = aProduct.rating;
+        const bRating = bProduct.rating;
 
         if (mode === "popular") return bSold - aSold;
         if (mode === "rating") return bRating - aRating;
@@ -817,10 +873,11 @@ if (zoomWrapper && lens && zoomResult) {
 window.addEventListener("storage", event => {
     updateCartCount();
 
-    if (event.key === "approvedProducts") {
+    if (event.key === "approvedProducts" || event.key === "adminProductModeration" || event.key?.startsWith("reviews-") || event.key === "orders") {
         renderApprovedProducts();
         bindProductCards();
         renderProductInfo();
+        applyProductModeration();
         applyProductFilters();
     }
 });
@@ -828,6 +885,7 @@ window.addEventListener("storage", event => {
 renderAuthArea();
 renderMerchantShortcut();
 renderProductInfo();
+applyProductModeration();
 initMailForm();
 renderMailThreads();
 initHeroSlideshow();

@@ -207,6 +207,18 @@ html[data-theme="dark"] .demo-box code {
     color: #ffffff !important;
 }
 
+html[data-theme="dark"] .terms-box {
+    background: #ffffff !important;
+    color: #111111 !important;
+}
+
+html[data-theme="dark"] .terms-box h2,
+html[data-theme="dark"] .terms-box p,
+html[data-theme="dark"] .terms-box label,
+html[data-theme="dark"] .terms-box span {
+    color: #111111 !important;
+}
+
 html[data-theme="dark"] .footer {
     background: #05070a !important;
 }

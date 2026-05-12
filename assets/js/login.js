@@ -26,6 +26,19 @@ function getUsers() {
     }
 }
 
+function getUserModeration() {
+    try {
+        const moderation = JSON.parse(localStorage.getItem("adminUserModeration"));
+        return moderation && typeof moderation === "object" ? moderation : {};
+    } catch {
+        return {};
+    }
+}
+
+function getModerationKey(user) {
+    return String(user.username || user.email || user.id || "").toLowerCase();
+}
+
 function setMessage(message, isSuccess = false) {
     loginMessage.textContent = message;
     loginMessage.classList.toggle("success", isSuccess);
@@ -67,8 +80,15 @@ form.addEventListener("submit", event => {
 
     window.setTimeout(() => {
         const demo = demoAccounts[username.toUpperCase()];
+        const moderation = getUserModeration();
 
         if (demo && demo.password === password) {
+            if (moderation[username.toLowerCase()]?.banned) {
+                setMessage("This account is currently suspended by admin.");
+                setLoading(false);
+                return;
+            }
+
             localStorage.setItem("loggedInUser", JSON.stringify({
                 username: username.toUpperCase(),
                 role: demo.role
@@ -85,6 +105,12 @@ form.addEventListener("submit", event => {
 
         if (!user) {
             setMessage("Invalid username or password.");
+            setLoading(false);
+            return;
+        }
+
+        if (moderation[getModerationKey(user)]?.banned) {
+            setMessage("This account is currently suspended by admin.");
             setLoading(false);
             return;
         }

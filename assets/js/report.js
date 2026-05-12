@@ -68,8 +68,11 @@ const reportProducts = {
 
 try {
     const approvedProducts = JSON.parse(localStorage.getItem("approvedProducts")) || [];
+    const moderation = JSON.parse(localStorage.getItem("adminProductModeration")) || {};
     if (Array.isArray(approvedProducts)) {
         approvedProducts.forEach(item => {
+            if (moderation[item.id]?.hidden) return;
+
             reportProducts[item.id] = {
                 name: item.name || "Merchant Product",
                 img: item.img || "/assets/img/bs-shirt.png",
@@ -84,6 +87,15 @@ try {
 
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("product") || "bs-shirt";
+let hiddenProductModeration = {};
+try {
+    hiddenProductModeration = JSON.parse(localStorage.getItem("adminProductModeration")) || {};
+} catch {
+    hiddenProductModeration = {};
+}
+if (hiddenProductModeration[productId]?.hidden) {
+    window.location.replace("/index.html#products");
+}
 const product = reportProducts[productId] || reportProducts["bs-shirt"];
 const MERCHANT_IMAGE_DB = "wmsuMerchImages";
 const MERCHANT_IMAGE_STORE = "productImages";

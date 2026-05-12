@@ -1,17 +1,17 @@
 const baseProducts = [
-    { name: "BSCS Shirt", category: "CCS", price: 259, stock: 24 },
-    { name: "BSIT Shirt", category: "CCS", price: 259, stock: 18 },
-    { name: "ACT AD Shirt", category: "CCS", price: 259, stock: 15 },
-    { name: "BSIT Classic Shirt", category: "CCS", price: 259, stock: 12 },
-    { name: "ACT AD Premium Shirt", category: "CCS", price: 259, stock: 18 },
-    { name: "BSCS Classic Shirt", category: "CCS", price: 259, stock: 9 },
-    { name: "BSCS Lanyard", category: "CCS", price: 99, stock: 40 },
-    { name: "BSIT Lanyard", category: "CCS", price: 99, stock: 36 },
-    { name: "BSIT Alternate Lanyard", category: "CCS", price: 109, stock: 28 },
-    { name: "CCS Lanyard", category: "CCS", price: 109, stock: 32 },
-    { name: "Python Shirt", category: "CCS", price: 279, stock: 20 },
-    { name: "COE Jacket", category: "COE", price: 499, stock: 14 },
-    { name: "COE Yellow Jacket", category: "COE", price: 529, stock: 11 }
+    { id: "bs-shirt", name: "BSCS Shirt", category: "CCS", price: 259, stock: 24 },
+    { id: "bs-shirt-2", name: "BSIT Shirt", category: "CCS", price: 259, stock: 18 },
+    { id: "bs-shirt-3", name: "ACT AD Shirt", category: "CCS", price: 259, stock: 15 },
+    { id: "bs-it-3", name: "BSIT Classic Shirt", category: "CCS", price: 259, stock: 12 },
+    { id: "act-ad-2", name: "ACT AD Premium Shirt", category: "CCS", price: 259, stock: 18 },
+    { id: "act-ad", name: "BSCS Classic Shirt", category: "CCS", price: 259, stock: 9 },
+    { id: "bscs-lanyard", name: "BSCS Lanyard", category: "CCS", price: 99, stock: 40 },
+    { id: "bsit-lanyard", name: "BSIT Lanyard", category: "CCS", price: 99, stock: 36 },
+    { id: "bsit-lanyard-2", name: "BSIT Alternate Lanyard", category: "CCS", price: 109, stock: 28 },
+    { id: "ccs-lanyard", name: "CCS Lanyard", category: "CCS", price: 109, stock: 32 },
+    { id: "python-shirt", name: "Python Shirt", category: "CCS", price: 279, stock: 20 },
+    { id: "coe-jacket", name: "COE Jacket", category: "COE", price: 499, stock: 14 },
+    { id: "coe-yellow-jacket", name: "COE Yellow Jacket", category: "COE", price: 529, stock: 11 }
 ];
 
 const MERCHANT_IMAGE_DB = "wmsuMerchImages";
@@ -170,6 +170,22 @@ function saveAdminLogs(logs) {
     localStorage.setItem("adminLogs", JSON.stringify(logs));
 }
 
+function getUserModeration() {
+    return getStoredObject("adminUserModeration") || {};
+}
+
+function saveUserModeration(moderation) {
+    localStorage.setItem("adminUserModeration", JSON.stringify(moderation));
+}
+
+function getProductModeration() {
+    return getStoredObject("adminProductModeration") || {};
+}
+
+function saveProductModeration(moderation) {
+    localStorage.setItem("adminProductModeration", JSON.stringify(moderation));
+}
+
 function addAdminLog(type, action) {
     const logs = getAdminLogs();
     logs.unshift({
@@ -242,8 +258,58 @@ function getAllProducts() {
     return [...baseProducts, ...getMerchantProducts()];
 }
 
+function getProductId(product) {
+    return product.id || product.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function getVisibleProducts() {
+    const moderation = getProductModeration();
+    return getAllProducts().filter(product => moderation[getProductId(product)]?.hidden !== true);
+}
+
 function getOrderItems(order) {
     return Array.isArray(order.items) ? order.items : [];
+}
+
+function getItemQuantity(item) {
+    return Number(item.qty || item.quantity) || 1;
+}
+
+function getItemUnitPrice(item) {
+    const raw = item.price ?? item.unitPrice ?? 0;
+    return Number(String(raw).replace(/[^\d.]/g, "")) || 0;
+}
+
+function getOrderDate(order) {
+    return new Date(order.completedAt || order.createdAt || order.date || Date.now());
+}
+
+function getProductSales(orders) {
+    const sales = new Map();
+
+    orders.forEach(order => {
+        getOrderItems(order).forEach(item => {
+            const name = item.name || "Unknown product";
+            const qty = getItemQuantity(item);
+            const existing = sales.get(name) || { name, qty: 0, revenue: 0 };
+            existing.qty += qty;
+            existing.revenue += qty * getItemUnitPrice(item);
+            sales.set(name, existing);
+        });
+    });
+
+    return Array.from(sales.values()).sort((a, b) => b.qty - a.qty || b.revenue - a.revenue);
+}
+
+function getInventoryStats() {
+    const products = getVisibleProducts();
+    const totalStock = products.reduce((sum, product) => sum + (Number(product.stock) || 0), 0);
+    const lowStock = products.filter(product => {
+        const threshold = Number(product.lowStockThreshold) || 10;
+        return (Number(product.stock) || 0) <= threshold;
+    });
+
+    return { products, totalStock, lowStock };
 }
 
 function getDepartmentTotals(orders) {
@@ -252,7 +318,7 @@ function getDepartmentTotals(orders) {
     orders.forEach(order => {
         getOrderItems(order).forEach(item => {
             const name = String(item.name || "").toUpperCase();
-            const qty = Number(item.qty) || 1;
+            const qty = getItemQuantity(item);
 
             if (name.includes("COE")) {
                 totals.COE += qty;
@@ -268,6 +334,11 @@ function getDepartmentTotals(orders) {
 function setText(id, value) {
     const element = document.getElementById(id);
     if (element) element.textContent = value;
+}
+
+function setPanelNote(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.innerHTML = value;
 }
 
 function renderLogout() {
@@ -286,31 +357,67 @@ function renderAdminDashboard() {
     const orders = getOrders();
     const reports = getReports();
     const users = getStoredArray("users");
+    const requests = getMerchantProductRequests();
+    const pendingPurchase = getStoredObject("pendingPurchase");
+    const today = new Date().toDateString();
     const total = orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+    const todayOrders = orders.filter(order => getOrderDate(order).toDateString() === today);
+    const todayTotal = todayOrders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+    const avgOrder = orders.length ? total / orders.length : 0;
+    const pendingReports = reports.filter(report => report.status !== "resolved").length;
+    const pendingApprovals = requests.filter(request => request.status === "pending").length;
+    const sales = getProductSales(orders);
+    const inventory = getInventoryStats();
 
     setText("admin-total-sales", formatPeso(total));
     setText("admin-order-count", String(orders.length));
     setText("admin-report-count", String(reports.length));
     setText("admin-user-count", String(users.length));
+    setText("admin-today-sales", formatPeso(todayTotal));
+    setText("admin-average-order", formatPeso(avgOrder));
+    setText("admin-pending-approvals", String(pendingApprovals));
+    setText("admin-pending-approvals-inline", String(pendingApprovals));
+    setText("admin-low-stock-count", String(inventory.lowStock.length));
+    setText("admin-active-product-count", String(inventory.products.length));
+    setText("admin-total-stock", String(inventory.totalStock));
+    setText("admin-top-product", sales[0] ? `${sales[0].name} (${sales[0].qty})` : "No sales yet");
+    setText("admin-open-issues", String(pendingReports + pendingApprovals + (pendingPurchase ? 1 : 0)));
+    setText("admin-report-count-inline", String(reports.length));
 
     activityList.innerHTML = "";
-    if (!orders.length) {
-        activityList.innerHTML = "<li>No completed purchase activity yet.</li>";
-    } else {
-        orders.slice(-6).reverse().forEach(order => {
-            const itemNames = getOrderItems(order).map(item => `${item.name} x${item.qty || 1}`).join(", ");
-            const li = document.createElement("li");
-            li.textContent = `${order.customerName || "A student"} bought ${itemNames || "merch"} for ${formatPeso(order.total)}.`;
-            activityList.appendChild(li);
-        });
+    const activity = [
+        ...orders.map(order => ({
+            createdAt: order.completedAt || order.createdAt,
+            text: `${order.customerName || "A student"} bought ${getOrderItems(order).map(item => `${item.name} x${getItemQuantity(item)}`).join(", ") || "merch"} for ${formatPeso(order.total)}.`
+        })),
+        ...reports.map(report => ({
+            createdAt: report.createdAt,
+            text: `${report.reporter || "A user"} reported ${report.productName || "a product"} (${report.status || "pending"}).`
+        })),
+        ...requests.map(request => ({
+            createdAt: request.createdAt,
+            text: `${request.merchant || "Merchant"} submitted ${request.name || "a product"} (${request.status || "pending"}).`
+        }))
+    ].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    if (!activity.length) {
+        activityList.innerHTML = "<li>No live user or merchant activity yet.</li>";
     }
+
+    activity.slice(0, 8).forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item.text;
+        activityList.appendChild(li);
+    });
 
     renderPieChart(orders);
     renderBarChart(orders);
+    renderDashboardQueues(orders, pendingPurchase, sales, inventory);
     renderProductApprovals();
     renderAdminMail();
     renderAdminLogs();
     renderAdminUsers();
+    renderAdminProducts();
 }
 
 function renderProductApprovals() {
@@ -371,7 +478,7 @@ function reviewProductRequest(id, status, note) {
             approved.unshift({
                 ...request,
                 sold: 0,
-                rating: 4.5,
+                rating: 0,
                 reviews: 0,
                 stockLabel: request.visibility === "preorder" ? "Preorder" : "In stock",
                 sizes: request.sizes || "One size",
@@ -424,20 +531,72 @@ function renderBarChart(orders) {
     const chart = document.getElementById("admin-bar-chart");
     if (!chart) return;
 
-    const mockDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-    const counts = mockDays.map((day, index) => {
-        const real = orders.filter((_, orderIndex) => orderIndex % mockDays.length === index).length;
-        return real || [5, 8, 6, 10, 7][index];
+    const days = Array.from({ length: 7 }, (_, index) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - index));
+        return date;
+    });
+    const counts = days.map(day => {
+        return orders.filter(order => getOrderDate(order).toDateString() === day.toDateString()).length;
     });
     const max = Math.max(...counts, 1);
 
     chart.innerHTML = "";
-    mockDays.forEach((day, index) => {
+    days.forEach((day, index) => {
         const row = document.createElement("div");
         row.className = "bar-row";
-        row.innerHTML = `<span>${day}</span><div class="bar-track"><div class="bar-fill" style="width:${counts[index] / max * 100}%"></div></div><strong>${counts[index]}</strong>`;
+        const label = day.toLocaleDateString("en-PH", { weekday: "short" });
+        row.innerHTML = `<span>${label}</span><div class="bar-track"><div class="bar-fill" style="width:${counts[index] / max * 100}%"></div></div><strong>${counts[index]}</strong>`;
         chart.appendChild(row);
     });
+}
+
+function renderDashboardQueues(orders, pendingPurchase, sales, inventory) {
+    const queue = document.getElementById("admin-live-order-queue");
+    const health = document.getElementById("admin-store-health");
+
+    if (queue) {
+        queue.innerHTML = "";
+        const queueItems = [
+            ...(pendingPurchase ? [{
+                label: pendingPurchase.orderId || pendingPurchase.id || "Pending checkout",
+                detail: getOrderItems(pendingPurchase).map(item => `${item.name} x${getItemQuantity(item)}`).join(", ") || "Payment in progress",
+                status: "Payment review",
+                className: "pending"
+            }] : []),
+            ...orders.slice(-4).reverse().map(order => ({
+                label: order.id || order.orderId || "Completed order",
+                detail: getOrderItems(order).map(item => `${item.name} x${getItemQuantity(item)}`).join(", ") || "Merch order",
+                status: "Complete",
+                className: "ok"
+            }))
+        ];
+
+        if (!queueItems.length) {
+            queue.innerHTML = '<p class="panel-note">Orders will appear here as users checkout.</p>';
+        }
+
+        queueItems.slice(0, 5).forEach(item => {
+            const row = document.createElement("div");
+            row.className = "info-row";
+            row.innerHTML = `<span>${escapeHtml(item.label)}</span><strong>${escapeHtml(item.detail)}</strong><span class="status-pill ${item.className}">${escapeHtml(item.status)}</span>`;
+            queue.appendChild(row);
+        });
+    }
+
+    if (health) {
+        const totalRevenue = orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+        const completionRate = pendingPurchase ? Math.round(orders.length / (orders.length + 1) * 100) : orders.length ? 100 : 0;
+        const topCategory = getDepartmentTotals(orders);
+        const category = topCategory.COE > topCategory.CCS ? "COE" : topCategory.CCS ? "CCS" : "No sales yet";
+        health.innerHTML = `
+            <div class="metric-line"><span>Payment completion</span><strong>${completionRate}%</strong></div>
+            <div class="metric-line"><span>Average order value</span><strong>${formatPeso(orders.length ? totalRevenue / orders.length : 0)}</strong></div>
+            <div class="metric-line"><span>Top product</span><strong>${escapeHtml(sales[0]?.name || "No sales yet")}</strong></div>
+            <div class="metric-line"><span>Top department</span><strong>${category}</strong></div>
+            <div class="metric-line"><span>Low-stock products</span><strong>${inventory.lowStock.length}</strong></div>
+        `;
+    }
 }
 
 function renderAdminReports() {
@@ -885,30 +1044,187 @@ function renderMerchantCustomers() {
     });
 }
 
-function renderAdminUsers() {
-    const panel = document.querySelector(".user-panel");
-    if (!panel || panel.dataset.dynamicBound) return;
+function renderAdminProducts() {
+    const list = document.getElementById("admin-product-list");
+    const activity = document.getElementById("admin-product-activity");
+    if (!list) return;
 
-    const storedUsers = getStoredArray("users");
-    if (!storedUsers.length) {
-        panel.dataset.dynamicBound = "true";
+    const moderation = getProductModeration();
+    const products = getAllProducts();
+    const requests = getMerchantProductRequests();
+    const visibleProducts = products.filter(product => moderation[getProductId(product)]?.hidden !== true);
+
+    setText("admin-product-total", String(visibleProducts.length));
+    setText("admin-product-flagged", String(Object.values(moderation).filter(item => item.flagged && !item.hidden).length));
+    setText("admin-product-hidden", String(Object.values(moderation).filter(item => item.hidden).length));
+    setText("admin-product-pending", String(requests.filter(request => request.status === "pending").length));
+
+    if (activity) {
+        activity.innerHTML = "";
+        const rows = [
+            ...requests.map(request => ({
+                date: request.reviewedAt || request.createdAt,
+                text: `${request.name} is ${request.status || "pending"} (${request.merchant || "Merchant"}).`
+            })),
+            ...getAdminLogs()
+                .filter(log => /product|submitted|approved|rejected|hidden|flagged/i.test(log.action || ""))
+                .map(log => ({ date: log.createdAt, text: log.action }))
+        ].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+        if (!rows.length) {
+            activity.innerHTML = "<li>No product activity yet.</li>";
+        }
+
+        rows.slice(0, 6).forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item.text;
+            activity.appendChild(li);
+        });
+    }
+
+    list.innerHTML = "";
+    if (!products.length) {
+        list.innerHTML = '<p class="panel-note">No products available.</p>';
         return;
     }
 
-    storedUsers.slice(0, 8).forEach(user => {
+    products.forEach(product => {
+        const id = getProductId(product);
+        const state = moderation[id] || {};
+        const row = document.createElement("div");
+        row.className = "product-row";
+        if (state.hidden) row.classList.add("is-hidden");
+        row.innerHTML = `
+            <span class="p-name">${escapeHtml(product.name)}</span>
+            <span class="p-seller">Seller: ${escapeHtml(product.merchant || product.category || "Campus Store")} | Stock: ${escapeHtml(product.stock ?? "n/a")} ${state.flagged ? "| Flagged" : ""}${state.hidden ? "| Hidden" : ""}</span>
+            <span class="p-price">${formatPeso(product.price)}</span>
+            <button class="flag-btn scoped-action" type="button">${state.flagged ? "Unflag" : "Flag"}</button>
+            <button class="delete-btn scoped-action" type="button">${state.hidden ? "Restore" : "Hide"}</button>
+        `;
+
+        row.querySelector(".flag-btn").addEventListener("click", () => {
+            const next = getProductModeration();
+            next[id] = {
+                ...next[id],
+                flagged: !next[id]?.flagged,
+                updatedAt: new Date().toISOString()
+            };
+            saveProductModeration(next);
+            addAdminLog(next[id].flagged ? "WARN" : "UPDATE", `${product.name} was ${next[id].flagged ? "flagged" : "unflagged"} by admin.`);
+            renderAdminProducts();
+            renderAdminDashboard();
+        });
+
+        row.querySelector(".delete-btn").addEventListener("click", () => {
+            const next = getProductModeration();
+            next[id] = {
+                ...next[id],
+                hidden: !next[id]?.hidden,
+                updatedAt: new Date().toISOString()
+            };
+            saveProductModeration(next);
+            addAdminLog(next[id].hidden ? "DELETE" : "UPDATE", `${product.name} was ${next[id].hidden ? "hidden from" : "restored to"} admin/store analytics.`);
+            renderAdminProducts();
+            renderAdminDashboard();
+        });
+
+        list.appendChild(row);
+    });
+}
+
+function renderAdminUsers() {
+    const panel = document.querySelector(".user-panel");
+    if (!panel) return;
+
+    const storedUsers = getStoredArray("users");
+    const moderation = getUserModeration();
+    const demoUsers = [
+        { username: "ADMIN", email: "admin@wmsu.edu", role: "admin", verified: true },
+        { username: "MERCHANT", email: "merchant@wmsumerch.fake", role: "merchant", verified: true }
+    ];
+    const users = [...demoUsers, ...storedUsers].filter((user, index, array) => {
+        const key = (user.username || user.email || user.id || "").toString().toLowerCase();
+        return key && array.findIndex(item => (item.username || item.email || item.id || "").toString().toLowerCase() === key) === index;
+    });
+
+    panel.querySelectorAll(".user-row").forEach(row => row.remove());
+
+    const banned = users.filter(user => moderation[getUserModerationKey(user)]?.banned).length;
+    const warned = users.filter(user => moderation[getUserModerationKey(user)]?.warned).length;
+    const activeToday = new Set(getOrders()
+        .filter(order => getOrderDate(order).toDateString() === new Date().toDateString())
+        .map(order => order.customerName || order.username)
+        .filter(Boolean)).size;
+    setText("admin-users-total", String(users.length));
+    setText("admin-users-active", String(activeToday));
+    setText("admin-users-flagged", String(banned + warned));
+    setText("admin-users-students", String(users.filter(user => (user.role || "user") === "user").length));
+    setText("admin-users-merchants", String(users.filter(user => user.role === "merchant").length));
+    setText("admin-users-admins", String(users.filter(user => user.role === "admin").length));
+
+    if (!users.length) {
+        panel.insertAdjacentHTML("beforeend", '<p class="panel-note">Registered users will appear here after signup.</p>');
+        return;
+    }
+
+    users.forEach(user => {
+        const key = getUserModerationKey(user);
+        const state = moderation[key] || {};
         const row = document.createElement("div");
         row.className = "user-row";
+        if (state.banned) row.classList.add("banned");
         row.innerHTML = `
             <span class="u-name">${escapeHtml(user.username || user.name || "student")}</span>
             <span class="u-email">${escapeHtml(user.email || "No email")}</span>
-            <span class="u-role">${escapeHtml(user.role || "user")} | ${user.verified ? "Verified" : "Unverified"}</span>
-            <button class="warn-btn" type="button">Warn</button>
-            <button class="ban-btn" type="button">Ban</button>
+            <span class="u-role">${escapeHtml(user.role || "user")} | ${user.verified ? "Verified" : "Unverified"}${state.warned ? " | Warned" : ""}${state.banned ? " | Banned" : ""}</span>
+            <button class="warn-btn" type="button" data-bound="true">${state.warned ? "Unwarn" : "Warn"}</button>
+            <button class="ban-btn" type="button" data-bound="true">${state.banned ? "Unban" : "Ban"}</button>
         `;
+
+        row.querySelector(".warn-btn").addEventListener("click", () => {
+            const next = getUserModeration();
+            next[key] = {
+                ...next[key],
+                warned: !next[key]?.warned,
+                updatedAt: new Date().toISOString()
+            };
+            saveUserModeration(next);
+            addAdminLog(next[key].warned ? "WARN" : "UPDATE", `${user.username || user.email} was ${next[key].warned ? "warned" : "unwarned"} by admin.`);
+            sendThread({
+                recipient: user.username || user.email || "admin",
+                sender: "Admin",
+                subject: next[key].warned ? "Account warning" : "Account warning cleared",
+                message: next[key].warned ? "Your account received an admin warning." : "Your account warning was cleared."
+            });
+            renderAdminUsers();
+            renderAdminLogs();
+        });
+
+        row.querySelector(".ban-btn").addEventListener("click", () => {
+            const next = getUserModeration();
+            next[key] = {
+                ...next[key],
+                banned: !next[key]?.banned,
+                updatedAt: new Date().toISOString()
+            };
+            saveUserModeration(next);
+            addAdminLog(next[key].banned ? "DELETE" : "UPDATE", `${user.username || user.email} was ${next[key].banned ? "banned" : "unbanned"} by admin.`);
+            sendThread({
+                recipient: user.username || user.email || "admin",
+                sender: "Admin",
+                subject: next[key].banned ? "Account suspended" : "Account restored",
+                message: next[key].banned ? "Your account was suspended by admin moderation." : "Your account access was restored."
+            });
+            renderAdminUsers();
+            renderAdminLogs();
+        });
+
         panel.appendChild(row);
     });
+}
 
-    panel.dataset.dynamicBound = "true";
+function getUserModerationKey(user) {
+    return String(user.username || user.email || user.id || "").toLowerCase();
 }
 
 function renderAdminLogs() {
@@ -918,6 +1234,11 @@ function renderAdminLogs() {
     document.getElementById("dynamic-log-list")?.remove();
 
     const logs = getAdminLogs();
+    setText("admin-log-creates", String(logs.filter(log => log.type === "CREATE").length));
+    setText("admin-log-updates", String(logs.filter(log => log.type === "UPDATE" || log.type === "APPROVE").length));
+    setText("admin-log-warnings", String(logs.filter(log => log.type === "WARN" || log.type === "REJECT").length));
+    setText("admin-log-deletes", String(logs.filter(log => log.type === "DELETE").length));
+
     const list = document.createElement("div");
     list.id = "dynamic-log-list";
 
@@ -1067,24 +1388,22 @@ function initContextButtons() {
     });
 }
 
-renderLogout();
-guardRoleAccess();
-renderAdminDashboard();
-renderProductApprovals();
-renderAdminReports();
-renderMerchantDashboard();
-renderMerchantProducts();
-renderMerchantMail();
-renderMerchantCustomers();
-renderAdminUsers();
-renderAdminLogs();
-initContextButtons();
-initAdminLogButtons();
+function getAdminDataSignature() {
+    return [
+        "orders",
+        "pendingPurchase",
+        "productReports",
+        "merchantProductRequests",
+        "approvedProducts",
+        "users",
+        "mailThreads",
+        "adminLogs",
+        "adminUserModeration",
+        "adminProductModeration"
+    ].map(key => `${key}:${localStorage.getItem(key) || ""}`).join("|");
+}
 
-document.getElementById("new-product-type")?.addEventListener("change", updateSizePanel);
-updateSizePanel();
-
-window.addEventListener("storage", () => {
+function refreshPanels() {
     renderAdminDashboard();
     renderProductApprovals();
     renderAdminReports();
@@ -1093,7 +1412,30 @@ window.addEventListener("storage", () => {
     renderMerchantMail();
     renderMerchantCustomers();
     renderAdminUsers();
+    renderAdminProducts();
     renderAdminLogs();
     initContextButtons();
     initAdminLogButtons();
+}
+
+renderLogout();
+guardRoleAccess();
+refreshPanels();
+
+document.getElementById("new-product-type")?.addEventListener("change", updateSizePanel);
+updateSizePanel();
+
+let adminDataSignature = getAdminDataSignature();
+
+window.addEventListener("storage", () => {
+    adminDataSignature = getAdminDataSignature();
+    refreshPanels();
 });
+
+window.setInterval(() => {
+    const nextSignature = getAdminDataSignature();
+    if (nextSignature === adminDataSignature) return;
+
+    adminDataSignature = nextSignature;
+    refreshPanels();
+}, 1200);
