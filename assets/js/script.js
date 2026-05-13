@@ -526,6 +526,39 @@ function renderMerchantShortcut() {
     shortcut.hidden = user?.role !== "merchant";
 }
 
+function renderRoleDashboardLinks() {
+    const user = getStoredObject("loggedInUser");
+    const dashboardItem = document.getElementById("role-dashboard-item");
+    const dashboardLink = document.getElementById("role-dashboard-link");
+    const dashboardMenuLink = document.getElementById("role-dashboard-menu-link");
+
+    const dashboardByRole = {
+        admin: {
+            label: "Admin Dashboard",
+            href: "/assets/html/admin/admin-dashboard.html"
+        },
+        merchant: {
+            label: "Merchant Dashboard",
+            href: "/assets/html/merchant/merchant-dashboard.html"
+        }
+    };
+
+    const dashboard = dashboardByRole[user?.role];
+    const shouldShow = Boolean(dashboard);
+
+    if (dashboardItem) dashboardItem.hidden = !shouldShow;
+
+    [dashboardLink, dashboardMenuLink].forEach(link => {
+        if (!link) return;
+        link.hidden = !shouldShow;
+
+        if (dashboard) {
+            link.href = dashboard.href;
+            link.textContent = dashboard.label;
+        }
+    });
+}
+
 function renderApprovedProducts() {
     const section = document.getElementById("merchant-releases");
     const groups = document.getElementById("merchant-product-groups");
@@ -884,6 +917,7 @@ window.addEventListener("storage", event => {
 
 renderAuthArea();
 renderMerchantShortcut();
+renderRoleDashboardLinks();
 renderProductInfo();
 applyProductModeration();
 initMailForm();
