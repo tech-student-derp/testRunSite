@@ -756,6 +756,38 @@ img {
     background: var(--primary);
 }
 
+.logout-popup-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.logout-popup-actions button {
+    min-height: 42px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.logout-cancel-btn {
+    background: #f1f1f1;
+    color: var(--ink);
+}
+
+.logout-cancel-btn:hover {
+    background: #e4e4e4;
+}
+
+.logout-confirm-btn {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.logout-confirm-btn:hover {
+    background: var(--primary-dark);
+}
+
 .sidebar {
     position: fixed;
     top: 0;

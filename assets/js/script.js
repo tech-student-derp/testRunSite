@@ -172,6 +172,10 @@ const heroSlideTitle = document.getElementById("hero-slide-title");
 const heroDots = document.getElementById("hero-dots");
 const authPopup = document.getElementById("auth-popup");
 const closeAuthPopup = document.getElementById("close-auth-popup");
+const logoutPopup = document.getElementById("logout-popup");
+const closeLogoutPopup = document.getElementById("close-logout-popup");
+const cancelLogout = document.getElementById("cancel-logout");
+const confirmLogout = document.getElementById("confirm-logout");
 const MERCHANT_IMAGE_DB = "wmsuMerchImages";
 const MERCHANT_IMAGE_STORE = "productImages";
 
@@ -276,6 +280,21 @@ function showAuthPopup() {
 
 function hideAuthPopup() {
     if (authPopup) authPopup.hidden = true;
+}
+
+function showLogoutPopup() {
+    if (!logoutPopup) return;
+    logoutPopup.hidden = false;
+    cancelLogout?.focus();
+}
+
+function hideLogoutPopup() {
+    if (logoutPopup) logoutPopup.hidden = true;
+}
+
+function logoutUser() {
+    localStorage.removeItem("loggedInUser");
+    window.location.reload();
 }
 
 function saveCart(cart) {
@@ -509,10 +528,7 @@ function renderAuthArea() {
     logout.className = "logout-btn";
     logout.type = "button";
     logout.textContent = "Log out";
-    logout.addEventListener("click", () => {
-        localStorage.removeItem("loggedInUser");
-        window.location.reload();
-    });
+    logout.addEventListener("click", showLogoutPopup);
 
     block.append(welcome, logout);
     authArea.append(themeButton, block);
@@ -863,9 +879,17 @@ menuBtn?.addEventListener("click", openLeftMenu);
 closeLeft?.addEventListener("click", closeLeftMenu);
 overlay?.addEventListener("click", closeAllPanels);
 closeAuthPopup?.addEventListener("click", hideAuthPopup);
+closeLogoutPopup?.addEventListener("click", hideLogoutPopup);
+cancelLogout?.addEventListener("click", hideLogoutPopup);
+confirmLogout?.addEventListener("click", logoutUser);
 authPopup?.addEventListener("click", event => {
     if (event.target === authPopup) {
         hideAuthPopup();
+    }
+});
+logoutPopup?.addEventListener("click", event => {
+    if (event.target === logoutPopup) {
+        hideLogoutPopup();
     }
 });
 
@@ -873,6 +897,7 @@ document.addEventListener("keydown", event => {
     if (event.key === "Escape") {
         closeAllPanels();
         hideAuthPopup();
+        hideLogoutPopup();
     }
 });
 

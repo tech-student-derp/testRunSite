@@ -1,11 +1,17 @@
 html[data-theme="dark"] {
     --primary: #ff4d4d;
     --primary-dark: #d83030;
+    --success: #4ade80;
+    --danger: #ff6b7a;
     --ink: #f4f4f5;
+    --text: #f4f4f5;
     --muted: #b7bbc3;
     --line: #303642;
     --surface: #171b22;
+    --panel: #171b22;
+    --card: #171b22;
     --page: #0f1217;
+    --bg: #0f1217;
     --dark: #05070a;
     --shadow: 0 10px 28px rgba(0,0,0,0.42);
     color-scheme: dark;
@@ -36,6 +42,11 @@ html[data-theme="dark"] body {
 
 html[data-theme="dark"] .site-header,
 html[data-theme="dark"] .page-header,
+html[data-theme="dark"] .support-header,
+html[data-theme="dark"] .payment-header,
+html[data-theme="dark"] .checkout-header,
+html[data-theme="dark"] .history-header,
+html[data-theme="dark"] .gcash-header,
 html[data-theme="dark"] .admin-header,
 html[data-theme="dark"] .report-header {
     background: #8f1111 !important;
@@ -43,6 +54,10 @@ html[data-theme="dark"] .report-header {
 }
 
 html[data-theme="dark"] .admin-sidebar,
+html[data-theme="dark"] .support-form,
+html[data-theme="dark"] .support-panel,
+html[data-theme="dark"] .payment-panel,
+html[data-theme="dark"] .order-summary,
 html[data-theme="dark"] .left-sidebar,
 html[data-theme="dark"] .sidebar,
 html[data-theme="dark"] .auth-popup-card,
@@ -83,18 +98,26 @@ html[data-theme="dark"] .notification-panel {
 
 html[data-theme="dark"] .auth-card,
 html[data-theme="dark"] .otp-card,
+html[data-theme="dark"] .otp-modal,
+html[data-theme="dark"] .verify-card,
 html[data-theme="dark"] .status-card,
 html[data-theme="dark"] .gcash-card,
 html[data-theme="dark"] .summary-panel,
+html[data-theme="dark"] .checkout-summary,
+html[data-theme="dark"] .empty-cart,
 html[data-theme="dark"] .cart-box,
 html[data-theme="dark"] .cart-item,
 html[data-theme="dark"] .history-card,
+html[data-theme="dark"] .history-toolbar,
+html[data-theme="dark"] .empty-history,
 html[data-theme="dark"] .method-panel,
 html[data-theme="dark"] .form-card,
 html[data-theme="dark"] .product-shell,
 html[data-theme="dark"] .review-section,
 html[data-theme="dark"] .reported-product,
 html[data-theme="dark"] .report-page fieldset,
+html[data-theme="dark"] .details-card,
+html[data-theme="dark"] .transaction-card,
 html[data-theme="dark"] .item-row,
 html[data-theme="dark"] .summary-item,
 html[data-theme="dark"] .approval-row,
@@ -131,6 +154,53 @@ html[data-theme="dark"] .form-section {
     color: var(--ink) !important;
 }
 
+html[data-theme="dark"] .method-card,
+html[data-theme="dark"] .hint-box,
+html[data-theme="dark"] .mock-code,
+html[data-theme="dark"] .status-breadcrumb,
+html[data-theme="dark"] .breadcrumb-step,
+html[data-theme="dark"] .bar-track,
+html[data-theme="dark"] .approval-row img,
+html[data-theme="dark"] .support-thread-list article,
+html[data-theme="dark"] .summary-item img {
+    background: #11151c !important;
+    border-color: var(--line) !important;
+    color: var(--ink) !important;
+}
+
+html[data-theme="dark"] .method-note {
+    background: #111d2e !important;
+    border-color: #244567 !important;
+    color: #b9d9ff !important;
+}
+
+html[data-theme="dark"] .mock-code {
+    color: var(--primary) !important;
+}
+
+html[data-theme="dark"] .status-pill.complete,
+html[data-theme="dark"] .breadcrumb-step.complete,
+html[data-theme="dark"] .status-pill.ok {
+    background: rgba(74,222,128,0.14) !important;
+    border-color: rgba(74,222,128,0.35) !important;
+    color: var(--success) !important;
+}
+
+html[data-theme="dark"] .status-pill.failed,
+html[data-theme="dark"] .breadcrumb-step.failed,
+html[data-theme="dark"] .status-pill.warn {
+    background: rgba(255,107,122,0.14) !important;
+    border-color: rgba(255,107,122,0.35) !important;
+    color: var(--danger) !important;
+}
+
+html[data-theme="dark"] .status-pill.pending,
+html[data-theme="dark"] .status-pill.delivery {
+    background: rgba(245,164,0,0.16) !important;
+    border-color: rgba(245,164,0,0.35) !important;
+    color: #f6c453 !important;
+}
+
 html[data-theme="dark"] p,
 html[data-theme="dark"] li,
 html[data-theme="dark"] dd,
@@ -156,7 +226,6 @@ html[data-theme="dark"] label,
 html[data-theme="dark"] legend,
 html[data-theme="dark"] dt,
 html[data-theme="dark"] .item-info p,
-html[data-theme="dark"] .method-note,
 html[data-theme="dark"] .empty-order,
 html[data-theme="dark"] .report-status,
 html[data-theme="dark"] .form-message {
@@ -183,13 +252,73 @@ html[data-theme="dark"] .left-sidebar-content a {
     color: #f4f4f5;
 }
 
-html[data-theme="dark"] .back-btn {
-    background: #f2f2f2 !important;
-    color: #333333 !important;
+html[data-theme="dark"] .back-btn,
+html[data-theme="dark"] #back-btn,
+html[data-theme="dark"] #resend-btn,
+html[data-theme="dark"] #fail-btn,
+html[data-theme="dark"] .secondary-link,
+html[data-theme="dark"] .logout-cancel-btn {
+    background: #232936 !important;
+    border-color: var(--line) !important;
+    color: var(--ink) !important;
 }
 
-html[data-theme="dark"] .back-btn:hover {
-    background: #dddddd !important;
+html[data-theme="dark"] .back-btn:hover,
+html[data-theme="dark"] #back-btn:hover,
+html[data-theme="dark"] #resend-btn:hover,
+html[data-theme="dark"] #fail-btn:hover,
+html[data-theme="dark"] .secondary-link:hover,
+html[data-theme="dark"] .logout-cancel-btn:hover {
+    background: #2f3747 !important;
+}
+
+html[data-theme="dark"] .back-link,
+html[data-theme="dark"] .cart-link,
+html[data-theme="dark"] #verify-btn,
+html[data-theme="dark"] #verify-purchase-btn,
+html[data-theme="dark"] #otp-close,
+html[data-theme="dark"] .view-btn,
+html[data-theme="dark"] .status-card .primary-link {
+    background: #05070a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .back-link:hover,
+html[data-theme="dark"] .cart-link:hover,
+html[data-theme="dark"] #verify-btn:hover,
+html[data-theme="dark"] #verify-purchase-btn:hover,
+html[data-theme="dark"] #otp-close:hover,
+html[data-theme="dark"] .view-btn:hover,
+html[data-theme="dark"] .status-card .primary-link:hover {
+    background: #232936 !important;
+}
+
+html[data-theme="dark"] .resolve-btn,
+html[data-theme="dark"] .reply-btn,
+html[data-theme="dark"] .accept-btn {
+    background: #15803d !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .resolve-btn:hover,
+html[data-theme="dark"] .reply-btn:hover,
+html[data-theme="dark"] .accept-btn:hover {
+    background: #10652f !important;
+}
+
+html[data-theme="dark"] .resolve-btn.disabled {
+    background: #4b5563 !important;
+    color: #d1d5db !important;
+}
+
+html[data-theme="dark"] #fail-btn {
+    background: rgba(255,107,122,0.14) !important;
+    border: 1px solid rgba(255,107,122,0.35) !important;
+    color: var(--danger) !important;
+}
+
+html[data-theme="dark"] #fail-btn:hover {
+    background: rgba(255,107,122,0.22) !important;
 }
 
 html[data-theme="dark"] .demo-box {
