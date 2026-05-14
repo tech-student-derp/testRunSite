@@ -280,6 +280,15 @@ function getItemUnitPrice(item) {
     return Number(String(raw).replace(/[^\d.]/g, "")) || 0;
 }
 
+function getOrderRevenue(order) {
+    const total = Number(order.total);
+    if (Number.isFinite(total) && total > 0) return total;
+
+    return getOrderItems(order).reduce((sum, item) => {
+        return sum + getItemQuantity(item) * getItemUnitPrice(item);
+    }, 0);
+}
+
 function getOrderDate(order) {
     return new Date(order.completedAt || order.createdAt || order.date || Date.now());
 }
@@ -319,16 +328,41 @@ function getDepartmentTotals(orders) {
         getOrderItems(order).forEach(item => {
             const name = String(item.name || "").toUpperCase();
             const qty = getItemQuantity(item);
+            const revenue = qty * getItemUnitPrice(item);
 
             if (name.includes("COE")) {
-                totals.COE += qty;
+                totals.COE += revenue;
             } else {
-                totals.CCS += qty;
+                totals.CCS += revenue;
             }
         });
     });
 
     return totals;
+}
+
+function getLastSevenSalesDays(orders) {
+    return Array.from({ length: 7 }, (_, index) => {
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        date.setDate(date.getDate() - (6 - index));
+
+        const dayOrders = orders.filter(order => {
+            const orderDate = getOrderDate(order);
+            orderDate.setHours(0, 0, 0, 0);
+            return orderDate.getTime() === date.getTime();
+        });
+
+        return {
+            date,
+            label: date.toLocaleDateString("en-PH", { weekday: "short" }),
+            revenue: dayOrders.reduce((sum, order) => sum + getOrderRevenue(order), 0),
+            orders: dayOrders.length,
+            items: dayOrders.reduce((sum, order) => {
+                return sum + getOrderItems(order).reduce((itemSum, item) => itemSum + getItemQuantity(item), 0);
+            }, 0)
+        };
+    });
 }
 
 function setText(id, value) {
@@ -360,9 +394,9 @@ function renderAdminDashboard() {
     const requests = getMerchantProductRequests();
     const pendingPurchase = getStoredObject("pendingPurchase");
     const today = new Date().toDateString();
-    const total = orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+    const total = orders.reduce((sum, order) => sum + getOrderRevenue(order), 0);
     const todayOrders = orders.filter(order => getOrderDate(order).toDateString() === today);
-    const todayTotal = todayOrders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+    const todayTotal = todayOrders.reduce((sum, order) => sum + getOrderRevenue(order), 0);
     const avgOrder = orders.length ? total / orders.length : 0;
     const pendingReports = reports.filter(report => report.status !== "resolved").length;
     const pendingApprovals = requests.filter(request => request.status === "pending").length;
@@ -388,7 +422,7 @@ function renderAdminDashboard() {
     const activity = [
         ...orders.map(order => ({
             createdAt: order.completedAt || order.createdAt,
-            text: `${order.customerName || "A student"} bought ${getOrderItems(order).map(item => `${item.name} x${getItemQuantity(item)}`).join(", ") || "merch"} for ${formatPeso(order.total)}.`
+            text: `${order.customerName || "A student"} bought ${getOrderItems(order).map(item => `${item.name} x${getItemQuantity(item)}`).join(", ") || "merch"} for ${formatPeso(getOrderRevenue(order))}.`
         })),
         ...reports.map(report => ({
             createdAt: report.createdAt,
@@ -412,6 +446,7 @@ function renderAdminDashboard() {
 
     renderPieChart(orders);
     renderBarChart(orders);
+    renderLineChart(orders);
     renderDashboardQueues(orders, pendingPurchase, sales, inventory);
     renderProductApprovals();
     renderAdminMail();
@@ -505,50 +540,91 @@ function renderPieChart(orders) {
     if (!chart || !legend) return;
 
     const totals = getDepartmentTotals(orders);
-    const values = [totals.CCS, totals.COE];
-    const total = values.reduce((sum, value) => sum + value, 0) || 1;
-    const ccs = values[0] / total * 100;
+    const entries = [
+        { color: "#c40000", label: "CCS", value: totals.CCS },
+        { color: "#111111", label: "COE", value: totals.COE }
+    ];
+    const total = entries.reduce((sum, entry) => sum + entry.value, 0);
 
-    chart.style.background = `conic-gradient(#c40000 0 ${ccs}%, #111 ${ccs}% 100%)`;
+    if (total > 0) {
+        let start = 0;
+        const stops = entries.map(entry => {
+            const end = start + (entry.value / total * 100);
+            const stop = `${entry.color} ${start}% ${end}%`;
+            start = end;
+            return stop;
+        });
+        chart.style.background = `conic-gradient(${stops.join(", ")})`;
+        chart.classList.remove("empty-chart");
+    } else {
+        chart.style.background = "conic-gradient(#d7dce3 0 100%)";
+        chart.classList.add("empty-chart");
+    }
 
     legend.innerHTML = "";
-    [
-        ["#c40000", "CCS", totals.CCS],
-        ["#111", "COE", totals.COE]
-    ].forEach(([color, label, value]) => {
+    entries.forEach(({ color, label, value }) => {
         const row = document.createElement("div");
         row.className = "legend-row";
-        row.innerHTML = `<span><i class="legend-dot" style="background:${color}"></i>${label}</span><strong>${value}</strong><span>${Math.round(value / total * 100)}%</span>`;
+        const percent = total > 0 ? Math.round(value / total * 100) : 0;
+        row.innerHTML = `<span><i class="legend-dot" style="background:${color}"></i>${label}</span><strong>${formatPeso(value)}</strong><span>${percent}%</span>`;
         legend.appendChild(row);
     });
-
-    if (!orders.length) {
-        chart.style.background = "conic-gradient(#c40000 0 65%, #111 65% 100%)";
-    }
 }
 
 function renderBarChart(orders) {
     const chart = document.getElementById("admin-bar-chart");
     if (!chart) return;
 
-    const days = Array.from({ length: 7 }, (_, index) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (6 - index));
-        return date;
-    });
-    const counts = days.map(day => {
-        return orders.filter(order => getOrderDate(order).toDateString() === day.toDateString()).length;
-    });
-    const max = Math.max(...counts, 1);
+    const days = getLastSevenSalesDays(orders);
+    const max = Math.max(...days.map(day => day.revenue), 1);
 
     chart.innerHTML = "";
-    days.forEach((day, index) => {
+    days.forEach(day => {
         const row = document.createElement("div");
         row.className = "bar-row";
-        const label = day.toLocaleDateString("en-PH", { weekday: "short" });
-        row.innerHTML = `<span>${label}</span><div class="bar-track"><div class="bar-fill" style="width:${counts[index] / max * 100}%"></div></div><strong>${counts[index]}</strong>`;
+        const width = day.revenue > 0 ? Math.max(4, day.revenue / max * 100) : 0;
+        row.innerHTML = `<span>${day.label}</span><div class="bar-track" title="${day.orders} orders"><div class="bar-fill" style="width:${width}%"></div></div><strong>${formatPeso(day.revenue)}</strong>`;
         chart.appendChild(row);
     });
+}
+
+function renderLineChart(orders) {
+    const chart = document.getElementById("admin-line-chart");
+    if (!chart) return;
+
+    const days = getLastSevenSalesDays(orders);
+    const maxRevenue = Math.max(...days.map(day => day.revenue), 0);
+    const scaleMax = maxRevenue || 1;
+    const width = 640;
+    const height = 260;
+    const pad = { top: 24, right: 24, bottom: 46, left: 58 };
+    const plotWidth = width - pad.left - pad.right;
+    const plotHeight = height - pad.top - pad.bottom;
+    const points = days.map((day, index) => {
+        const x = pad.left + (plotWidth / (days.length - 1 || 1)) * index;
+        const y = pad.top + plotHeight - (day.revenue / scaleMax) * plotHeight;
+        return { ...day, x, y };
+    });
+    const path = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
+    const areaPath = `${path} L ${points.at(-1).x.toFixed(1)} ${pad.top + plotHeight} L ${points[0].x.toFixed(1)} ${pad.top + plotHeight} Z`;
+    const yTicks = [0, 0.5, 1].map(ratio => {
+        const value = maxRevenue * ratio;
+        const y = pad.top + plotHeight - ratio * plotHeight;
+        return { value, y };
+    });
+
+    chart.innerHTML = `
+        <svg class="line-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Last seven days sales trend">
+            ${yTicks.map(tick => `<g class="line-grid"><line x1="${pad.left}" y1="${tick.y}" x2="${width - pad.right}" y2="${tick.y}"></line><text x="${pad.left - 10}" y="${tick.y + 4}" text-anchor="end">${formatPeso(tick.value)}</text></g>`).join("")}
+            <path class="line-area" d="${areaPath}"></path>
+            <path class="line-path" d="${path}"></path>
+            ${points.map(point => `<g class="line-point-group"><circle class="line-point" cx="${point.x}" cy="${point.y}" r="5"><title>${point.label}: ${formatPeso(point.revenue)} from ${point.orders} orders</title></circle><text x="${point.x}" y="${height - 18}" text-anchor="middle">${point.label}</text></g>`).join("")}
+        </svg>
+        <div class="line-chart-summary">
+            <span>7-day total</span>
+            <strong>${formatPeso(days.reduce((sum, day) => sum + day.revenue, 0))}</strong>
+        </div>
+    `;
 }
 
 function renderDashboardQueues(orders, pendingPurchase, sales, inventory) {
@@ -585,7 +661,7 @@ function renderDashboardQueues(orders, pendingPurchase, sales, inventory) {
     }
 
     if (health) {
-        const totalRevenue = orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+        const totalRevenue = orders.reduce((sum, order) => sum + getOrderRevenue(order), 0);
         const completionRate = pendingPurchase ? Math.round(orders.length / (orders.length + 1) * 100) : orders.length ? 100 : 0;
         const topCategory = getDepartmentTotals(orders);
         const category = topCategory.COE > topCategory.CCS ? "COE" : topCategory.CCS ? "CCS" : "No sales yet";
